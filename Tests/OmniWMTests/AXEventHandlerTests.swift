@@ -10891,4 +10891,63 @@ private func waitUntilAXEventTest(
         #expect(lastAppliedBorderWindowId(on: controller) == 903)
         #expect(lastAppliedBorderFrame(on: controller) == focusedFrame)
     }
+
+    @Test @MainActor func spuriousCGSDestroyIsSuppressedWhenWindowStillExistsInWindowServer() {
+        let controller = makeAXEventTestController()
+        guard let workspaceId = controller.activeWorkspace()?.id else {
+            Issue.record("Missing workspace setup")
+            return
+        }
+
+        let pid: pid_t = 9_201
+        let token = WindowToken(pid: pid, windowId: 920)
+        _ = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 920),
+            pid: pid,
+            windowId: 920,
+            to: workspaceId
+        )
+        #expect(controller.workspaceManager.entry(for: token) != nil)
+
+        controller.axEventHandler.windowExistsInWindowServerForTests = { windowId in
+            windowId == 920
+        }
+
+        controller.axEventHandler.cgsEventObserver(
+            CGSEventObserver.shared,
+            didReceive: .destroyed(windowId: 920, spaceId: 0)
+        )
+
+        #expect(controller.workspaceManager.entry(for: token) != nil)
+    }
+
+    @Test @MainActor func realCGSDestroyRemovesWindowWhenGoneFromWindowServer() {
+        let controller = makeAXEventTestController()
+        guard let workspaceId = controller.activeWorkspace()?.id else {
+            Issue.record("Missing workspace setup")
+            return
+        }
+
+        let pid: pid_t = 9_202
+        let token = WindowToken(pid: pid, windowId: 921)
+        _ = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 921),
+            pid: pid,
+            windowId: 921,
+            to: workspaceId
+        )
+        #expect(controller.workspaceManager.entry(for: token) != nil)
+
+        controller.axEventHandler.windowExistsInWindowServerForTests = { _ in false }
+        controller.axEventHandler.windowInfoProvider = { windowId in
+            WindowServerInfo(id: windowId, pid: pid, level: 0, frame: .zero)
+        }
+
+        controller.axEventHandler.cgsEventObserver(
+            CGSEventObserver.shared,
+            didReceive: .destroyed(windowId: 921, spaceId: 0)
+        )
+
+        #expect(controller.workspaceManager.entry(for: token) == nil)
+    }
 }
