@@ -64,7 +64,7 @@ struct QuakeGhosttyConfigBuilder: Sendable {
             return config
         } catch {
             operations.freeConfig(config)
-            print("QuakeTerminal: Failed to build ghostty config: \(error)")
+            WMLog.config.error("QuakeTerminal: configBuildFailed error=\(String(describing: error), privacy: .public)")
             return nil
         }
     }

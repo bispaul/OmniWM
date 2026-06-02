@@ -253,6 +253,7 @@ extension NiriLayoutEngine {
         orientation: Monitor.Orientation = .horizontal
     ) -> NiriNode? {
         if direction.primaryStep(for: orientation) != nil {
+            WMLog.layout.debug("NiriNavigation.focusTarget: direction=\(String(describing: direction), privacy: .public) crossContainer=true currentSelection=\(String(describing: currentSelection.id), privacy: .public)")
             return moveSelectionCrossContainer(
                 direction: direction,
                 currentSelection: currentSelection,

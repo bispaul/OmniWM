@@ -65,6 +65,7 @@ final class DisplayConfigurationObserver: NSObject {
         let disconnectedIds = previousIds.subtracting(currentIds)
         for monitorId in disconnectedIds {
             if let prev = previousMonitors[monitorId] {
+                WMLog.workspace.info("DisplayObserver: disconnected monitorId=\(String(describing: monitorId), privacy: .public)")
                 onEvent?(.disconnected(monitorId, prev.outputId))
             }
         }
@@ -72,6 +73,7 @@ final class DisplayConfigurationObserver: NSObject {
         let connectedIds = currentIds.subtracting(previousIds)
         for monitorId in connectedIds {
             if let monitor = currentById[monitorId] {
+                WMLog.workspace.info("DisplayObserver: connected monitorId=\(String(describing: monitorId), privacy: .public) frame=\(String(describing: monitor.frame), privacy: .public)")
                 onEvent?(.connected(monitor))
             }
         }
@@ -82,6 +84,7 @@ final class DisplayConfigurationObserver: NSObject {
                   let previous = previousMonitors[monitorId]?.monitor else { continue }
 
             if current.frame != previous.frame || current.visibleFrame != previous.visibleFrame {
+                WMLog.workspace.info("DisplayObserver: reconfigured monitorId=\(String(describing: monitorId), privacy: .public) frame=\(String(describing: current.frame), privacy: .public)")
                 onEvent?(.reconfigured(current))
             }
         }

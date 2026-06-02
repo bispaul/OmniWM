@@ -340,6 +340,7 @@ final class AXManager {
 
         let visibleWindows = SkyLight.shared.queryAllVisibleWindows()
         var pidsWithWindows = Set(visibleWindows.map { $0.pid })
+        WMLog.ax.info("fullRescanEnumeration: slPidCount=\(pidsWithWindows.count, privacy: .public)")
 
         // Some Electron apps are missed by the broad SLS enumeration but are
         // visible through CGWindowList. Add regular rendered windows from the
@@ -359,9 +360,11 @@ final class AXManager {
             }
         }
 
+        WMLog.ax.debug("fullRescanEnumeration: mergedPidCount=\(pidsWithWindows.count, privacy: .public)")
         let apps = NSWorkspace.shared.runningApplications.filter {
             shouldTrack($0) && pidsWithWindows.contains($0.processIdentifier)
         }
+        WMLog.ax.info("fullRescanEnumeration: filteredAppCount=\(apps.count, privacy: .public)")
 
         return await withTaskGroup(
             of: (pid: pid_t, windows: [(AXWindowRef, pid_t, Int)], failed: Bool).self
@@ -385,6 +388,7 @@ final class AXManager {
                             )
                         }
                     } catch {
+                        WMLog.ax.error("fullRescanEnumeration: failed pid=\(app.processIdentifier, privacy: .public) error=\(String(describing: error), privacy: .public)")
                     }
                     return (app.processIdentifier, [], true)
                 }
@@ -398,6 +402,7 @@ final class AXManager {
                     failedPIDs.insert(result.pid)
                 }
             }
+            WMLog.ax.info("fullRescanEnumeration: windowCount=\(results.count, privacy: .public) failedPidCount=\(failedPIDs.count, privacy: .public)")
             return .init(windows: results, failedPIDs: failedPIDs)
         }
     }
@@ -414,13 +419,14 @@ final class AXManager {
         isRetry: Bool,
         terminalObserver: FrameApplicationTerminalObserver? = nil
     ) {
-        WMLog.ax.debug("applyFramesParallel: \(frames.count) requests, isRetry=\(isRetry)")
+        WMLog.ax.debug("applyFramesParallel: \(frames.count, privacy: .public) requests, isRetry=\(isRetry, privacy: .public)")
         for key in framesByPidBuffer.keys {
             framesByPidBuffer[key]?.removeAll(keepingCapacity: true)
         }
 
         for (pid, windowId, frame) in frames {
             if inactiveWorkspaceWindowIds.contains(windowId) {
+                WMLog.ax.debug("enqueueFrameApplications: skippedInactive windowId=\(windowId, privacy: .public)")
                 continue
             }
             let cachedFrame = lastAppliedFrames[windowId]
@@ -497,6 +503,7 @@ final class AXManager {
             }
             if !isRetry {
                 retryBudgetByWindowId[windowId] = 1
+                WMLog.ax.debug("enqueueFrameApplications: queued windowId=\(windowId, privacy: .public) retryBudget=1 force=\(shouldForceApply, privacy: .public)")
             }
             if framesByPidBuffer[pid] == nil {
                 framesByPidBuffer[pid] = []
@@ -685,6 +692,7 @@ final class AXManager {
             guard remainingRetries > 0,
                   shouldRetryFrameWrite(after: resolvedResult)
             else {
+                WMLog.ax.debug("handleFrameApplyResults: retryExhausted windowId=\(resolvedWindowId, privacy: .public) remainingRetries=\(remainingRetries, privacy: .public)")
                 retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                 notifyPendingFrameObserver(with: resolvedResult)
                 clearSettledRekeyMappings(to: resolvedWindowId)
@@ -693,6 +701,7 @@ final class AXManager {
 
             retryBudgetByWindowId[resolvedWindowId] = remainingRetries - 1
             forceApplyWindowIds.insert(resolvedWindowId)
+            WMLog.ax.debug("handleFrameApplyResults: retrying windowId=\(resolvedWindowId, privacy: .public) remainingRetries=\(remainingRetries - 1, privacy: .public)")
 
             let pid = resolvedResult.pid
             let frame = resolvedResult.targetFrame
@@ -712,11 +721,8 @@ final class AXManager {
         if observerRequestIdByWindowId[pendingObserver.windowId] == result.requestId {
             observerRequestIdByWindowId.removeValue(forKey: pendingObserver.windowId)
         }
-        let deliveredResult = pendingObserver.windowId == result.windowId
-            ? result
-            : result.rekeyed(to: pendingObserver.windowId)
         for observer in pendingObserver.observers {
-            observer(deliveredResult)
+            observer(result)
         }
     }
 
@@ -725,8 +731,10 @@ final class AXManager {
         switch failureReason {
         case .cancelled,
              .suppressed:
+            WMLog.ax.debug("shouldRetryFrameWrite: noRetry reason=\(String(describing: failureReason), privacy: .public)")
             return false
         default:
+            WMLog.ax.debug("shouldRetryFrameWrite: willRetry reason=\(String(describing: failureReason), privacy: .public)")
             return true
         }
     }

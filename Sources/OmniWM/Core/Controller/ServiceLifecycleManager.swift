@@ -65,6 +65,7 @@ final class ServiceLifecycleManager {
     private func startServices() {
         guard let controller, !controller.hasStartedServices else { return }
         controller.hasStartedServices = true
+        WMLog.ax.info("startServices: begin")
         controller.reconcileEnabledAndHotkeysState()
         controller.layoutRefreshController.setup()
         controller.axEventHandler.setup()
@@ -184,6 +185,7 @@ final class ServiceLifecycleManager {
         // (prevents stale geometry when display ID or coordinate space changes, e.g. KVM switch)
         controller.focusBorderController.hide()
         guard !currentMonitors.isEmpty else { return }
+        WMLog.workspace.info("applyMonitorConfigurationChanged: monitorCount=\(currentMonitors.count, privacy: .public)")
         guard currentMonitors.allSatisfy({ $0.frame.width > 1 && $0.frame.height > 1 }) else { return }
 
         controller.workspaceManager.applyMonitorConfigurationChange(currentMonitors)
@@ -238,6 +240,7 @@ final class ServiceLifecycleManager {
     }
 
     func performStartupRefresh() {
+        WMLog.ax.info("performStartupRefresh: requestFullRescan reason=startup")
         controller?.layoutRefreshController.requestFullRescan(reason: .startup)
     }
 
@@ -345,6 +348,7 @@ final class ServiceLifecycleManager {
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let controller = self?.controller else { return }
+                WMLog.ax.info("systemWake: requestFullRescan")
                 _ = controller.workspaceManager.recordReconcileEvent(.systemWake(source: .service))
                 controller.layoutRefreshController.requestFullRescan(reason: .unlock)
             }

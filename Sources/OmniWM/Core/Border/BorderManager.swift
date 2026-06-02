@@ -58,6 +58,7 @@ final class BorderManager {
 
         if borderWindow == nil {
             borderWindow = BorderWindow(config: config, operations: borderWindowOperations)
+            WMLog.focus.debug("BorderManager: borderWindowCreated")
         }
 
         guard let windowId else {
@@ -101,6 +102,7 @@ final class BorderManager {
     }
 
     func hideBorder() {
+        WMLog.focus.debug("BorderManager: hideBorder lastWindowId=\(String(describing: self.lastAppliedWindowId), privacy: .public)")
         borderWindow?.hide()
         clearBorderState()
         surfaceCoordinator.unregister(id: surfaceID)

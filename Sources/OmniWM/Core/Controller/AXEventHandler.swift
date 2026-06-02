@@ -430,6 +430,7 @@ final class AXEventHandler: CGSEventDelegate {
         }
 
         let windowInfo = resolveWindowInfo(windowId)
+        WMLog.ax.info("processCreatedWindow: windowId=\(windowId, privacy: .public) windowInfoResolved=\(windowInfo != nil, privacy: .public)")
         let nativeFullscreenRestore = restoreNativeFullscreenCreateBeforeAdmissionIfNeeded(
             windowId: windowId,
             windowInfo: windowInfo,
@@ -447,6 +448,7 @@ final class AXEventHandler: CGSEventDelegate {
             windowInfo: windowInfo,
             createPlacementContext: createPlacementContextsByWindowId[windowId]
         ) else {
+            WMLog.ax.info("processCreatedWindow: candidateFailed windowId=\(windowId, privacy: .public) hasWindowInfo=\(windowInfo != nil, privacy: .public)")
             if let windowInfo {
                 _ = scheduleCreatedWindowRetryIfNeeded(
                     windowId: windowId,
@@ -893,6 +895,7 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
 
+        WMLog.ax.info("trackPreparedCreate: windowId=\(candidate.windowId, privacy: .public) pid=\(candidate.token.pid, privacy: .public) mode=\(String(describing: candidate.mode), privacy: .public) workspaceId=\(candidate.workspaceId.uuidString, privacy: .public)")
         let trackedToken = controller.workspaceManager.addWindow(
             candidate.axRef,
             pid: candidate.token.pid,
@@ -1436,6 +1439,7 @@ final class AXEventHandler: CGSEventDelegate {
             fallbackAXRef: axRef,
             createPlacementContext: createPlacementContextsByWindowId[windowId]
         ) else {
+            WMLog.ax.info("admitFocusedWindow: candidateFailed windowId=\(windowId, privacy: .public) hasWindowInfo=\(windowInfo != nil, privacy: .public)")
             if let windowInfo {
                 _ = scheduleCreatedWindowRetryIfNeeded(
                     windowId: windowId,
@@ -2117,6 +2121,7 @@ final class AXEventHandler: CGSEventDelegate {
             appFullscreen: appFullscreen,
             windowInfo: matchingWindowInfo
         )
+        WMLog.ax.info("prepareCreateCandidate: windowId=\(windowId, privacy: .public) pid=\(token.pid, privacy: .public) disposition=\(String(describing: evaluation.decision.disposition), privacy: .public) source=\(String(describing: evaluation.decision.source), privacy: .public) layoutKind=\(String(describing: evaluation.decision.layoutDecisionKind), privacy: .public)")
 
         let trackedMode = controller.trackedModeForLifecycle(
             decision: evaluation.decision,
@@ -2131,6 +2136,7 @@ final class AXEventHandler: CGSEventDelegate {
         }
 
         guard let trackedMode else { return nil }
+        WMLog.ax.info("prepareCreateCandidate: windowId=\(windowId, privacy: .public) trackedMode=\(String(describing: trackedMode), privacy: .public) heuristicReasons=\(String(describing: evaluation.decision.heuristicReasons), privacy: .public)")
         subscribeToWindows([windowId])
 
         let resolvedBundleId = bundleId ?? evaluation.facts.ax.bundleId
@@ -2158,6 +2164,7 @@ final class AXEventHandler: CGSEventDelegate {
             windowFrame: placementFrame,
             fallbackWorkspaceId: controller.activeWorkspace()?.id
         )
+        WMLog.ax.debug("prepareCreateCandidate: windowId=\(windowId, privacy: .public) workspaceId=\(workspaceId.uuidString, privacy: .public) bundleId=\(String(describing: resolvedBundleId), privacy: .public)")
         recordCreatePlacementTrace(
             token: token,
             workspaceId: workspaceId,
