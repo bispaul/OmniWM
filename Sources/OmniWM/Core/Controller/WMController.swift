@@ -268,6 +268,10 @@ final class WMController {
         }
     }
 
+    func orderWindowAbove(_ windowId: UInt32) {
+        windowFocusOperations.orderWindow(windowId)
+    }
+
     func applyPersistedSettings(_ settings: SettingsStore) {
         WMLog.config.info("Applying persisted settings")
         setAnimationsEnabled(settings.animationsEnabled, persist: false)
