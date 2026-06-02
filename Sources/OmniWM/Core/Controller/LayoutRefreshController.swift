@@ -3560,6 +3560,34 @@ final class LayoutDiffExecutor {
             controller.axManager.applyFramesParallel(frameUpdates)
         }
 
+        // Z-order tiled windows: left-to-right (back-to-front), focused last (topmost)
+        if !diff.frameChanges.isEmpty {
+            let focusedToken = diff.focusedFrame?.token
+            var tiledOrderEntries: [(windowId: Int, x: CGFloat, isFocused: Bool)] = []
+
+            for change in diff.frameChanges {
+                guard !hiddenTokens.contains(change.token),
+                      let entry = resolveEntry(for: change.token),
+                      entry.mode == .tiling
+                else { continue }
+                let isFocused = change.token == focusedToken
+                tiledOrderEntries.append((entry.windowId, change.frame.origin.x, isFocused))
+            }
+
+            if tiledOrderEntries.count > 1 {
+                tiledOrderEntries.sort { lhs, rhs in
+                    if lhs.isFocused != rhs.isFocused { return !lhs.isFocused }
+                    return lhs.x < rhs.x
+                }
+
+                WMLog.layout.debug("Z-order: ordering \(tiledOrderEntries.count, privacy: .public) tiled windows, focused=\(String(describing: focusedToken), privacy: .public)")
+
+                for entry in tiledOrderEntries {
+                    controller.orderWindowAbove(UInt32(entry.windowId))
+                }
+            }
+        }
+
         if !resizeProbeFrameUpdates.isEmpty {
             controller.axManager.applyFramesParallel(
                 resizeProbeFrameUpdates,
