@@ -151,4 +151,57 @@ import Foundation
 
         #expect(orderedWindowIds.isEmpty)
     }
+
+    @Test func mixedTiledAndFloatingOnlyOrdersTiled() {
+        var orderedWindowIds: [UInt32] = []
+        let controller = makeLayoutPlanTestController(
+            windowFocusOperations: WindowFocusOperations(
+                activateApp: { _ in },
+                focusSpecificWindow: { _, _, _ in },
+                raiseWindow: { _ in },
+                orderWindow: { windowId in
+                    orderedWindowIds.append(windowId)
+                }
+            )
+        )
+
+        let wsId = controller.workspaceManager.visibleWorkspaceIds().first!
+        let monitor = controller.workspaceManager.monitors.first!
+
+        let w1 = makeLayoutPlanTestWindow(windowId: 100)
+        let w2 = makeLayoutPlanTestWindow(windowId: 200)
+        let w3 = makeLayoutPlanTestWindow(windowId: 300)
+        let token1 = controller.workspaceManager.addWindow(w1, pid: getpid(), windowId: 100, to: wsId, mode: .tiling)
+        let token2 = controller.workspaceManager.addWindow(w2, pid: getpid(), windowId: 200, to: wsId, mode: .floating)
+        let token3 = controller.workspaceManager.addWindow(w3, pid: getpid(), windowId: 300, to: wsId, mode: .tiling)
+
+        let diff = WorkspaceLayoutDiff(
+            frameChanges: [
+                LayoutFrameChange(token: token1, frame: CGRect(x: 0, y: 0, width: 960, height: 1080), forceApply: false),
+                LayoutFrameChange(token: token2, frame: CGRect(x: 200, y: 200, width: 400, height: 400), forceApply: false),
+                LayoutFrameChange(token: token3, frame: CGRect(x: 960, y: 0, width: 960, height: 1080), forceApply: false),
+            ],
+            focusedFrame: LayoutFocusedFrame(token: token3, frame: CGRect(x: 960, y: 0, width: 960, height: 1080))
+        )
+
+        let plan = WorkspaceLayoutPlan(
+            workspaceId: wsId,
+            monitor: LayoutMonitorSnapshot(
+                monitorId: monitor.id,
+                displayId: monitor.displayId,
+                frame: monitor.frame,
+                visibleFrame: monitor.visibleFrame,
+                workingFrame: monitor.visibleFrame,
+                scale: 1.0,
+                orientation: .horizontal
+            ),
+            sessionPatch: .init(workspaceId: wsId, viewportState: controller.workspaceManager.niriViewportState(for: wsId), rememberedFocusToken: nil),
+            diff: diff
+        )
+
+        controller.layoutRefreshController.executeLayoutPlan(plan)
+
+        #expect(!orderedWindowIds.contains(200))
+        #expect(orderedWindowIds.last == 300)
+    }
 }
