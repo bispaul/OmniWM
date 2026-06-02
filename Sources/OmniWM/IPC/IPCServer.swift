@@ -153,14 +153,14 @@ final class IPCServer: IPCServerLifecycle {
                     handle: FileHandle(fileDescriptor: clientFD, closeOnDealloc: true),
                     bridge: bridge,
                     onClose: { id in
-                        WMLog.ipc.info("IPC client disconnected: \(id.uuidString)")
+                        WMLog.ipc.info("IPC client disconnected: \(id.uuidString, privacy: .public)")
                         Task {
                             await connectionRegistry.remove(id: id)
                         }
                     }
                 )
 
-                WMLog.ipc.info("IPC client connected: \(connection.id.uuidString)")
+                WMLog.ipc.info("IPC client connected: \(connection.id.uuidString, privacy: .public)")
                 await connectionRegistry.insert(connection)
                 await connection.start()
             }

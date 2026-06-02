@@ -335,7 +335,7 @@ final class StatusBarMenuBuilder {
                 settings
             )
         } catch {
-            NSLog("OmniWM settings file action failed: \(error.localizedDescription)")
+            WMLog.config.error("settingsFileActionFailed: \(error.localizedDescription, privacy: .public)")
         }
     }
 

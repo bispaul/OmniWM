@@ -81,7 +81,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         if result == GHOSTTY_SUCCESS {
             Self.ghosttyInitialized = true
         } else {
-            print("QuakeTerminal: ghostty_init failed with code \(result)")
+            WMLog.config.error("QuakeTerminal: ghosttyInitFailed code=\(result, privacy: .public)")
         }
     }
 
@@ -90,12 +90,12 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
 
         initializeGhosttyIfNeeded()
         guard Self.ghosttyInitialized else {
-            print("QuakeTerminal: GhosttyKit not initialized")
+            WMLog.config.error("QuakeTerminal: ghosttyKitNotInitialized")
             return
         }
 
         guard let config = makeGhosttyConfig() else {
-            print("QuakeTerminal: Failed to create ghostty config")
+            WMLog.config.error("QuakeTerminal: ghosttyConfigCreateFailed")
             return
         }
         ghosttyConfig = config
@@ -148,7 +148,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
 
         ghosttyApp = ghostty_app_new(&runtimeConfig, config)
         guard ghosttyApp != nil else {
-            print("QuakeTerminal: Failed to create ghostty app")
+            WMLog.config.error("QuakeTerminal: ghosttyAppCreateFailed")
             ghostty_config_free(config)
             ghosttyConfig = nil
             return

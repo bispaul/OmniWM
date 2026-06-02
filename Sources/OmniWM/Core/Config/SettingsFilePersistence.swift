@@ -98,7 +98,7 @@ final class SettingsFilePersistence {
             lastPersistedExport = snapshot.export
             return snapshot.export
         } catch {
-            WMLog.config.error("Settings load failed: \(error.localizedDescription)")
+            WMLog.config.error("Settings load failed: \(error.localizedDescription, privacy: .public)")
             report("Failed to load \(fileURL.path): \(error.localizedDescription)")
             moveCorruptFileAsideIfPresent()
             let defaults = SettingsExport.defaults()

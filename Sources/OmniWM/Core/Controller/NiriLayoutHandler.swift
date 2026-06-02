@@ -1105,6 +1105,7 @@ enum NiriWindowMoveResult {
             workingFrame: workingFrame,
             gaps: gap
         ) {
+            WMLog.focus.debug("focusNeighbor: direction=\(String(describing: direction), privacy: .public) currentNode=\(String(describing: currentId), privacy: .public) targetNode=\(String(describing: newNode.id), privacy: .public)")
             activateNode(
                 newNode, in: wsId, state: &state,
                 options: .init(activateWindow: false, ensureVisible: false, preserveViewportAnchor: true)

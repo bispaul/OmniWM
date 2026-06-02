@@ -156,7 +156,7 @@ final class AppAXContext {
 
             if let context {
                 contexts[pid] = context
-                WMLog.ax.info("AX context created pid=\(pid)")
+                WMLog.ax.info("AX context created pid=\(pid, privacy: .public)")
             }
             return context
         }
@@ -699,7 +699,7 @@ final class AppAXContext {
     }
 
     func destroy() {
-        WMLog.ax.info("AX context destroyed pid=\(self.pid)")
+        WMLog.ax.info("AX context destroyed pid=\(self.pid, privacy: .public)")
         AppAXContext.contexts.removeValue(forKey: self.pid)
 
         for (_, job) in activeFrameBatchJobs {

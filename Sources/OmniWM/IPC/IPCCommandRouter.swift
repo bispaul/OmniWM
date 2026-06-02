@@ -13,7 +13,7 @@ final class IPCCommandRouter {
     }
 
     func handle(_ request: IPCCommandRequest) -> ExternalCommandResult {
-        WMLog.ipc.debug("IPC command received: \(String(describing: request))")
+        WMLog.ipc.debug("IPC command received: \(String(describing: request), privacy: .public)")
         switch request {
         case let .focus(ipcDirection):
             return controller.commandHandler.performCommand(.focus(direction(for: ipcDirection)))
