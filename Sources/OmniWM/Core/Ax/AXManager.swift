@@ -117,12 +117,12 @@ final class AXManager {
     func markWindowActive(_ windowId: Int) {
         WMLog.ax.info("Window state added")
         inactiveWorkspaceWindowIds.remove(windowId)
-        WMLog.ax.debug("Marked window active: \(windowId)")
+        WMLog.ax.debug("Marked window active: \(windowId, privacy: .public)")
     }
 
     func markWindowInactive(_ windowId: Int) {
         inactiveWorkspaceWindowIds.insert(windowId)
-        WMLog.ax.debug("Marked window inactive: \(windowId)")
+        WMLog.ax.debug("Marked window inactive: \(windowId, privacy: .public)")
     }
 
     func forceApplyNextFrame(for windowId: Int) {
@@ -238,7 +238,7 @@ final class AXManager {
     }
 
     func removeWindowState(pid: pid_t, windowId: Int) {
-        WMLog.ax.info("Removing window state for windowId=\(windowId) pid=\(pid)")
+        WMLog.ax.info("Removing window state for windowId=\(windowId, privacy: .public) pid=\(pid, privacy: .public)")
         AppAXContext.contexts[pid]?.removeWindowState(windowId: windowId)
 
         var cancelledResults: [(PendingFrameObserver, AXFrameApplyResult)] = []
@@ -674,7 +674,7 @@ final class AXManager {
             }
 
             if let failureReason = resolvedResult.writeResult.failureReason {
-                WMLog.ax.error("Frame write failed windowId=\(resolvedWindowId) reason=\(String(describing: failureReason))")
+                WMLog.ax.error("Frame write failed windowId=\(resolvedWindowId, privacy: .public) reason=\(String(describing: failureReason), privacy: .public)")
                 recentFrameWriteFailures[resolvedWindowId] = failureReason
             }
 

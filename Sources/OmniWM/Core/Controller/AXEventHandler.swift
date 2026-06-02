@@ -409,7 +409,7 @@ final class AXEventHandler: CGSEventDelegate {
     }
 
     private func handleCGSWindowCreated(windowId: UInt32, spaceId: UInt64) {
-        WMLog.ax.info("Window created: windowId=\(windowId)")
+        WMLog.ax.info("Window created: windowId=\(windowId, privacy: .public)")
         captureCreatePlacementContext(windowId: windowId, spaceId: spaceId)
         recordNiriCreateFocusTrace(.init(kind: .createSeen(windowId: windowId)))
         processCreatedWindow(windowId: windowId)
@@ -675,7 +675,7 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
 
-        WMLog.ax.debug("Frame change triggered relayout: windowId=\(entry.windowId)")
+        WMLog.ax.debug("Frame change triggered relayout: windowId=\(entry.windowId, privacy: .public)")
         debugCounters.geometryRelayoutRequests += 1
         debugCounters.scopedGeometryRelayoutRequests += 1
         controller.layoutRefreshController.requestRelayout(
@@ -693,7 +693,7 @@ final class AXEventHandler: CGSEventDelegate {
             for: entry.windowId,
             observedFrame: observedFrame
         ) {
-            WMLog.ax.debug("Frame change suppressed (own write): windowId=\(entry.windowId)")
+            WMLog.ax.debug("Frame change suppressed (own write): windowId=\(entry.windowId, privacy: .public)")
             debugCounters.geometryRelayoutsSuppressedForOwnFrameWrites += 1
             return true
         }
@@ -780,7 +780,7 @@ final class AXEventHandler: CGSEventDelegate {
     }
 
     private func handleCGSWindowDestroyed(windowId: UInt32) {
-        WMLog.ax.info("Window destroyed: windowId=\(windowId)")
+        WMLog.ax.info("Window destroyed: windowId=\(windowId, privacy: .public)")
         AXWindowService.invalidateCachedTitle(windowId: windowId)
         cancelCreatedWindowRetry(windowId: windowId)
         discardCreatePlacementContext(windowId: windowId)

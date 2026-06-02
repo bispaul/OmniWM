@@ -3587,7 +3587,7 @@ final class LayoutDiffExecutor {
                     return lhs.x < rhs.x
                 }
 
-                WMLog.layout.debug("Z-order: ordering \(tiledOrderEntries.count) tiled windows, focused=\(String(describing: focusedToken))")
+                WMLog.layout.debug("Z-order: ordering \(tiledOrderEntries.count, privacy: .public) tiled windows, focused=\(String(describing: focusedToken), privacy: .public)")
 
                 for entry in tiledOrderEntries {
                     controller.orderWindowAbove(UInt32(entry.windowId))

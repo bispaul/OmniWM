@@ -47,7 +47,7 @@ final class FocusBorderController {
         forceOrdering: Bool = true
     ) -> Bool {
         if let target {
-            WMLog.focus.debug("Focus changed to: token=\(String(describing: target.token))")
+            WMLog.focus.debug("Focus changed to: token=\(String(describing: target.token), privacy: .public)")
         }
         lastAXConfirmedTarget = target
         requiresFocusValidationBeforeRender = false

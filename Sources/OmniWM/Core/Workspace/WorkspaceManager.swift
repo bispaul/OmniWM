@@ -2227,7 +2227,7 @@ final class WorkspaceManager {
         ruleEffects: ManagedWindowRuleEffects = .none,
         managedReplacementMetadata: ManagedReplacementMetadata? = nil
     ) -> WindowToken {
-        WMLog.workspace.info("Adding window: windowId=\(windowId) workspace=\(workspace.uuidString)")
+        WMLog.workspace.info("Adding window: windowId=\(windowId, privacy: .public) workspace=\(workspace.uuidString, privacy: .public)")
         let token = windows.upsert(
             window: ax,
             pid: pid,
@@ -2634,7 +2634,7 @@ final class WorkspaceManager {
     @discardableResult
     func removeWindow(pid: pid_t, windowId: Int) -> WindowModel.Entry? {
         guard let entry = windows.entry(forPid: pid, windowId: windowId) else { return nil }
-        WMLog.workspace.info("Removing window: windowId=\(windowId)")
+        WMLog.workspace.info("Removing window: windowId=\(windowId, privacy: .public)")
         let removedEntry = removeTrackedWindow(entry)
         schedulePersistedWindowRestoreCatalogSave()
         return removedEntry
