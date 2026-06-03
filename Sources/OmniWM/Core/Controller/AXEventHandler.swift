@@ -1663,7 +1663,7 @@ final class AXEventHandler: CGSEventDelegate {
                     _ = controller.workspaceManager.removeWindow(pid: pid, windowId: windowId)
                     WMLog.ax.info("windowMiniaturized: removed from layout windowId=\(windowId, privacy: .public)")
                 }
-                controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+                controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
             }
         }
     }
