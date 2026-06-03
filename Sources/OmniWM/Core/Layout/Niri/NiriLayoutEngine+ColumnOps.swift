@@ -215,6 +215,7 @@ extension NiriLayoutEngine {
 
         // Window-close removals use removeWindows(...); this is structural cleanup for move/consume paths.
         column.remove()
+        normalizeRemainingColumnProportions(in: workspaceId)
     }
 
     func normalizeColumnSizes(in workspaceId: WorkspaceDescriptor.ID) {

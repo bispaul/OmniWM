@@ -8352,4 +8352,90 @@ private func makeCenteredCrossMonitorFixture(
         #expect(controller.niriLayoutHandler.scrollAnimationByDisplay[monitor.displayId] == nil)
         #expect(controller.workspaceManager.hiddenState(for: token)?.workspaceInactive == true)
     }
+
+    @Test func removeColumnRedistributesProportionally() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+        let workingFrame = CGRect(x: 0, y: 0, width: 1800, height: 900)
+        let gap: CGFloat = 2
+
+        let h1 = makeTestHandle()
+        let h2 = makeTestHandle()
+        let h3 = makeTestHandle()
+
+        let w1 = engine.addWindow(handle: h1, to: wsId, afterSelection: nil)
+        let w2 = engine.addWindow(handle: h2, to: wsId, afterSelection: w1.id)
+        let w3 = engine.addWindow(handle: h3, to: wsId, afterSelection: w2.id)
+
+        engine.columns(in: wsId)[0].width = .proportion(0.4)
+        engine.columns(in: wsId)[1].width = .proportion(0.3)
+        engine.columns(in: wsId)[2].width = .proportion(0.3)
+
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.selectedNodeId = w1.id
+        state.viewOffsetPixels = .static(0)
+
+        _ = engine.removeWindows(
+            Set([h2.id]),
+            in: wsId,
+            state: &state,
+            motion: .disabled,
+            workingFrame: workingFrame,
+            gaps: gap,
+            selectedNodeId: w1.id,
+            removedNodeIds: [w2.id]
+        )
+
+        let remaining = engine.columns(in: wsId)
+        #expect(remaining.count == 2)
+
+        if case let .proportion(p1) = remaining[0].width,
+           case let .proportion(p2) = remaining[1].width
+        {
+            #expect(abs(p1 - 0.5714) < 0.01)
+            #expect(abs(p2 - 0.4286) < 0.01)
+            #expect(abs(p1 + p2 - 1.0) < 0.001)
+        } else {
+            Issue.record("Expected proportional widths")
+        }
+    }
+
+    @Test func singleRemainingColumnGetsFullWidth() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+        let workingFrame = CGRect(x: 0, y: 0, width: 1800, height: 900)
+        let gap: CGFloat = 2
+
+        let h1 = makeTestHandle()
+        let h2 = makeTestHandle()
+
+        let w1 = engine.addWindow(handle: h1, to: wsId, afterSelection: nil)
+        let w2 = engine.addWindow(handle: h2, to: wsId, afterSelection: w1.id)
+
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.selectedNodeId = w1.id
+        state.viewOffsetPixels = .static(0)
+
+        _ = engine.removeWindows(
+            Set([h2.id]),
+            in: wsId,
+            state: &state,
+            motion: .disabled,
+            workingFrame: workingFrame,
+            gaps: gap,
+            selectedNodeId: w1.id,
+            removedNodeIds: [w2.id]
+        )
+
+        let remaining = engine.columns(in: wsId)
+        #expect(remaining.count == 1)
+
+        if case let .proportion(p) = remaining[0].width {
+            #expect(abs(p - 1.0) < 0.001)
+        } else {
+            Issue.record("Expected proportional width of 1.0")
+        }
+    }
 }

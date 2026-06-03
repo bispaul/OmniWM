@@ -159,13 +159,11 @@ extension NiriLayoutEngine {
         }
 
         if column.children.isEmpty {
-            let root = column.parent as? NiriRoot
+            let wsId = roots.first { $0.value === column.parent }?.key
             column.remove()
 
-            if let root {
-                for col in root.columns {
-                    col.cachedWidth = 0
-                }
+            if let wsId {
+                normalizeRemainingColumnProportions(in: wsId)
             }
         }
     }
@@ -432,6 +430,7 @@ extension NiriLayoutEngine {
             window.detach()
         }
         column.remove()
+        normalizeRemainingColumnProportions(in: workspaceId)
 
         var fallbackSelectionId: NodeId?
         var viewportNeedsRecalc = false
@@ -680,5 +679,32 @@ extension NiriLayoutEngine {
         }
 
         return candidates.max { ($0.lastFocusedTime ?? .distantPast) < ($1.lastFocusedTime ?? .distantPast) }
+    }
+
+    func normalizeRemainingColumnProportions(in workspaceId: WorkspaceDescriptor.ID) {
+        let cols = columns(in: workspaceId)
+        guard !cols.isEmpty else { return }
+
+        if cols.count == 1 {
+            cols[0].width = .proportion(1.0)
+            cols[0].cachedWidth = 0
+            return
+        }
+
+        var totalProportion: CGFloat = 0
+        for col in cols {
+            if case let .proportion(p) = col.width {
+                totalProportion += p
+            }
+        }
+
+        guard totalProportion > 0 else { return }
+
+        for col in cols {
+            if case let .proportion(p) = col.width {
+                col.width = .proportion(p / totalProportion)
+                col.cachedWidth = 0
+            }
+        }
     }
 }
