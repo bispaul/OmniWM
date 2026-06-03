@@ -1096,20 +1096,34 @@ enum NiriWindowMoveResult {
             col.resolveAndCacheWidth(workingAreaWidth: workingFrame.width, gaps: gap)
         }
 
-        if let newNode = engine.focusTarget(
-            direction: direction,
-            currentSelection: currentNode,
-            in: wsId,
-            motion: controller.motionPolicy.snapshot(),
-            state: &state,
-            workingFrame: workingFrame,
-            gaps: gap
-        ) {
+        var candidateNode = currentNode
+        var attempts = 0
+        let maxAttempts = controller.workspaceManager.tiledEntries(in: wsId).count
+        while attempts < maxAttempts,
+              let newNode = engine.focusTarget(
+                  direction: direction,
+                  currentSelection: candidateNode,
+                  in: wsId,
+                  motion: controller.motionPolicy.snapshot(),
+                  state: &state,
+                  workingFrame: workingFrame,
+                  gaps: gap
+              )
+        {
+            attempts += 1
+            if let windowNode = newNode as? NiriWindow,
+               controller.axEventHandler.isWindowMiniaturized(windowNode.token.windowId)
+            {
+                WMLog.focus.debug("focusNeighbor: skipping minimized windowId=\(windowNode.token.windowId, privacy: .public)")
+                candidateNode = newNode
+                continue
+            }
             WMLog.focus.debug("focusNeighbor: direction=\(String(describing: direction), privacy: .public) currentNode=\(String(describing: currentId), privacy: .public) targetNode=\(String(describing: newNode.id), privacy: .public)")
             activateNode(
                 newNode, in: wsId, state: &state,
                 options: .init(activateWindow: false, ensureVisible: false)
             )
+            break
         }
         _ = controller.workspaceManager.applySessionPatch(
             .init(

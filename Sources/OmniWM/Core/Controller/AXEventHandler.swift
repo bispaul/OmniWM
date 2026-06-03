@@ -323,6 +323,7 @@ final class AXEventHandler: CGSEventDelegate {
     var managedReplacementTimeSourceForTests: (() -> TimeInterval)?
     var axContextWarmupHandlerForTests: ((pid_t) -> Void)?
     var windowExistsInWindowServerForTests: ((UInt32) -> Bool)?
+    private(set) var miniaturizedWindowIds: Set<Int> = []
     private(set) var debugCounters = DebugCounters()
 
     init(
@@ -791,6 +792,7 @@ final class AXEventHandler: CGSEventDelegate {
 
     private func handleCGSWindowDestroyed(windowId: UInt32) {
         WMLog.ax.info("Window destroyed: windowId=\(windowId, privacy: .public)")
+        miniaturizedWindowIds.remove(Int(windowId))
         if windowExistsInWindowServer(windowId) {
             WMLog.ax.info("Window destroyed suppressed (still in window server): windowId=\(windowId, privacy: .public)")
             return
@@ -1254,6 +1256,7 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
         let token = WindowToken(pid: pid, windowId: axRef.windowId)
+        miniaturizedWindowIds.remove(axRef.windowId)
 
         let appFullscreen = isFullscreenProvider?(axRef) ?? AXWindowService.isFullscreen(axRef)
 
@@ -1633,10 +1636,16 @@ final class AXEventHandler: CGSEventDelegate {
     }
 
     func handleWindowMiniaturized(pid: pid_t, windowId: Int) {
+        miniaturizedWindowIds.insert(windowId)
+        WMLog.ax.info("windowMiniaturized: windowId=\(windowId, privacy: .public) pid=\(pid, privacy: .public)")
         controller?.clearKeyboardFocusTarget(
             matching: WindowToken(pid: pid, windowId: windowId),
             pid: pid
         )
+    }
+
+    func isWindowMiniaturized(_ windowId: Int) -> Bool {
+        miniaturizedWindowIds.contains(windowId)
     }
 
     @discardableResult
@@ -3251,6 +3260,8 @@ final class AXEventHandler: CGSEventDelegate {
         guard let controller else { return }
 
         let entries = controller.workspaceManager.entries(forPid: pid)
+        let terminatedWindowIds = Set(entries.map { $0.token.windowId })
+        miniaturizedWindowIds.subtract(terminatedWindowIds)
         for entry in entries {
             clearManagedFocusState(
                 matching: entry.token,
