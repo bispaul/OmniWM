@@ -783,6 +783,33 @@ private func waitUntilServiceLifecycleTest(
         #expect(lifecycleManager.awaitingDisplayWake == false)
     }
 
+    @Test @MainActor func miniaturizedWindowTrackingBasics() {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let axHandler = controller.axEventHandler
+
+        // Unknown window should not be miniaturized
+        #expect(!axHandler.isWindowMiniaturized(12345))
+        #expect(axHandler.miniaturizedWindowIds.isEmpty)
+
+        // After handling miniaturize, the window should be tracked
+        axHandler.handleWindowMiniaturized(pid: 100, windowId: 12345)
+
+        #expect(axHandler.isWindowMiniaturized(12345))
+        #expect(axHandler.miniaturizedWindowIds.contains(12345))
+
+        // A different window should not be affected
+        #expect(!axHandler.isWindowMiniaturized(99999))
+
+        // Tracking a second window should not disturb the first
+        axHandler.handleWindowMiniaturized(pid: 200, windowId: 99999)
+
+        #expect(axHandler.isWindowMiniaturized(12345))
+        #expect(axHandler.isWindowMiniaturized(99999))
+        #expect(axHandler.miniaturizedWindowIds.count == 2)
+    }
+
     @Test @MainActor func singleMonitorWakeSkipsStabilization() {
         let defaults = makeLifecycleTestDefaults()
         let settings = SettingsStore(defaults: defaults)
