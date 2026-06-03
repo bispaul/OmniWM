@@ -115,7 +115,7 @@ final class AXManager {
     }
 
     func markWindowActive(_ windowId: Int) {
-        WMLog.ax.info("Window state added")
+        WMLog.ax.debug("Marked window active (removed from inactive set)")
         inactiveWorkspaceWindowIds.remove(windowId)
         WMLog.ax.debug("Marked window active: \(windowId, privacy: .public)")
     }

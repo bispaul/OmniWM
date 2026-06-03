@@ -1656,7 +1656,8 @@ final class AXEventHandler: CGSEventDelegate {
             }
             Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: 300_000_000)
-                guard let controller = self?.controller else { return }
+                guard let self, let controller = self.controller else { return }
+                guard self.miniaturizedWindowIds.contains(windowId) else { return }
                 let token = WindowToken(pid: pid, windowId: windowId)
                 if controller.workspaceManager.entry(for: token) != nil {
                     _ = controller.workspaceManager.removeWindow(pid: pid, windowId: windowId)
