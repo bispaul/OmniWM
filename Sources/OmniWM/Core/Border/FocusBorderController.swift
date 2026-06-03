@@ -25,11 +25,13 @@ final class FocusBorderController {
     var observedFrameProviderForTests: ((AXWindowRef) -> CGRect?)?
     var suppressNextRenderForTests: ((KeyboardFocusTarget) -> Bool)?
     var suppressNextFrameHintForTests: ((WindowToken) -> Bool)?
+    var windowExistsProviderForTests: ((UInt32) -> Bool)?
 
     private let borderManager: BorderManager
     private var lastAXConfirmedTarget: KeyboardFocusTarget?
     private var requiresFocusValidationBeforeRender = false
     private var suppressedManagedTargets: Set<WindowToken> = []
+    private var nonManagedRefreshTask: Task<Void, Never>?
 
     init(
         controller: WMController,
@@ -54,11 +56,25 @@ final class FocusBorderController {
         if let target {
             suppressedManagedTargets.remove(target.token)
         }
-        return refresh(
+        let result = refresh(
             preferredFrame: preferredFrame,
             preferredFrameSource: preferredFrameSource,
             forceOrdering: forceOrdering
         )
+
+        nonManagedRefreshTask?.cancel()
+        if let target, !target.isManaged {
+            let token = target.token
+            nonManagedRefreshTask = Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                guard !Task.isCancelled, let self, self.lastAXConfirmedTarget?.token == token else { return }
+                _ = self.refresh()
+            }
+        } else {
+            nonManagedRefreshTask = nil
+        }
+
+        return result
     }
 
     @discardableResult
@@ -305,6 +321,19 @@ final class FocusBorderController {
         {
             WMLog.focus.debug("renderEligibility: hide reason=notDisplayable token=\(String(describing: target.token), privacy: .public)")
             return .hide
+        }
+
+        if !target.isManaged {
+            guard let wid = UInt32(exactly: target.windowId) else {
+                WMLog.focus.debug("renderEligibility: clear reason=invalidWindowId windowId=\(target.windowId, privacy: .public)")
+                return .clear
+            }
+            let windowExists = windowExistsProviderForTests?(wid)
+                ?? (SkyLight.shared.queryWindowInfo(wid) != nil)
+            if !windowExists {
+                WMLog.focus.debug("renderEligibility: clear reason=nonManagedWindowGone windowId=\(target.windowId, privacy: .public)")
+                return .clear
+            }
         }
 
         return .update
