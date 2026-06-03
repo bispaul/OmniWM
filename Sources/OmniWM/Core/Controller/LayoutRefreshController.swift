@@ -2210,6 +2210,11 @@ import os
                 controller.nativeFullscreenPlaceholderManager.remove(entry.token)
                 controller.clearResizePlaceholder(for: entry.token)
             }
+        }
+        if !inactiveWindowJobs.isEmpty {
+            controller.axManager.cancelPendingFrameJobs(inactiveWindowJobs)
+        }
+        for snapshot in workspaceEntries where !activeWorkspaceIds.contains(snapshot.workspace.id) {
             guard let monitor = controller.workspaceManager.monitor(for: snapshot.workspace.id) else { continue }
             let preferredSide = preferredSides[monitor.id] ?? .right
             hideWorkspace(
@@ -2218,9 +2223,6 @@ import os
                 preferredSide: preferredSide,
                 hiddenPlacementMonitors: hiddenPlacementMonitors
             )
-        }
-        if !inactiveWindowJobs.isEmpty {
-            controller.axManager.cancelPendingFrameJobs(inactiveWindowJobs)
         }
     }
 

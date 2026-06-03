@@ -273,7 +273,7 @@ final class DwindleLayoutEngine {
         node.kind = .split(orientation: newOrientation, ratio: ratio)
         node.cachedFrame = frame
 
-        let fraction = CGFloat(0.5)
+        let fraction = CGFloat(ratio)
         let (firstFrame, secondFrame): (CGRect, CGRect)
         switch newOrientation {
         case .horizontal:
