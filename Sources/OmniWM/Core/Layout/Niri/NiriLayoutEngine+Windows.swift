@@ -159,11 +159,13 @@ extension NiriLayoutEngine {
         }
 
         if column.children.isEmpty {
-            let wsId = roots.first { $0.value === column.parent }?.key
+            let root = column.parent as? NiriRoot
             column.remove()
 
-            if let wsId {
-                normalizeRemainingColumnProportions(in: wsId)
+            if let root {
+                for col in root.columns {
+                    col.cachedWidth = 0
+                }
             }
         }
     }
