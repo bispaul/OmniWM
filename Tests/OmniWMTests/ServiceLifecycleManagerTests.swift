@@ -759,4 +759,40 @@ private func waitUntilServiceLifecycleTest(
         #expect(settings.mouseWarpMonitorOrder == ["Right", "Left"])
         #expect(settings.effectiveMouseWarpMonitorOrder(for: [left, right]) == ["Right", "Left"])
     }
+
+    @Test @MainActor func wakeStabilizationPropertiesDefaultToInactive() {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let lifecycleManager = controller.serviceLifecycleManager
+
+        #expect(lifecycleManager.expectedMonitorCount == nil)
+        #expect(lifecycleManager.awaitingDisplayWake == false)
+    }
+
+    @Test @MainActor func clearWakeStabilizationStateResetsProperties() {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let lifecycleManager = controller.serviceLifecycleManager
+
+        lifecycleManager.clearWakeStabilizationState()
+
+        #expect(lifecycleManager.expectedMonitorCount == nil)
+        #expect(lifecycleManager.awaitingDisplayWake == false)
+    }
+
+    @Test @MainActor func singleMonitorWakeSkipsStabilization() {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let monitor = makeLifecycleMonitor(displayId: 910, name: "Built-in", x: 0, y: 0)
+
+        controller.workspaceManager.applyMonitorConfigurationChange([monitor])
+        #expect(controller.workspaceManager.monitors.count == 1)
+
+        let lifecycleManager = controller.serviceLifecycleManager
+        #expect(lifecycleManager.expectedMonitorCount == nil)
+        #expect(lifecycleManager.awaitingDisplayWake == false)
+    }
 }

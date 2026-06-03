@@ -29,6 +29,10 @@ final class ServiceLifecycleManager {
     var accessibilityPermissionStateProviderForTests: (() -> Bool)?
     var accessibilityPermissionRequestHandlerForTests: (() -> Bool)?
 
+    private(set) var expectedMonitorCount: Int?
+    private var wakeStabilizationTask: Task<Void, Never>?
+    private(set) var awaitingDisplayWake = false
+
     init(controller: WMController) {
         self.controller = controller
     }
@@ -173,7 +177,32 @@ final class ServiceLifecycleManager {
     }
 
     private func handleMonitorConfigurationChanged() {
-        applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
+        let currentMonitors = Monitor.current()
+
+        if awaitingDisplayWake {
+            guard let controller else { return }
+            let preSleepCount = controller.workspaceManager.monitors.count
+            awaitingDisplayWake = false
+            expectedMonitorCount = preSleepCount
+            WMLog.workspace.info("wakeStabilization: entered from display event, expecting \(preSleepCount, privacy: .public) monitors")
+            wakeStabilizationTask = Task { [weak self] in
+                try? await Task.sleep(nanoseconds: 30_000_000_000)
+                guard let self, self.expectedMonitorCount != nil else { return }
+                WMLog.workspace.info("wakeStabilization: timeout, firing rescan with \(Monitor.current().count, privacy: .public)/\(self.expectedMonitorCount ?? 0, privacy: .public) monitors")
+                self.completeWakeStabilization()
+            }
+        }
+
+        if let expected = expectedMonitorCount {
+            applyMonitorConfigurationChanged(currentMonitors: currentMonitors, performPostUpdateActions: false)
+            WMLog.workspace.info("wakeStabilization: currentMonitors=\(currentMonitors.count, privacy: .public) expected=\(expected, privacy: .public)")
+            if currentMonitors.count >= expected {
+                completeWakeStabilization()
+            }
+            return
+        }
+
+        applyMonitorConfigurationChanged(currentMonitors: currentMonitors)
     }
 
     func applyMonitorConfigurationChanged(
@@ -199,6 +228,23 @@ final class ServiceLifecycleManager {
         controller.workspaceManager.garbageCollectUnusedWorkspaces(focusedWorkspaceId: focusedWsId)
 
         controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+    }
+
+    private func completeWakeStabilization() {
+        let expected = expectedMonitorCount ?? 0
+        expectedMonitorCount = nil
+        wakeStabilizationTask?.cancel()
+        wakeStabilizationTask = nil
+        awaitingDisplayWake = false
+        WMLog.workspace.info("wakeStabilization: complete, firing rescan (expected=\(expected, privacy: .public))")
+        applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
+    }
+
+    func clearWakeStabilizationState() {
+        expectedMonitorCount = nil
+        wakeStabilizationTask?.cancel()
+        wakeStabilizationTask = nil
+        awaitingDisplayWake = false
     }
 
     func handleAppTerminated(pid: pid_t) {
@@ -337,6 +383,7 @@ final class ServiceLifecycleManager {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
+                self?.clearWakeStabilizationState()
                 _ = self?.controller?.workspaceManager.recordReconcileEvent(.systemSleep(source: .service))
             }
         }
@@ -347,10 +394,32 @@ final class ServiceLifecycleManager {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
-                guard let controller = self?.controller else { return }
-                WMLog.ax.info("systemWake: requestFullRescan")
+                guard let self, let controller = self.controller else { return }
                 _ = controller.workspaceManager.recordReconcileEvent(.systemWake(source: .service))
-                controller.layoutRefreshController.requestFullRescan(reason: .unlock)
+
+                let preSleepCount = controller.workspaceManager.monitors.count
+                let currentCount = Monitor.current().count
+
+                if preSleepCount <= 1 {
+                    WMLog.ax.info("systemWake: single monitor, rescan immediately")
+                    controller.layoutRefreshController.requestFullRescan(reason: .unlock)
+                    return
+                }
+
+                if currentCount < preSleepCount {
+                    WMLog.ax.info("systemWake: possible DarkWake, awaiting display event (current=\(currentCount, privacy: .public) expected=\(preSleepCount, privacy: .public))")
+                    self.awaitingDisplayWake = true
+                    return
+                }
+
+                WMLog.ax.info("systemWake: deferring rescan, expecting \(preSleepCount, privacy: .public) monitors")
+                self.expectedMonitorCount = preSleepCount
+                self.wakeStabilizationTask = Task { [weak self] in
+                    try? await Task.sleep(nanoseconds: 30_000_000_000)
+                    guard let self, self.expectedMonitorCount != nil else { return }
+                    WMLog.workspace.info("wakeStabilization: timeout, firing rescan with \(Monitor.current().count, privacy: .public)/\(self.expectedMonitorCount ?? 0, privacy: .public) monitors")
+                    self.completeWakeStabilization()
+                }
             }
         }
     }
