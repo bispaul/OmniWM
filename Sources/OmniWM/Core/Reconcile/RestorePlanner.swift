@@ -268,9 +268,10 @@ struct RestorePlanner {
             monitors: input.monitors
         )
 
-        let targetMode: TrackedWindowMode = persistedEntry.restoreIntent.restoreToFloating ? .floating : input.metadata
-            .mode
-        let floatingFrame = persistedEntry.restoreIntent.restoreToFloating
+        let shouldRestoreToFloating = persistedEntry.restoreIntent.restoreToFloating
+            && input.metadata.layoutDecisionKind != .explicitLayout
+        let targetMode: TrackedWindowMode = shouldRestoreToFloating ? .floating : input.metadata.mode
+        let floatingFrame = shouldRestoreToFloating
             ? resolvedPersistedFloatingFrame(
                 for: persistedEntry.restoreIntent,
                 preferredMonitor: preferredMonitor

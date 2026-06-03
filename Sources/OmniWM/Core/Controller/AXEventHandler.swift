@@ -2182,7 +2182,8 @@ final class AXEventHandler: CGSEventDelegate {
                 bundleId: resolvedBundleId,
                 workspaceId: workspaceId,
                 mode: trackedMode,
-                facts: evaluation.facts
+                facts: evaluation.facts,
+                layoutDecisionKind: evaluation.decision.layoutDecisionKind
             ),
             hasStructuralReplacementWorkspaceMatch: structuralReplacementWorkspaceId != nil,
             requiresPostCreateLifecycleVerification: requiresPostCreateLifecycleVerification(
@@ -2505,7 +2506,8 @@ final class AXEventHandler: CGSEventDelegate {
         bundleId: String?,
         workspaceId: WorkspaceDescriptor.ID,
         mode: TrackedWindowMode,
-        facts: WindowRuleFacts
+        facts: WindowRuleFacts,
+        layoutDecisionKind: WindowDecisionLayoutKind = .fallbackLayout
     ) -> ManagedReplacementMetadata {
         ManagedReplacementMetadata(
             bundleId: bundleId,
@@ -2518,7 +2520,8 @@ final class AXEventHandler: CGSEventDelegate {
             parentWindowId: normalizedParentWindowId(facts.windowServer?.parentId),
             frame: facts.windowServer?.frame,
             transientWindowServerEvidence: facts.windowServer?.hasTransientSurfaceEvidence ?? false,
-            degradedWindowServerChildEvidence: facts.degradedWindowServerChildEvidence
+            degradedWindowServerChildEvidence: facts.degradedWindowServerChildEvidence,
+            layoutDecisionKind: layoutDecisionKind
         )
     }
 

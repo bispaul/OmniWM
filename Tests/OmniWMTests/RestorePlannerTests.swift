@@ -8,7 +8,8 @@ private func makeRestorePlannerMetadata(
     workspaceId: WorkspaceDescriptor.ID = WorkspaceDescriptor.ID(),
     mode: TrackedWindowMode = .tiling,
     title: String? = "Document",
-    frame: CGRect? = nil
+    frame: CGRect? = nil,
+    layoutDecisionKind: WindowDecisionLayoutKind = .fallbackLayout
 ) -> ManagedReplacementMetadata {
     ManagedReplacementMetadata(
         bundleId: bundleId,
@@ -19,7 +20,8 @@ private func makeRestorePlannerMetadata(
         title: title,
         windowLevel: 0,
         parentWindowId: nil,
-        frame: frame
+        frame: frame,
+        layoutDecisionKind: layoutDecisionKind
     )
 }
 
@@ -195,5 +197,71 @@ struct RestorePlannerTests {
         )
 
         #expect(plan == nil)
+    }
+
+    @Test func explicitLayoutOverridesPersistedFloatingFlag() throws {
+        let planner = RestorePlanner()
+        let monitor = makeLayoutPlanTestMonitor(displayId: 710, name: "Main")
+        let workspaceId = WorkspaceDescriptor.ID()
+        let metadata = makeRestorePlannerMetadata(
+            workspaceId: workspaceId,
+            mode: .tiling,
+            layoutDecisionKind: .explicitLayout
+        )
+        let token = WindowToken(pid: 741, windowId: 41)
+        let entry = makeRestorePlannerCatalogEntry(
+            token: token,
+            metadata: metadata,
+            workspaceName: "1",
+            monitor: monitor,
+            restoreToFloating: true
+        )
+        let plan = try #require(
+            planner.planPersistedHydration(
+                .init(
+                    token: token,
+                    metadata: metadata,
+                    catalog: PersistedWindowRestoreCatalog(entries: [entry]),
+                    consumedEntries: [],
+                    monitors: [monitor],
+                    workspaceIdForName: { _ in workspaceId }
+                )
+            )
+        )
+        #expect(plan.targetMode == .tiling)
+        #expect(plan.floatingFrame == nil)
+    }
+
+    @Test func fallbackLayoutRespectsPersistedFloatingFlag() throws {
+        let planner = RestorePlanner()
+        let monitor = makeLayoutPlanTestMonitor(displayId: 711, name: "Main")
+        let workspaceId = WorkspaceDescriptor.ID()
+        let metadata = makeRestorePlannerMetadata(
+            workspaceId: workspaceId,
+            mode: .tiling,
+            layoutDecisionKind: .fallbackLayout
+        )
+        let token = WindowToken(pid: 742, windowId: 42)
+        let entry = makeRestorePlannerCatalogEntry(
+            token: token,
+            metadata: metadata,
+            workspaceName: "1",
+            monitor: monitor,
+            restoreToFloating: true
+        )
+        let plan = try #require(
+            planner.planPersistedHydration(
+                .init(
+                    token: token,
+                    metadata: metadata,
+                    catalog: PersistedWindowRestoreCatalog(entries: [entry]),
+                    consumedEntries: [],
+                    monitors: [monitor],
+                    workspaceIdForName: { _ in workspaceId }
+                )
+            )
+        )
+        #expect(plan.targetMode == .floating)
+        #expect(plan.floatingFrame != nil)
     }
 }
