@@ -1644,7 +1644,13 @@ final class AXEventHandler: CGSEventDelegate {
             matching: token,
             pid: pid
         )
-        if let wsId {
+        if let wsId, let controller {
+            let nextToken = controller.workspaceManager.tiledEntries(in: wsId)
+                .first { $0.token != token }?.token
+            if let nextToken {
+                controller.focusWindow(nextToken)
+                WMLog.ax.info("windowMiniaturized: pre-focused windowId=\(nextToken.windowId, privacy: .public) on same workspace")
+            }
             Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: 300_000_000)
                 guard let controller = self?.controller else { return }
@@ -1652,10 +1658,6 @@ final class AXEventHandler: CGSEventDelegate {
                 if controller.workspaceManager.entry(for: token) != nil {
                     _ = controller.workspaceManager.removeWindow(pid: pid, windowId: windowId)
                     WMLog.ax.info("windowMiniaturized: removed from layout windowId=\(windowId, privacy: .public)")
-                }
-                if let nextEntry = controller.workspaceManager.tiledEntries(in: wsId).first {
-                    controller.focusWindow(nextEntry.token)
-                    WMLog.ax.info("windowMiniaturized: focused next window on same workspace pid=\(nextEntry.token.pid, privacy: .public) windowId=\(nextEntry.token.windowId, privacy: .public)")
                 }
                 controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
             }
