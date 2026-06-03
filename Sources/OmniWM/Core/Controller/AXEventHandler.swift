@@ -1647,28 +1647,12 @@ final class AXEventHandler: CGSEventDelegate {
         if let wsId {
             Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: 300_000_000)
-                guard let controller = self?.controller,
-                      let engine = controller.niriEngine
-                else { return }
-                var state = controller.workspaceManager.niriViewportState(for: wsId)
-                guard let monitor = controller.workspaceManager.monitor(for: wsId) else { return }
-                let workingFrame = controller.insetWorkingFrame(for: monitor)
-                let gap = CGFloat(controller.workspaceManager.gaps)
-                guard let currentId = state.selectedNodeId,
-                      let windowNode = engine.findNode(by: currentId) as? NiriWindow,
-                      let column = engine.findColumn(containing: windowNode, in: wsId)
-                else { return }
-                engine.expandColumnToAvailableWidth(
-                    column,
-                    in: wsId,
-                    motion: controller.motionPolicy.snapshot(),
-                    state: &state,
-                    workingFrame: workingFrame,
-                    gaps: gap
-                )
-                _ = controller.workspaceManager.applySessionPatch(
-                    .init(workspaceId: wsId, viewportState: state, rememberedFocusToken: nil)
-                )
+                guard let controller = self?.controller else { return }
+                let token = WindowToken(pid: pid, windowId: windowId)
+                if let entry = controller.workspaceManager.entry(for: token) {
+                    _ = controller.workspaceManager.removeWindow(pid: pid, windowId: windowId)
+                    WMLog.ax.info("windowMiniaturized: removed from layout windowId=\(windowId, privacy: .public)")
+                }
                 controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
             }
         }
