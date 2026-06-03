@@ -278,6 +278,7 @@ final class AXEventHandler: CGSEventDelegate {
         Int64(WorkspaceManager.staleUnavailableNativeFullscreenTimeout)
     )
     private static let stabilizationRetryDelay: Duration = .milliseconds(100)
+    private static let maxStabilizationRetries = 3
     private static let postCreateLifecycleVerificationDelay: Duration = .milliseconds(75)
     private static let createdWindowRetryLimit = 5
     private static let createPlacementContextTTL: TimeInterval = 15
@@ -300,6 +301,7 @@ final class AXEventHandler: CGSEventDelegate {
     private var pendingWindowRuleReevaluationTask: Task<Void, Never>?
     private var pendingWindowRuleReevaluationTargets: Set<WindowRuleReevaluationTarget> = []
     private var pendingWindowStabilizationTasks: [WindowToken: Task<Void, Never>] = [:]
+    private var stabilizationRetryCount: [WindowToken: Int] = [:]
     private var pendingPostCreateLifecycleVerificationTasks: [WindowToken: Task<Void, Never>] = [:]
     private var pendingCreatedWindowRetryTasks: [UInt32: Task<Void, Never>] = [:]
     private var createdWindowRetryCountById: [UInt32: Int] = [:]
@@ -898,6 +900,7 @@ final class AXEventHandler: CGSEventDelegate {
         }
 
         WMLog.ax.info("trackPreparedCreate: windowId=\(candidate.windowId, privacy: .public) pid=\(candidate.token.pid, privacy: .public) mode=\(String(describing: candidate.mode), privacy: .public) workspaceId=\(candidate.workspaceId.uuidString, privacy: .public)")
+        stabilizationRetryCount.removeValue(forKey: candidate.token)
         let trackedToken = controller.workspaceManager.addWindow(
             candidate.axRef,
             pid: candidate.token.pid,
@@ -2330,6 +2333,7 @@ final class AXEventHandler: CGSEventDelegate {
             cancelWindowStabilizationRetry(for: resolvedToken)
             cancelPostCreateLifecycleVerification(for: resolvedToken)
             controller?.clearManualWindowOverride(for: resolvedToken)
+            stabilizationRetryCount.removeValue(forKey: resolvedToken)
         }
 
         guard let candidate = prepareDestroyCandidate(windowId: windowId, pidHint: pidHint) else {
@@ -3003,6 +3007,14 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
 
+        let count = (stabilizationRetryCount[token] ?? 0) + 1
+        guard count <= Self.maxStabilizationRetries else {
+            WMLog.ax.debug("stabilizationRetry: exhausted token=\(String(describing: token), privacy: .public) attempts=\(count - 1, privacy: .public)")
+            stabilizationRetryCount.removeValue(forKey: token)
+            return
+        }
+        stabilizationRetryCount[token] = count
+
         pendingWindowStabilizationTasks[token]?.cancel()
         pendingWindowStabilizationTasks[token] = Task { @MainActor [weak self] in
             try? await Task.sleep(for: Self.stabilizationRetryDelay)
@@ -3280,6 +3292,7 @@ final class AXEventHandler: CGSEventDelegate {
         guard let controller else { return }
 
         let entries = controller.workspaceManager.entries(forPid: pid)
+        stabilizationRetryCount = stabilizationRetryCount.filter { $0.key.pid != pid }
         let terminatedWindowIds = Set(entries.map { $0.token.windowId })
         miniaturizedWindowIds.subtract(terminatedWindowIds)
         for entry in entries {
