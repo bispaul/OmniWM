@@ -1385,7 +1385,8 @@ import os
                     || evaluation.facts.windowServer?.hasTransientSurfaceEvidence == true,
                 degradedWindowServerChildEvidence: existingEntry?.managedReplacementMetadata?
                     .degradedWindowServerChildEvidence == true
-                    || evaluation.facts.degradedWindowServerChildEvidence
+                    || evaluation.facts.degradedWindowServerChildEvidence,
+                layoutDecisionKind: evaluation.decision.layoutDecisionKind
             )
 
             _ = controller.workspaceManager.addWindow(
