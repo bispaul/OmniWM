@@ -1642,6 +1642,10 @@ final class AXEventHandler: CGSEventDelegate {
             matching: WindowToken(pid: pid, windowId: windowId),
             pid: pid
         )
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 200_000_000)
+            self?.controller?.niriLayoutHandler.expandColumnToAvailableWidth()
+        }
     }
 
     func isWindowMiniaturized(_ windowId: Int) -> Bool {
