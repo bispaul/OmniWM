@@ -404,6 +404,7 @@ private func waitUntilServiceLifecycleTest(
         lifecycleManager.accessibilityPermissionStateProviderForTests = { true }
         lifecycleManager.accessibilityPermissionStreamProviderForTests = { _ in permissionStream.stream }
         lifecycleManager.accessibilityPermissionRequestHandlerForTests = { false }
+        controller.focusBorderController.windowExistsProviderForTests = { _ in true }
         defer {
             permissionStream.continuation.finish()
             controller.setEnabled(false)
