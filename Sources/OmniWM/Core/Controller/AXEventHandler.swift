@@ -1638,13 +1638,39 @@ final class AXEventHandler: CGSEventDelegate {
     func handleWindowMiniaturized(pid: pid_t, windowId: Int) {
         miniaturizedWindowIds.insert(windowId)
         WMLog.ax.info("windowMiniaturized: windowId=\(windowId, privacy: .public) pid=\(pid, privacy: .public)")
+        let token = WindowToken(pid: pid, windowId: windowId)
+        let wsId = controller?.workspaceManager.workspace(for: token)
         controller?.clearKeyboardFocusTarget(
-            matching: WindowToken(pid: pid, windowId: windowId),
+            matching: token,
             pid: pid
         )
-        Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 200_000_000)
-            self?.controller?.niriLayoutHandler.expandColumnToAvailableWidth()
+        if let wsId {
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: 300_000_000)
+                guard let controller = self?.controller,
+                      let engine = controller.niriEngine
+                else { return }
+                var state = controller.workspaceManager.niriViewportState(for: wsId)
+                guard let monitor = controller.workspaceManager.monitor(for: wsId) else { return }
+                let workingFrame = controller.insetWorkingFrame(for: monitor)
+                let gap = CGFloat(controller.workspaceManager.gaps)
+                guard let currentId = state.selectedNodeId,
+                      let windowNode = engine.findNode(by: currentId) as? NiriWindow,
+                      let column = engine.findColumn(containing: windowNode, in: wsId)
+                else { return }
+                engine.expandColumnToAvailableWidth(
+                    column,
+                    in: wsId,
+                    motion: controller.motionPolicy.snapshot(),
+                    state: &state,
+                    workingFrame: workingFrame,
+                    gaps: gap
+                )
+                _ = controller.workspaceManager.applySessionPatch(
+                    .init(workspaceId: wsId, viewportState: state, rememberedFocusToken: nil)
+                )
+                controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            }
         }
     }
 
