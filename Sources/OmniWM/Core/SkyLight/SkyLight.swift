@@ -645,7 +645,6 @@ final class SkyLight {
         var rect = frame
         _ = newRegionWithRect(&rect, &region)
         guard let region else { return 0 }
-        defer { cfRelease(region) }
 
         var wid: UInt32 = 0
         _ = newWindow(cid, 2, -9999, -9999, region, &wid)
@@ -675,7 +674,6 @@ final class SkyLight {
         var rect = frame
         _ = newRegionWithRect(&rect, &region)
         guard let region else { return }
-        defer { cfRelease(region) }
 
         disableUpdate(cid)
         _ = setWindowShape(cid, wid, -9999, -9999, region)
