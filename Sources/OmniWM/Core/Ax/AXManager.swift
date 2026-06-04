@@ -56,6 +56,7 @@ final class AXManager {
     private var pendingFrameWrites: [Int: CGRect] = [:]
     private var recentFrameWriteFailures: [Int: AXFrameWriteFailureReason] = [:]
     private var recentFailedFrames: [Int: CGRect] = [:]
+    private var verificationMismatchCooldowns: [Int: Date] = [:]
     private var retryBudgetByWindowId: [Int: Int] = [:]
     private var forceApplyWindowIds: Set<Int> = []
     private var pendingFrameObserversByRequestId: [AXFrameRequestId: PendingFrameObserver] = [:]
@@ -218,6 +219,10 @@ final class AXManager {
             recentFailedFrames[newWindowId] = failedFrame
         }
 
+        if let cooldownStart = verificationMismatchCooldowns.removeValue(forKey: oldWindowId) {
+            verificationMismatchCooldowns[newWindowId] = cooldownStart
+        }
+
         if let retryBudget = retryBudgetByWindowId.removeValue(forKey: oldWindowId) {
             retryBudgetByWindowId[newWindowId] = retryBudget
         }
@@ -277,6 +282,7 @@ final class AXManager {
         pendingFrameWrites.removeValue(forKey: windowId)
         recentFrameWriteFailures.removeValue(forKey: windowId)
         recentFailedFrames.removeValue(forKey: windowId)
+        verificationMismatchCooldowns.removeValue(forKey: windowId)
         retryBudgetByWindowId.removeValue(forKey: windowId)
         forceApplyWindowIds.remove(windowId)
         inactiveWorkspaceWindowIds.remove(windowId)
@@ -483,6 +489,15 @@ final class AXManager {
                !pendingObserver.targetFrame.approximatelyEqual(to: frame, tolerance: 0.5)
             {
                 discardPendingFrameObserver(for: windowId)
+            }
+
+            if let cooldownStart = verificationMismatchCooldowns[windowId],
+               Date().timeIntervalSince(cooldownStart) < 0.5
+            {
+                WMLog.ax.debug("enqueueFrameApplications: cooldownActive windowId=\(windowId, privacy: .public)")
+                continue
+            } else {
+                verificationMismatchCooldowns.removeValue(forKey: windowId)
             }
 
             if let failedFrame = recentFailedFrames[windowId],
@@ -715,6 +730,9 @@ final class AXManager {
                 WMLog.ax.error("Frame write failed windowId=\(resolvedWindowId, privacy: .public) reason=\(String(describing: failureReason), privacy: .public)")
                 recentFrameWriteFailures[resolvedWindowId] = failureReason
                 recentFailedFrames[resolvedWindowId] = resolvedResult.targetFrame
+                if failureReason == .verificationMismatch {
+                    verificationMismatchCooldowns[resolvedWindowId] = Date()
+                }
             }
 
             let remainingRetries = retryBudgetByWindowId[resolvedWindowId] ?? 0

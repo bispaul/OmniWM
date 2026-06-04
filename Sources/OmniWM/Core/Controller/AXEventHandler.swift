@@ -326,6 +326,7 @@ final class AXEventHandler: CGSEventDelegate {
     var axContextWarmupHandlerForTests: ((pid_t) -> Void)?
     var windowExistsInWindowServerForTests: ((UInt32) -> Bool)?
     private(set) var miniaturizedWindowIds: Set<Int> = []
+    private var pendingMiniaturizeTasks: [WindowToken: Task<Void, Never>] = [:]
     private(set) var debugCounters = DebugCounters()
 
     init(
@@ -1260,6 +1261,7 @@ final class AXEventHandler: CGSEventDelegate {
         }
         let token = WindowToken(pid: pid, windowId: axRef.windowId)
         miniaturizedWindowIds.remove(axRef.windowId)
+        pendingMiniaturizeTasks.removeValue(forKey: token)?.cancel()
 
         let appFullscreen = isFullscreenProvider?(axRef) ?? AXWindowService.isFullscreen(axRef)
 
@@ -1658,11 +1660,14 @@ final class AXEventHandler: CGSEventDelegate {
                 controller.focusWindow(nextToken)
                 WMLog.ax.info("windowMiniaturized: pre-focused windowId=\(nextToken.windowId, privacy: .public) on same workspace")
             }
-            Task { @MainActor [weak self] in
+            pendingMiniaturizeTasks[token]?.cancel()
+            let task = Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: 300_000_000)
+                guard !Task.isCancelled else { return }
                 guard let self, let controller = self.controller else { return }
                 guard self.miniaturizedWindowIds.contains(windowId) else { return }
                 let token = WindowToken(pid: pid, windowId: windowId)
+                self.pendingMiniaturizeTasks.removeValue(forKey: token)
                 if controller.workspaceManager.entry(for: token) != nil {
                     _ = controller.workspaceManager.removeWindow(pid: pid, windowId: windowId)
                     WMLog.ax.info("windowMiniaturized: removed from layout windowId=\(windowId, privacy: .public)")
@@ -1672,6 +1677,7 @@ final class AXEventHandler: CGSEventDelegate {
                     affectedWorkspaceIds: [wsId]
                 )
             }
+            pendingMiniaturizeTasks[token] = task
         }
     }
 
@@ -2353,6 +2359,7 @@ final class AXEventHandler: CGSEventDelegate {
             cancelPostCreateLifecycleVerification(for: resolvedToken)
             controller?.clearManualWindowOverride(for: resolvedToken)
             stabilizationRetryCount.removeValue(forKey: resolvedToken)
+            pendingMiniaturizeTasks.removeValue(forKey: resolvedToken)?.cancel()
         }
 
         guard let candidate = prepareDestroyCandidate(windowId: windowId, pidHint: pidHint) else {
@@ -3319,6 +3326,9 @@ final class AXEventHandler: CGSEventDelegate {
         stabilizationRetryCount = stabilizationRetryCount.filter { $0.key.pid != pid }
         let terminatedWindowIds = Set(entries.map { $0.token.windowId })
         miniaturizedWindowIds.subtract(terminatedWindowIds)
+        for entry in entries {
+            pendingMiniaturizeTasks.removeValue(forKey: entry.token)?.cancel()
+        }
         for entry in entries {
             clearManagedFocusState(
                 matching: entry.token,

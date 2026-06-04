@@ -1836,10 +1836,10 @@ final class WMController {
                     frame: currentFrame,
                     for: token,
                     referenceMonitor: referenceMonitor,
-                    restoreToFloating: true
+                    restoreToFloating: false
                 )
             } else if var floatingState = workspaceManager.floatingState(for: token) {
-                floatingState.restoreToFloating = true
+                floatingState.restoreToFloating = false
                 workspaceManager.setFloatingState(floatingState, for: token)
             }
             _ = workspaceManager.setWindowMode(.tiling, for: token)
