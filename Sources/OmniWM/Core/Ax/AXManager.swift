@@ -485,8 +485,7 @@ final class AXManager {
                 discardPendingFrameObserver(for: windowId)
             }
 
-            if !shouldForceApply,
-               let failedFrame = recentFailedFrames[windowId],
+            if let failedFrame = recentFailedFrames[windowId],
                failedFrame.approximatelyEqual(to: frame, tolerance: 0.5)
             {
                 WMLog.ax.debug("enqueueFrameApplications: skippedSameFailedFrame windowId=\(windowId, privacy: .public)")
