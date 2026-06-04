@@ -222,6 +222,17 @@ enum AXWindowService {
         pinnedElements.removeAll()
     }
 
+    /// Remove pinned elements whose owning PID is no longer running.
+    static func pruneDeadPinnedElements() {
+        pinnedElementsLock.lock()
+        defer { pinnedElementsLock.unlock() }
+        let runningPIDs = Set(NSWorkspace.shared.runningApplications.map { $0.processIdentifier })
+        pinnedElements = pinnedElements.filter { _, element in
+            var pid: pid_t = 0
+            return AXUIElementGetPid(element, &pid) == .success && runningPIDs.contains(pid)
+        }
+    }
+
     private static func pinnedAXElement(for windowId: UInt32) -> AXUIElement? {
         pinnedElementsLock.lock()
         defer { pinnedElementsLock.unlock() }
@@ -338,10 +349,12 @@ enum AXWindowService {
         guard CFGetTypeID(posRaw) == AXValueGetTypeID(),
               CFGetTypeID(sizeRaw) == AXValueGetTypeID()
         else { throw .cannotGetAttribute }
+        let posValue = unsafeBitCast(posRaw, to: AXValue.self)
+        let sizeValue = unsafeBitCast(sizeRaw, to: AXValue.self)
         var pos = CGPoint.zero
         var size = CGSize.zero
-        guard AXValueGetValue(posRaw as! AXValue, .cgPoint, &pos),
-              AXValueGetValue(sizeRaw as! AXValue, .cgSize, &size) else { throw .cannotGetAttribute }
+        guard AXValueGetValue(posValue, .cgPoint, &pos),
+              AXValueGetValue(sizeValue, .cgSize, &size) else { throw .cannotGetAttribute }
         return convertFromAX(CGRect(origin: pos, size: size))
     }
 
@@ -730,16 +743,18 @@ enum AXWindowService {
             if valuesArray.count > 3, let minValue = valuesArray[3],
                CFGetTypeID(minValue as CFTypeRef) == AXValueGetTypeID()
             {
+                let minAXValue = unsafeBitCast(minValue, to: AXValue.self)
                 var size = CGSize.zero
-                if AXValueGetValue(minValue as! AXValue, .cgSize, &size) {
+                if AXValueGetValue(minAXValue, .cgSize, &size) {
                     minSize = size
                 }
             }
             if valuesArray.count > 4, let maxValue = valuesArray[4],
                CFGetTypeID(maxValue as CFTypeRef) == AXValueGetTypeID()
             {
+                let maxAXValue = unsafeBitCast(maxValue, to: AXValue.self)
                 var size = CGSize.zero
-                if AXValueGetValue(maxValue as! AXValue, .cgSize, &size) {
+                if AXValueGetValue(maxAXValue, .cgSize, &size) {
                     maxSize = size
                 }
             }

@@ -144,7 +144,8 @@ final class WindowActionHandler {
            let closeButton,
            CFGetTypeID(closeButton) == AXUIElementGetTypeID()
         {
-            AXUIElementPerformAction(closeButton as! AXUIElement, kAXPressAction as CFString)
+            let closeBtn = unsafeBitCast(closeButton, to: AXUIElement.self)
+            AXUIElementPerformAction(closeBtn, kAXPressAction as CFString)
         }
     }
 

@@ -1,6 +1,7 @@
 import AppKit
 import ApplicationServices
 import Carbon
+import Combine
 import SwiftUI
 
 struct CommandPaletteWindowItem: Identifiable {
@@ -199,6 +200,9 @@ final class CommandPaletteController: NSObject, ObservableObject, NSWindowDelega
     @Published var searchText = "" {
         didSet { updateSelectionAfterFilterChange() }
     }
+    /// Debounced version of searchText used by filter computed properties.
+    @Published private(set) var debouncedSearchText = ""
+    private var searchDebounceSubscription: AnyCancellable?
 
     @Published var selectedMode: CommandPaletteMode = .windows {
         didSet { handleModeChange(from: oldValue) }
@@ -260,18 +264,24 @@ final class CommandPaletteController: NSObject, ObservableObject, NSWindowDelega
         self.environment = environment
         self.ownedWindowRegistry = ownedWindowRegistry
         super.init()
+        searchDebounceSubscription = $searchText
+            .debounce(for: .milliseconds(50), scheduler: RunLoop.main)
+            .removeDuplicates()
+            .sink { [weak self] value in
+                self?.debouncedSearchText = value
+            }
     }
 
     var filteredWindowItems: [CommandPaletteWindowItem] {
-        filterWindowItems(windows, query: searchText)
+        filterWindowItems(windows, query: debouncedSearchText)
     }
 
     var filteredMenuItems: [MenuItemModel] {
-        filterMenuItems(menuItems, query: searchText)
+        filterMenuItems(menuItems, query: debouncedSearchText)
     }
 
     var filteredClipboardItems: [ClipboardPaletteItem] {
-        filterClipboardItems(clipboardItems, query: searchText)
+        filterClipboardItems(clipboardItems, query: debouncedSearchText)
     }
 
     var isMenuModeAvailable: Bool {
@@ -1377,8 +1387,8 @@ private struct CommandPaletteModePicker: View {
     let isMenuModeAvailable: Bool
     let onSelect: (CommandPaletteMode) -> Void
 
-    private let trackColor = Color(red: 0.22, green: 0.22, blue: 0.22)
-    private let selectedFillColor = Color(red: 0.49, green: 0.33, blue: 0.20)
+    private let trackColor = Color(NSColor.controlBackgroundColor)
+    private let selectedFillColor = Color(NSColor.controlAccentColor)
 
     var body: some View {
         HStack(spacing: 4) {
@@ -1422,16 +1432,16 @@ private struct CommandPaletteModePicker: View {
 
     private func tabTitleColor(isSelected: Bool, enabled: Bool) -> Color {
         if !enabled {
-            return Color.white.opacity(0.38)
+            return Color(NSColor.tertiaryLabelColor)
         }
-        return isSelected ? .white : Color.white.opacity(0.92)
+        return isSelected ? Color(NSColor.selectedMenuItemTextColor) : Color(NSColor.labelColor)
     }
 
     private func tabShortcutColor(isSelected: Bool, enabled: Bool) -> Color {
         if !enabled {
-            return Color.white.opacity(0.32)
+            return Color(NSColor.quaternaryLabelColor)
         }
-        return isSelected ? Color.white.opacity(0.82) : Color.white.opacity(0.62)
+        return isSelected ? Color(NSColor.selectedMenuItemTextColor).opacity(0.82) : Color(NSColor.secondaryLabelColor)
     }
 }
 

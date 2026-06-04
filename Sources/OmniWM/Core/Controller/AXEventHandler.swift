@@ -2097,6 +2097,17 @@ final class AXEventHandler: CGSEventDelegate {
             task.cancel()
         }
         pendingWindowStabilizationTasks.removeAll()
+        stabilizationRetryCount.removeAll()
+    }
+
+    /// Remove entries from per-window tracking dictionaries whose PIDs are no longer running.
+    func pruneStalePerWindowState() {
+        for token in stabilizationRetryCount.keys {
+            if kill(token.pid, 0) != 0, errno == ESRCH {
+                stabilizationRetryCount.removeValue(forKey: token)
+                pendingWindowStabilizationTasks.removeValue(forKey: token)?.cancel()
+            }
+        }
     }
 
     func flushPendingManagedReplacementEventsForTests() {

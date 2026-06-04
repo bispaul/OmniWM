@@ -213,8 +213,23 @@ extension NiriLayoutEngine {
     ) {
         guard column.children.isEmpty else { return }
 
+        // Capture the column index before removal so we can adjust activeColumnIndex.
+        let removedIndex = columnIndex(of: column, in: workspaceId)
+
         // Window-close removals use removeWindows(...); this is structural cleanup for move/consume paths.
         column.remove()
+
+        // Adjust activeColumnIndex after the column has been removed from the tree.
+        if let removedIndex {
+            let newCount = columns(in: workspaceId).count
+            if newCount == 0 {
+                state.activeColumnIndex = 0
+            } else if removedIndex < state.activeColumnIndex {
+                state.activeColumnIndex -= 1
+            } else if state.activeColumnIndex >= newCount {
+                state.activeColumnIndex = newCount - 1
+            }
+        }
     }
 
     func normalizeColumnSizes(in workspaceId: WorkspaceDescriptor.ID) {

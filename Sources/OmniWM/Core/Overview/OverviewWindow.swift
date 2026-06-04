@@ -34,7 +34,7 @@ final class OverviewWindow: NSPanel {
         isFloatingPanel = true
         isOpaque = false
         backgroundColor = .clear
-        level = .screenSaver
+        level = .floating
         ignoresMouseEvents = false
         hasShadow = false
         hidesOnDeactivate = false

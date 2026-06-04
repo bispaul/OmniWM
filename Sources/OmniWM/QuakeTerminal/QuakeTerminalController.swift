@@ -101,7 +101,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         ghosttyConfig = config
 
         var runtimeConfig = ghostty_runtime_config_s()
-        runtimeConfig.userdata = Unmanaged.passUnretained(self).toOpaque()
+        runtimeConfig.userdata = Unmanaged.passRetained(self).toOpaque()
         runtimeConfig.supports_selection_clipboard = true
         runtimeConfig.wakeup_cb = { userdata in
             guard let userdata else { return }
@@ -172,6 +172,8 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         if let ghosttyApp {
             ghostty_app_free(ghosttyApp)
             self.ghosttyApp = nil
+            // Balance the Unmanaged.passRetained(self) from setup()
+            Unmanaged.passUnretained(self).release()
         }
         if let ghosttyConfig {
             ghostty_config_free(ghosttyConfig)

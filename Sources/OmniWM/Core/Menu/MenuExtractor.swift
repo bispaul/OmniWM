@@ -16,8 +16,10 @@ final class MenuExtractor: @unchecked Sendable {
         let app = AXUIElementCreateApplication(pid)
         var menuBarValue: AnyObject?
         let result = AXUIElementCopyAttributeValue(app, kAXMenuBarAttribute as CFString, &menuBarValue)
-        guard result == .success, let menuBar = menuBarValue else { return nil }
-        return (menuBar as! AXUIElement)
+        guard result == .success, let menuBar = menuBarValue,
+              CFGetTypeID(menuBar as CFTypeRef) == AXUIElementGetTypeID()
+        else { return nil }
+        return unsafeBitCast(menuBar, to: AXUIElement.self)
     }
 
     func buildMenu(from element: AXUIElement, target: AnyObject?, action: Selector?) -> [NSMenuItem] {
@@ -307,7 +309,10 @@ extension NSMenu {
             guard let obj = objc_getAssociatedObject(self, &kAXRootElementAssociatedKey) else {
                 return nil
             }
-            return (obj as! AXUIElement)
+            guard CFGetTypeID(obj as CFTypeRef) == AXUIElementGetTypeID() else {
+                return nil
+            }
+            return unsafeBitCast(obj, to: AXUIElement.self)
         }
         set {
             objc_setAssociatedObject(

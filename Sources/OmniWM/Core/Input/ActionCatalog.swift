@@ -42,6 +42,9 @@ enum ActionCatalog {
     private static let specsByID = Dictionary(
         uniqueKeysWithValues: specs.map { ($0.id, $0) }
     )
+    private static let specsByCommand = Dictionary(
+        uniqueKeysWithValues: specs.map { ($0.command, $0) }
+    )
 
     static func allSpecs() -> [ActionSpec] {
         specs
@@ -52,7 +55,7 @@ enum ActionCatalog {
     }
 
     static func spec(for command: HotkeyCommand) -> ActionSpec? {
-        specs.first { $0.command == command }
+        specsByCommand[command]
     }
 
     static func title(for command: HotkeyCommand) -> String? {

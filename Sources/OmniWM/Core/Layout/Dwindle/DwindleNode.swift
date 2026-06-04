@@ -182,6 +182,17 @@ final class DwindleNode {
         collectAllLeaves().compactMap { $0.windowToken }
     }
 
+    func countAllWindows() -> Int {
+        if isLeaf {
+            return windowToken != nil ? 1 : 0
+        }
+        var total = 0
+        for child in children {
+            total += child.countAllWindows()
+        }
+        return total
+    }
+
     func animateFrom(
         oldFrame: CGRect,
         newFrame: CGRect,

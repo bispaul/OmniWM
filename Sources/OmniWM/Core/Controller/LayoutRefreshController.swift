@@ -3,6 +3,24 @@ import Foundation
 import QuartzCore
 import os
 
+/// Weak-proxy target for CADisplayLink to break the strong-reference retain cycle.
+/// CADisplayLink retains its target; if that target also stores the display link, neither can deallocate.
+/// This proxy holds a weak reference to the real target and forwards the selector.
+@MainActor
+private final class DisplayLinkProxy: NSObject {
+    weak var target: AnyObject?
+    let selector: Selector
+
+    init(target: AnyObject, selector: Selector) {
+        self.target = target
+        self.selector = selector
+    }
+
+    @objc func handleDisplayLink(_ displayLink: CADisplayLink) {
+        _ = target?.perform(selector, with: displayLink)
+    }
+}
+
 @MainActor final class LayoutRefreshController: NSObject {
     typealias PostLayoutAction = @MainActor () -> Void
 
@@ -221,6 +239,7 @@ import os
 
     private func getOrCreateDisplayLink(for displayId: CGDirectDisplayID) -> CADisplayLink? {
         if let existing = layoutState.displayLinksByDisplay[displayId] {
+            existing.isPaused = false
             return existing
         }
 
@@ -228,7 +247,8 @@ import os
             return nil
         }
         WMLog.layout.debug("Display link created")
-        let link = screen.displayLink(target: self, selector: #selector(displayLinkFired(_:)))
+        let proxy = DisplayLinkProxy(target: self, selector: #selector(displayLinkFired(_:)))
+        let link = screen.displayLink(target: proxy, selector: #selector(DisplayLinkProxy.handleDisplayLink(_:)))
         layoutState.displayLinksByDisplay[displayId] = link
         layoutState.displayIdByLink[ObjectIdentifier(link)] = displayId
         return link
@@ -380,10 +400,9 @@ import os
            dwindleHandler.dwindleAnimationByDisplay[displayId] == nil,
            layoutState.closingAnimationsByDisplay[displayId].map({ $0.isEmpty }) ?? true
         {
-            // Idle display links must not remain cached after teardown.
-            if let link = layoutState.displayLinksByDisplay.removeValue(forKey: displayId) {
-                layoutState.displayIdByLink.removeValue(forKey: ObjectIdentifier(link))
-                link.invalidate()
+            // Pause instead of invalidate so the link can be reused without recreation overhead.
+            if let link = layoutState.displayLinksByDisplay[displayId] {
+                link.isPaused = true
             }
         }
     }
@@ -1027,6 +1046,8 @@ import os
         applyRefreshMetadata(refresh, to: &plan)
         try Task.checkCancellation()
         await executeRefreshExecutionPlan(plan)
+        controller.axEventHandler.pruneStalePerWindowState()
+        AXWindowService.pruneDeadPinnedElements()
         return true
     }
 

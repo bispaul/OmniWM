@@ -2,6 +2,22 @@ import AppKit
 import Foundation
 import QuartzCore
 
+/// Weak-proxy target for CADisplayLink to break the strong-reference retain cycle.
+@MainActor
+private final class OverviewDisplayLinkProxy: NSObject {
+    weak var target: AnyObject?
+    let selector: Selector
+
+    init(target: AnyObject, selector: Selector) {
+        self.target = target
+        self.selector = selector
+    }
+
+    @objc func handleDisplayLink(_ displayLink: CADisplayLink) {
+        _ = target?.perform(selector, with: displayLink)
+    }
+}
+
 @MainActor
 final class OverviewAnimator {
     private weak var controller: OverviewController?
@@ -86,7 +102,8 @@ final class OverviewAnimator {
             return
         }
 
-        let link = screen.displayLink(target: self, selector: #selector(tick(_:)))
+        let proxy = OverviewDisplayLinkProxy(target: self, selector: #selector(tick(_:)))
+        let link = screen.displayLink(target: proxy, selector: #selector(OverviewDisplayLinkProxy.handleDisplayLink(_:)))
         link.add(to: .main, forMode: .common)
         displayLink = link
     }

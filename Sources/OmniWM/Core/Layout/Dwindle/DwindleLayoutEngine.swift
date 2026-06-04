@@ -77,8 +77,8 @@ final class DwindleLayoutEngine {
     }
 
     func containsWindow(_ token: WindowToken, in workspaceId: WorkspaceDescriptor.ID) -> Bool {
-        guard let root = roots[workspaceId] else { return false }
-        return root.collectAllWindows().contains(token)
+        guard roots[workspaceId] != nil else { return false }
+        return tokenToNode[token] != nil
     }
 
     func findNode(for token: WindowToken) -> DwindleNode? {
@@ -86,7 +86,7 @@ final class DwindleLayoutEngine {
     }
 
     func windowCount(in workspaceId: WorkspaceDescriptor.ID) -> Int {
-        roots[workspaceId]?.collectAllWindows().count ?? 0
+        roots[workspaceId]?.countAllWindows() ?? 0
     }
 
     func selectedNode(in workspaceId: WorkspaceDescriptor.ID) -> DwindleNode? {
@@ -441,7 +441,7 @@ final class DwindleLayoutEngine {
     ) -> [WindowToken: CGRect] {
         guard let root = roots[workspaceId] else { return [:] }
 
-        let windowCount = root.collectAllWindows().count
+        let windowCount = root.countAllWindows()
         if windowCount == 0 {
             return [:]
         }
@@ -733,7 +733,10 @@ final class DwindleLayoutEngine {
     }
 
     private func singleWindowRect(screen: CGRect) -> CGRect {
-        let targetRatio = settings.singleWindowAspectRatio.width / settings.singleWindowAspectRatio.height
+        guard screen.width >= 1, screen.height >= 1 else { return screen }
+        let aspectHeight = max(settings.singleWindowAspectRatio.height, 1)
+        let targetRatio = settings.singleWindowAspectRatio.width / aspectHeight
+        guard targetRatio.isFinite, targetRatio > 0 else { return screen }
         let currentRatio = screen.width / screen.height
 
         if abs(targetRatio - currentRatio) < settings.singleWindowAspectRatioTolerance {

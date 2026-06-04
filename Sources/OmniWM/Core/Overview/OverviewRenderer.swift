@@ -48,6 +48,13 @@ enum OverviewRenderer {
         static let dividerHeight: CGFloat = 2
     }
 
+    // Cached fonts — avoid CTFontCreateWithName on every render frame.
+    // CTFont is thread-safe but not marked Sendable; nonisolated(unsafe) is safe here.
+    nonisolated(unsafe) private static let workspaceLabelFont = CTFontCreateWithName("SF Pro Display" as CFString, Metrics.workspaceLabelFontSize, nil)
+    nonisolated(unsafe) private static let titleFont = CTFontCreateWithName("SF Pro Text" as CFString, Metrics.titleFontSize, nil)
+    nonisolated(unsafe) private static let appNameFont = CTFontCreateWithName("SF Pro Text" as CFString, Metrics.appNameFontSize, nil)
+    nonisolated(unsafe) private static let searchFont = CTFontCreateWithName("SF Pro Text" as CFString, Metrics.searchFontSize, nil)
+
     static func render(
         context: CGContext,
         layout: OverviewLayout,
@@ -200,7 +207,7 @@ enum OverviewRenderer {
         section: OverviewWorkspaceSection,
         alpha: CGFloat
     ) {
-        let font = CTFontCreateWithName("SF Pro Display" as CFString, Metrics.workspaceLabelFontSize, nil)
+        let font = workspaceLabelFont
         let color = section.isActive ? Colors.workspaceLabelActive : Colors.workspaceLabelInactive
 
         let attributes: [NSAttributedString.Key: Any] = [
@@ -339,7 +346,7 @@ enum OverviewRenderer {
         let textX = infoRect.minX + 8 + Metrics.iconSize + 6
         let maxTextWidth = infoRect.width - (textX - infoRect.minX) - 8
 
-        let titleFont = CTFontCreateWithName("SF Pro Text" as CFString, Metrics.titleFontSize, nil)
+        let titleFont = self.titleFont
         let truncatedTitle = truncateText(window.title, font: titleFont, maxWidth: maxTextWidth)
         let titleAttributes: [NSAttributedString.Key: Any] = [
             .font: titleFont,
@@ -354,7 +361,7 @@ enum OverviewRenderer {
         CTLineDraw(titleLine, context)
         context.restoreGState()
 
-        let appFont = CTFontCreateWithName("SF Pro Text" as CFString, Metrics.appNameFontSize, nil)
+        let appFont = self.appNameFont
         let appAttributes: [NSAttributedString.Key: Any] = [
             .font: appFont,
             .foregroundColor: NSColor(cgColor: Colors.textGray.copy(alpha: alpha)!)!
@@ -432,7 +439,7 @@ enum OverviewRenderer {
         let displayText = searchQuery.isEmpty ? "Type to search..." : searchQuery
         let textColor = searchQuery.isEmpty ? Colors.textDimmed : Colors.textWhite
 
-        let font = CTFontCreateWithName("SF Pro Text" as CFString, Metrics.searchFontSize, nil)
+        let font = searchFont
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: NSColor(cgColor: textColor.copy(alpha: alpha)!)!

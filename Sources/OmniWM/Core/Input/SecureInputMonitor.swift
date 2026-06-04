@@ -40,19 +40,21 @@ final class SecureInputMonitor {
         let callback: CGEventTapCallBack = { _, type, event, _ in
             switch type {
             case .tapDisabledByUserInput:
-                Task { @MainActor in
+                DispatchQueue.main.async {
                     SecureInputMonitor.sharedMonitor?.handleSecureInputDetected()
-                }
-                if let tap = SecureInputMonitor.sharedMonitor?.eventTap {
-                    CGEvent.tapEnable(tap: tap, enable: true)
+                    if let tap = SecureInputMonitor.sharedMonitor?.eventTap {
+                        CGEvent.tapEnable(tap: tap, enable: true)
+                    }
                 }
             case .tapDisabledByTimeout:
-                if let tap = SecureInputMonitor.sharedMonitor?.eventTap {
-                    CGEvent.tapEnable(tap: tap, enable: true)
+                DispatchQueue.main.async {
+                    if let tap = SecureInputMonitor.sharedMonitor?.eventTap {
+                        CGEvent.tapEnable(tap: tap, enable: true)
+                    }
                 }
             default:
-                if SecureInputMonitor.sharedMonitor?.isSecureInputActive ?? false {
-                    Task { @MainActor in
+                DispatchQueue.main.async {
+                    if SecureInputMonitor.sharedMonitor?.isSecureInputActive ?? false {
                         SecureInputMonitor.sharedMonitor?.checkSecureInputEnded()
                     }
                 }

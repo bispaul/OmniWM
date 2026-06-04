@@ -13,6 +13,10 @@ final class SleepPreventionManager {
         setupWorkspaceNotifications()
     }
 
+    deinit {
+        NSWorkspace.shared.notificationCenter.removeObserver(self)
+    }
+
     func preventSleep() {
         assertionTimer?.invalidate()
         assertionTimer = Timer.scheduledTimer(

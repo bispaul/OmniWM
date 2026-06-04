@@ -1,4 +1,5 @@
 import AppKit
+import os
 import QuartzCore
 
 @MainActor
@@ -16,12 +17,14 @@ final class BorderWindow {
         var transactionHide: @MainActor (UInt32) -> Void
         var backingScaleForFrame: @MainActor (CGRect) -> CGFloat
 
-        nonisolated(unsafe) private static var nextStubWindowId: UInt32 = 90_000
+        private static let nextStubWindowId = OSAllocatedUnfairLock<UInt32>(initialState: 90_000)
 
         static let noop = Self(
             createBorderWindow: { _ in
-                nextStubWindowId += 1
-                return nextStubWindowId
+                nextStubWindowId.withLock { id in
+                    id += 1
+                    return id
+                }
             },
             releaseBorderWindow: { _ in },
             configureWindow: { _, _, _ in },

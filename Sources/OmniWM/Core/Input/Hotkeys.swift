@@ -287,8 +287,7 @@ final class HotkeyCenter {
 
     deinit {
         MainActor.assumeIsolated {
-            stopSequenceTap()
-            stopVirtualHyperTap()
+            stop()
         }
     }
 
