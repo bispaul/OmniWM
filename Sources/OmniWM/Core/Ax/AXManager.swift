@@ -491,7 +491,8 @@ final class AXManager {
                 discardPendingFrameObserver(for: windowId)
             }
 
-            if let cooldownStart = verificationMismatchCooldowns[windowId],
+            if !shouldForceApply,
+               let cooldownStart = verificationMismatchCooldowns[windowId],
                Date().timeIntervalSince(cooldownStart) < 0.5
             {
                 WMLog.ax.debug("enqueueFrameApplications: cooldownActive windowId=\(windowId, privacy: .public)")
