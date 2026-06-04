@@ -55,6 +55,7 @@ final class AXManager {
     private var lastAppliedFrames: [Int: CGRect] = [:]
     private var pendingFrameWrites: [Int: CGRect] = [:]
     private var recentFrameWriteFailures: [Int: AXFrameWriteFailureReason] = [:]
+    private var recentFailedFrames: [Int: CGRect] = [:]
     private var retryBudgetByWindowId: [Int: Int] = [:]
     private var forceApplyWindowIds: Set<Int> = []
     private var pendingFrameObserversByRequestId: [AXFrameRequestId: PendingFrameObserver] = [:]
@@ -213,6 +214,10 @@ final class AXManager {
             recentFrameWriteFailures[newWindowId] = failure
         }
 
+        if let failedFrame = recentFailedFrames.removeValue(forKey: oldWindowId) {
+            recentFailedFrames[newWindowId] = failedFrame
+        }
+
         if let retryBudget = retryBudgetByWindowId.removeValue(forKey: oldWindowId) {
             retryBudgetByWindowId[newWindowId] = retryBudget
         }
@@ -236,6 +241,7 @@ final class AXManager {
         WMLog.ax.debug("Frame write confirmed")
         lastAppliedFrames[windowId] = frame
         recentFrameWriteFailures.removeValue(forKey: windowId)
+        recentFailedFrames.removeValue(forKey: windowId)
         retryBudgetByWindowId.removeValue(forKey: windowId)
         clearSettledRekeyMappings(to: windowId)
     }
@@ -270,6 +276,7 @@ final class AXManager {
         lastAppliedFrames.removeValue(forKey: windowId)
         pendingFrameWrites.removeValue(forKey: windowId)
         recentFrameWriteFailures.removeValue(forKey: windowId)
+        recentFailedFrames.removeValue(forKey: windowId)
         retryBudgetByWindowId.removeValue(forKey: windowId)
         forceApplyWindowIds.remove(windowId)
         inactiveWorkspaceWindowIds.remove(windowId)
@@ -478,10 +485,30 @@ final class AXManager {
                 discardPendingFrameObserver(for: windowId)
             }
 
+            if !shouldForceApply,
+               let failedFrame = recentFailedFrames[windowId],
+               failedFrame.approximatelyEqual(to: frame, tolerance: 0.5)
+            {
+                WMLog.ax.debug("enqueueFrameApplications: skippedSameFailedFrame windowId=\(windowId, privacy: .public)")
+                if let terminalObserver {
+                    terminalObserver(
+                        successfulNoOpFrameApplyResult(
+                            requestId: makeNextFrameApplicationRequestId(),
+                            pid: pid,
+                            windowId: windowId,
+                            frame: frame,
+                            currentFrameHint: cachedFrame,
+                            observedFrame: cachedFrame ?? frame
+                        )
+                    )
+                }
+                continue
+            }
             let existingObserverRequestId = observerRequestIdByWindowId[windowId]
             let requestId = makeNextFrameApplicationRequestId()
             pendingFrameWrites[windowId] = frame
             recentFrameWriteFailures.removeValue(forKey: windowId)
+            recentFailedFrames.removeValue(forKey: windowId)
             if isRetry,
                let existingObserverRequestId,
                var pendingObserver = pendingFrameObserversByRequestId[existingObserverRequestId],
@@ -585,6 +612,7 @@ final class AXManager {
             lastAppliedFrames.removeValue(forKey: windowId)
             pendingFrameWrites.removeValue(forKey: windowId)
             recentFrameWriteFailures.removeValue(forKey: windowId)
+            recentFailedFrames.removeValue(forKey: windowId)
             retryBudgetByWindowId.removeValue(forKey: windowId)
             forceApplyWindowIds.remove(windowId)
         }
@@ -677,6 +705,7 @@ final class AXManager {
             if let confirmedFrame = resolvedResult.confirmedFrame {
                 lastAppliedFrames[resolvedWindowId] = confirmedFrame
                 recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
+                recentFailedFrames.removeValue(forKey: resolvedWindowId)
                 retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                 notifyPendingFrameObserver(with: resolvedResult)
                 clearSettledRekeyMappings(to: resolvedWindowId)
@@ -686,6 +715,7 @@ final class AXManager {
             if let failureReason = resolvedResult.writeResult.failureReason {
                 WMLog.ax.error("Frame write failed windowId=\(resolvedWindowId, privacy: .public) reason=\(String(describing: failureReason), privacy: .public)")
                 recentFrameWriteFailures[resolvedWindowId] = failureReason
+                recentFailedFrames[resolvedWindowId] = resolvedResult.targetFrame
             }
 
             let remainingRetries = retryBudgetByWindowId[resolvedWindowId] ?? 0
