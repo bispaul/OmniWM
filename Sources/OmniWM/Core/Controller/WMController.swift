@@ -1193,9 +1193,19 @@ final class WMController {
             WMLog.workspace.warning("defaultWorkspaceId: created fallback workspace \"1\"")
             return createdWorkspaceId
         }
-        // createIfMissing: true should always succeed; this is unreachable defense-in-depth
-        WMLog.workspace.error("defaultWorkspaceId: all fallbacks exhausted — no workspaces exist")
-        return workspaceManager.workspaces.first!.id
+        // "1" not in configured workspace set — add it as emergency fallback
+        WMLog.workspace.error("defaultWorkspaceId: workspace configurations empty, adding emergency workspace \"1\"")
+        settings.workspaceConfigurations.append(WorkspaceConfiguration(name: "1", monitorAssignment: .main))
+        workspaceManager.applySettings()
+        if let emergencyId = workspaceManager.workspaceId(for: "1", createIfMissing: true) {
+            return emergencyId
+        }
+        // Should never reach here — applySettings + createIfMissing guarantees creation
+        if let lastResort = workspaceManager.workspaces.first?.id {
+            return lastResort
+        }
+        WMLog.workspace.fault("defaultWorkspaceId: all fallbacks exhausted — cannot create any workspace")
+        return WorkspaceDescriptor(name: "1").id
     }
 
     private func createPlacementTarget(

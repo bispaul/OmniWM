@@ -10950,4 +10950,22 @@ private func waitUntilAXEventTest(
 
         #expect(controller.workspaceManager.entry(for: token) == nil)
     }
+
+    @Test @MainActor func resolveWorkspaceForNewWindowCreatesFallbackWhenNoWorkspacesExist() {
+        let controller = makeAXEventTestController(workspaceConfigurations: [])
+        // Remove all workspaces that applyMonitorConfigurationChange may have created
+        let settings = controller.settings
+        settings.workspaceConfigurations = []
+        controller.workspaceManager.applySettings()
+
+        let axRef = AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 99999)
+        let workspaceId = controller.resolveWorkspaceForNewWindow(
+            axRef: axRef,
+            pid: getpid(),
+            fallbackWorkspaceId: nil
+        )
+
+        // Should have created workspace "1" as fallback instead of crashing
+        #expect(controller.workspaceManager.descriptor(for: workspaceId) != nil)
+    }
 }
