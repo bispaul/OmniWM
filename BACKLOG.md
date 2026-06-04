@@ -134,8 +134,18 @@
 - #37 deprecated activate → modern API (15 min)
 - #70 dead availability checks → remove (5 min)
 
+### PRIORITY: Visual Quirks (user-facing, fix ASAP)
+These are the daily-driver annoyances — all pre-existing, all related:
+
+| Bug | Issue | Root Cause | Fix Path |
+|-----|-------|-----------|----------|
+| #6 | Viewport gap after Caps+H/L navigation and Caps+F fullscreen | Viewport doesn't recenter after scroll/fullscreen toggle | #41 overspread OR viewport recenter in focusNeighbor/toggleFullWidth |
+| #9/#23 | Sleep/wake assigns windows to wrong monitor (33% width) | Rescan fires before 32" reconnects (160ms gap) | #49 null stale display state OR delay rescan until all monitors back |
+| #15 | Cross-monitor frame storm during animation | CADisplayLink animation path is global, not scoped to affected monitor | Scope animation callback to affected workspace only |
+| #18 | App activation on 32" steals Retina focus | workspaceDidActivateApplication is global, focus policy runs on all monitors | Scope nativeAppSwitch focus lease to the activation monitor |
+
 ### High-Impact Features (from research)
 - #42 Independent proportions — biggest architectural win, eliminates resize cascade
 - #46 Sliver workaround — eliminates verificationMismatch for off-viewport windows
-- #41 Overspread — clean solution for gap-filling (bug #25)
-- #49 Null stale display state — addresses sleep/wake migration (bug #23)
+- #41 Overspread — clean solution for gap-filling (bug #6/#25)
+- #49 Null stale display state — addresses sleep/wake migration (bug #9/#23)
