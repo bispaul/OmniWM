@@ -28,7 +28,7 @@ extension NiriLayoutEngine {
         }
     }
 
-    private func copyColumnWidthState(from sourceColumn: NiriContainer, to targetColumn: NiriContainer) {
+    func copyColumnWidthState(from sourceColumn: NiriContainer, to targetColumn: NiriContainer) {
         targetColumn.width = sourceColumn.width
         targetColumn.presetWidthIdx = sourceColumn.presetWidthIdx
         targetColumn.isFullWidth = sourceColumn.isFullWidth
