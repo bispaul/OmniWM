@@ -1896,7 +1896,7 @@ struct NodeActivationOptions {
             newFrames: newFrames,
             motion: motion
         )
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         return hasPendingAnimationWork(state: state)
     }
 
@@ -1904,7 +1904,7 @@ struct NodeActivationOptions {
         state: ViewportState,
         oldFrames: [WindowToken: CGRect]
     ) -> Bool {
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         let newFrames = engine.captureWindowFrames(in: wsId)
         _ = engine.triggerMoveAnimations(
             in: wsId,
@@ -1916,7 +1916,7 @@ struct NodeActivationOptions {
     }
 
     func commitSimple(state: ViewportState) -> Bool {
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         return hasPendingAnimationWork(state: state)
     }
 }
