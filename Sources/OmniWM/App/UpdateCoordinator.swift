@@ -180,7 +180,7 @@ final class UpdateCoordinator: AppUpdateCoordinating {
             alert.messageText = title
             alert.informativeText = message
             alert.addButton(withTitle: "OK")
-            NSApplication.shared.activate(ignoringOtherApps: true)
+            NSApplication.shared.activate()
             _ = alert.runModal()
         },
         openURL: @escaping (URL) -> Void = { url in

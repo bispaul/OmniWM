@@ -87,7 +87,7 @@ final class WindowActionHandler {
             OwnedWindowRegistry.shared.visibleWindows(kind: .utility)
         },
         frontOwnedWindow: @escaping (NSWindow) -> Void = { window in
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
             window.makeKeyAndOrderFront(nil)
         }
     ) {

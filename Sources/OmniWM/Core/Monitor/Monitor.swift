@@ -19,10 +19,7 @@ struct Monitor: Identifiable, Hashable {
     static func current() -> [Monitor] {
         NSScreen.screens.compactMap { screen -> Monitor? in
             guard let displayId = screen.displayId else { return nil }
-            var hasNotch = false
-            if #available(macOS 12.0, *) {
-                hasNotch = screen.safeAreaInsets.top > 0
-            }
+            let hasNotch = screen.safeAreaInsets.top > 0
             return Monitor(
                 id: ID(displayId: displayId),
                 displayId: displayId,
@@ -37,10 +34,7 @@ struct Monitor: Identifiable, Hashable {
     static func fallback() -> Monitor {
         let frame = NSScreen.main?.frame ?? CGRect(x: 0, y: 0, width: 1440, height: 900)
         let displayId = NSScreen.main?.displayId ?? CGMainDisplayID()
-        var hasNotch = false
-        if #available(macOS 12.0, *) {
-            hasNotch = NSScreen.main?.safeAreaInsets.top ?? 0 > 0
-        }
+        let hasNotch = NSScreen.main?.safeAreaInsets.top ?? 0 > 0
         return Monitor(
             id: .fallback,
             displayId: displayId,

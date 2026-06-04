@@ -37,7 +37,7 @@ private func makeAXEventOwnedWindow(
     )
     window.isReleasedWhenClosed = false
     window.makeKeyAndOrderFront(nil)
-    NSApp.activate(ignoringOtherApps: true)
+    NSApp.activate()
     return window
 }
 

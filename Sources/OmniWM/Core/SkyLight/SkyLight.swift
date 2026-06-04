@@ -319,9 +319,7 @@ final class SkyLight {
 
     func orderWindow(_ wid: UInt32, relativeTo targetWid: UInt32, order: SkyLightWindowOrder = .above) {
         let cid = getMainConnectionID()
-        guard let transaction = transactionCreate(cid) else {
-            fatalError("Failed to create SkyLight transaction")
-        }
+        guard let transaction = transactionCreate(cid) else { return }
         defer { cfRelease(transaction) }
         transactionOrderWindow(transaction, wid, order.rawValue, targetWid)
         _ = transactionCommit(transaction, 0)
@@ -529,7 +527,7 @@ final class SkyLight {
         let cid = getMainConnectionID()
         guard cid != 0 else { return nil }
 
-        var widValue = Int32(windowId)
+        var widValue = Int32(bitPattern: windowId)
         let widNumber = CFNumberCreate(nil, .sInt32Type, &widValue)!
         defer { cfRelease(widNumber) }
         let windowArray = [widNumber] as CFArray
@@ -647,6 +645,7 @@ final class SkyLight {
         var rect = frame
         _ = newRegionWithRect(&rect, &region)
         guard let region else { return 0 }
+        defer { cfRelease(region) }
 
         var wid: UInt32 = 0
         _ = newWindow(cid, 2, -9999, -9999, region, &wid)
@@ -676,6 +675,7 @@ final class SkyLight {
         var rect = frame
         _ = newRegionWithRect(&rect, &region)
         guard let region else { return }
+        defer { cfRelease(region) }
 
         disableUpdate(cid)
         _ = setWindowShape(cid, wid, -9999, -9999, region)

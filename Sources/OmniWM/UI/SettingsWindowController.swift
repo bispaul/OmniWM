@@ -15,7 +15,7 @@ final class SettingsWindowController {
     ) {
         if let window {
             window.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
             return
         }
 
@@ -36,7 +36,7 @@ final class SettingsWindowController {
         window.isReleasedWhenClosed = false
         ownedWindowRegistry.register(window)
         window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+        NSApp.activate()
 
         NotificationCenter.default
             .addObserver(forName: NSWindow.willCloseNotification, object: window, queue: .main) { [weak self] _ in

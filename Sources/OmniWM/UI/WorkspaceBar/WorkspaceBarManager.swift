@@ -409,9 +409,7 @@ final class WorkspaceBarManager {
     }
 
     private func configureHostingView<Content: View>(_ hostingView: NSHostingView<Content>) {
-        if #available(macOS 13.0, *) {
-            hostingView.sizingOptions = []
-        }
+        hostingView.sizingOptions = []
     }
 
     private func applyCurrentAppearance(

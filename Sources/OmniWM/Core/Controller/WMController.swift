@@ -1189,10 +1189,13 @@ final class WMController {
         if let workspaceId = workspaceManager.primaryWorkspace()?.id ?? workspaceManager.workspaces.first?.id {
             return workspaceId
         }
-        if let createdWorkspaceId = workspaceManager.workspaceId(for: "1", createIfMissing: false) {
+        if let createdWorkspaceId = workspaceManager.workspaceId(for: "1", createIfMissing: true) {
+            WMLog.workspace.warning("defaultWorkspaceId: created fallback workspace \"1\"")
             return createdWorkspaceId
         }
-        fatalError("resolveWorkspaceForNewWindow: no workspaces exist")
+        // createIfMissing: true should always succeed; this is unreachable defense-in-depth
+        WMLog.workspace.error("defaultWorkspaceId: all fallbacks exhausted — no workspaces exist")
+        return workspaceManager.workspaces.first!.id
     }
 
     private func createPlacementTarget(

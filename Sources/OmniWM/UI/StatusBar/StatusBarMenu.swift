@@ -32,7 +32,7 @@ final class StatusBarMenuBuilder {
             alert.messageText = title
             alert.informativeText = message
             alert.addButton(withTitle: "OK")
-            NSApplication.shared.activate(ignoringOtherApps: true)
+            NSApplication.shared.activate()
             _ = alert.runModal()
         }
         confirmationAlertPresenter = { title, message, confirmTitle, cancelTitle in
@@ -42,7 +42,7 @@ final class StatusBarMenuBuilder {
             alert.informativeText = message
             alert.addButton(withTitle: confirmTitle)
             alert.addButton(withTitle: cancelTitle)
-            NSApplication.shared.activate(ignoringOtherApps: true)
+            NSApplication.shared.activate()
             return alert.runModal() == .alertFirstButtonReturn
         }
         settingsFileActionPerformer = { action, settings in

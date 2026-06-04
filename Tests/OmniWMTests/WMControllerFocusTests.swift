@@ -133,7 +133,7 @@ private func makeFocusOwnedWindow(
     )
     window.isReleasedWhenClosed = false
     window.makeKeyAndOrderFront(nil)
-    NSApp.activate(ignoringOtherApps: true)
+    NSApp.activate()
     return window
 }
 

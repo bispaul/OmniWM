@@ -6,7 +6,7 @@ import ScreenCaptureKit
 struct OverviewEnvironment {
     var frontmostApplicationPID: () -> pid_t? = { NSWorkspace.shared.frontmostApplication?.processIdentifier }
     var currentProcessID: () -> pid_t = { getpid() }
-    var activateOmniWM: () -> Void = { NSApp.activate(ignoringOtherApps: true) }
+    var activateOmniWM: () -> Void = { NSApp.activate() }
     var activateApplication: (pid_t) -> Void = { pid in
         NSRunningApplication(processIdentifier: pid)?.activate(options: [])
     }

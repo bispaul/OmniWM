@@ -236,8 +236,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
     }
 
     func applyGeometryToVisibleWindow() {
-        guard let window, visible else { return }
-        let screen = targetScreen()
+        guard let window, visible, let screen = targetScreen() else { return }
 
         if let customFrame = customFrameForShow(on: screen) {
             window.setFrame(customFrame, display: true)
@@ -471,8 +470,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         guard tabs.isEmpty else { return }
         createTab()
 
-        if let window {
-            let screen = targetScreen()
+        if let window, let screen = targetScreen() {
             let position = settings.quakeTerminalPosition
             position.setFinal(
                 in: window,
@@ -545,7 +543,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
 
     private func animateWindowIn(window: NSWindow) {
         let quakeWindow = window as? QuakeTerminalWindow
-        let screen = targetScreen()
+        guard let screen = targetScreen() else { return }
         let generation = beginAnimationTransition()
 
         if let customFrame = customFrameForShow(on: screen) {
@@ -640,7 +638,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
             return
         }
 
-        let screen = window.screen ?? targetScreen()
+        guard let screen = window.screen ?? targetScreen() else { return }
         let position = settings.quakeTerminalPosition
         let widthPercent = settings.quakeTerminalWidthPercent
         let heightPercent = settings.quakeTerminalHeightPercent
@@ -690,7 +688,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         makeWindowKey(window)
 
         if !NSApp.isActive {
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
             DispatchQueue.main.async { [weak self] in
                 guard let self, self.visible, !window.isKeyWindow else { return }
                 self.makeWindowKey(window, retries: 10)
@@ -773,7 +771,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         return customFrame
     }
 
-    private func targetScreen() -> NSScreen {
+    private func targetScreen() -> NSScreen? {
         let monitors = Monitor.current()
 
         switch settings.quakeTerminalMonitorMode {
@@ -797,7 +795,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
             break
         }
 
-        return NSScreen.main ?? NSScreen.screens.first!
+        return NSScreen.main ?? NSScreen.screens.first
     }
 
     private func screenOfFocusedWindow(monitors: [Monitor]) -> NSScreen? {

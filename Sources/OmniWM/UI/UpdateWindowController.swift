@@ -19,7 +19,7 @@ final class UpdateWindowController: UpdateWindowControlling {
             hosting.rootView = UpdatePopupView(configuration: configuration)
             center(window)
             window.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
             return
         }
 
@@ -40,7 +40,7 @@ final class UpdateWindowController: UpdateWindowControlling {
         ownedWindowRegistry.register(window)
         actionHandledOnClose = false
         window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+        NSApp.activate()
 
         NotificationCenter.default
             .addObserver(forName: NSWindow.willCloseNotification, object: window, queue: .main) { [weak self] _ in

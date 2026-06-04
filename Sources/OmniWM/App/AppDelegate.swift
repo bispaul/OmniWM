@@ -145,7 +145,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         alert.messageText = title
         alert.informativeText = message
         alert.addButton(withTitle: "OK")
-        NSApplication.shared.activate(ignoringOtherApps: true)
+        NSApplication.shared.activate()
         _ = alert.runModal()
     }
 }

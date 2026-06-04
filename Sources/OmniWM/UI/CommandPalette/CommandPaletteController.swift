@@ -78,7 +78,7 @@ struct CommandPaletteEnvironment {
     var runningApplication: (pid_t) -> NSRunningApplication? = { NSRunningApplication(processIdentifier: $0) }
     var ownBundleIdentifier: () -> String? = { Bundle.main.bundleIdentifier }
     var fetchMenuItems: (pid_t) -> [MenuItemModel] = { MenuAnywhereFetcher().fetchMenuItemsSync(for: $0) }
-    var activateOmniWM: () -> Void = { NSApp.activate(ignoringOtherApps: true) }
+    var activateOmniWM: () -> Void = { NSApp.activate() }
     var navigateToWindow: (WMController, WindowHandle) -> Void = { controller, handle in
         controller.navigateToCommandPaletteWindow(handle)
     }
