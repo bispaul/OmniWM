@@ -2290,6 +2290,46 @@ private func workspaceConfigurations(
         #expect(manager.lastFocusedToken(in: workspaceId) == handle.id)
     }
 
+    @Test @MainActor func setWindowModeTilingClearsRestoreToFloatingInFloatingState() {
+        let defaults = makeWorkspaceManagerTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main)
+        ]
+
+        let manager = WorkspaceManager(settings: settings)
+        let monitor = makeWorkspaceManagerTestMonitor(displayId: 350, name: "Main", x: 0, y: 0)
+        manager.applyMonitorConfigurationChange([monitor])
+
+        guard let workspaceId = manager.workspaceId(for: "1", createIfMissing: true) else {
+            Issue.record("Failed to create workspace")
+            return
+        }
+
+        let token = manager.addWindow(
+            makeWorkspaceManagerTestWindow(windowId: 3601),
+            pid: 3601,
+            windowId: 3601,
+            to: workspaceId,
+            mode: .floating
+        )
+        manager.setFloatingState(
+            .init(
+                lastFrame: CGRect(x: 100, y: 100, width: 400, height: 300),
+                normalizedOrigin: CGPoint(x: 0.5, y: 0.5),
+                referenceMonitorId: monitor.id,
+                restoreToFloating: true
+            ),
+            for: token
+        )
+
+        #expect(manager.floatingState(for: token)?.restoreToFloating == true)
+
+        #expect(manager.setWindowMode(.tiling, for: token))
+
+        #expect(manager.floatingState(for: token)?.restoreToFloating == false)
+    }
+
     @Test @MainActor func scratchpadTokenRekeysAndClearsOnWindowRemoval() {
         let defaults = makeWorkspaceManagerTestDefaults()
         let settings = SettingsStore(defaults: defaults)

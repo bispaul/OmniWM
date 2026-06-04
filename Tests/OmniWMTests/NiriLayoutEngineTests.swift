@@ -8438,4 +8438,96 @@ private func makeCenteredCrossMonitorFixture(
             Issue.record("Expected proportional width of 1.0")
         }
     }
+
+    @Test func cleanupEmptyColumnAdjustsActiveColumnIndexWhenRemovedBeforeActive() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+        let root = NiriRoot(workspaceId: wsId)
+        engine.roots[wsId] = root
+
+        // Create 3 columns with one window each.
+        let col0 = NiriContainer()
+        let col1 = NiriContainer()
+        let col2 = NiriContainer()
+        root.appendChild(col0)
+        root.appendChild(col1)
+        root.appendChild(col2)
+
+        let h0 = makeTestHandle(pid: 310)
+        let h1 = makeTestHandle(pid: 311)
+        let h2 = makeTestHandle(pid: 312)
+        let w0 = NiriWindow(token: h0.id)
+        let w1 = NiriWindow(token: h1.id)
+        let w2 = NiriWindow(token: h2.id)
+        col0.appendChild(w0)
+        col1.appendChild(w1)
+        col2.appendChild(w2)
+        engine.tokenToNode[h0.id] = w0
+        engine.tokenToNode[h1.id] = w1
+        engine.tokenToNode[h2.id] = w2
+
+        #expect(engine.columns(in: wsId).count == 3)
+
+        // Set activeColumnIndex to the last column (index 2).
+        var state = ViewportState()
+        state.activeColumnIndex = 2
+
+        // Remove the window from the middle column (index 1) to make it empty.
+        w1.remove()
+        engine.tokenToNode.removeValue(forKey: h1.id)
+
+        // Clean up the now-empty middle column.
+        engine.cleanupEmptyColumn(col1, in: wsId, state: &state)
+
+        // The middle column (index 1) was removed. Since 1 < 2 (active),
+        // activeColumnIndex should decrement from 2 to 1.
+        #expect(engine.columns(in: wsId).count == 2)
+        #expect(state.activeColumnIndex == 1)
+    }
+
+    @Test func cleanupEmptyColumnClampsActiveColumnIndexWhenActiveColumnRemoved() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+        let root = NiriRoot(workspaceId: wsId)
+        engine.roots[wsId] = root
+
+        // Create 3 columns with one window each.
+        let col0 = NiriContainer()
+        let col1 = NiriContainer()
+        let col2 = NiriContainer()
+        root.appendChild(col0)
+        root.appendChild(col1)
+        root.appendChild(col2)
+
+        let h0 = makeTestHandle(pid: 320)
+        let h1 = makeTestHandle(pid: 321)
+        let h2 = makeTestHandle(pid: 322)
+        let w0 = NiriWindow(token: h0.id)
+        let w1 = NiriWindow(token: h1.id)
+        let w2 = NiriWindow(token: h2.id)
+        col0.appendChild(w0)
+        col1.appendChild(w1)
+        col2.appendChild(w2)
+        engine.tokenToNode[h0.id] = w0
+        engine.tokenToNode[h1.id] = w1
+        engine.tokenToNode[h2.id] = w2
+
+        #expect(engine.columns(in: wsId).count == 3)
+
+        // Set activeColumnIndex to the last column (index 2).
+        var state = ViewportState()
+        state.activeColumnIndex = 2
+
+        // Remove the window from the active column (index 2) to make it empty.
+        w2.remove()
+        engine.tokenToNode.removeValue(forKey: h2.id)
+
+        // Clean up the now-empty active column.
+        engine.cleanupEmptyColumn(col2, in: wsId, state: &state)
+
+        // After removing column at index 2, only 2 columns remain (indices 0, 1).
+        // activeColumnIndex 2 >= newCount 2, so it clamps to newCount - 1 = 1.
+        #expect(engine.columns(in: wsId).count == 2)
+        #expect(state.activeColumnIndex == 1)
+    }
 }

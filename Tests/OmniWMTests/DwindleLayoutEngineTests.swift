@@ -1373,6 +1373,32 @@ private func configureWorkspacesAsDwindle(
         #expect(r1.minY < r2.minY, "First window should be above second")
     }
 
+    @Test func singleWindowRectReturnsFiniteFrameWhenAspectRatioIsZeroZero() {
+        let engine = DwindleLayoutEngine()
+        let wsId = UUID()
+        let handle = makeTestHandle(pid: 201)
+
+        engine.settings.singleWindowAspectRatio = CGSize(width: 0, height: 0)
+
+        _ = engine.syncWindows([handle], in: wsId, focusedHandle: handle)
+        let frames = engine.calculateLayout(
+            for: wsId,
+            screen: CGRect(x: 0, y: 0, width: 1600, height: 1000)
+        )
+
+        guard let frame = frames[handle.id] else {
+            Issue.record("Expected a frame for the single window with zero aspect ratio")
+            return
+        }
+
+        #expect(frame.width.isFinite, "Frame width must be finite when aspect ratio is (0,0)")
+        #expect(frame.height.isFinite, "Frame height must be finite when aspect ratio is (0,0)")
+        #expect(!frame.width.isNaN, "Frame width must not be NaN when aspect ratio is (0,0)")
+        #expect(!frame.height.isNaN, "Frame height must not be NaN when aspect ratio is (0,0)")
+        #expect(frame.width > 0, "Frame width must be positive")
+        #expect(frame.height > 0, "Frame height must be positive")
+    }
+
     @Test func reorientSplitsHandlesThreeWindowTreeCorrectly() {
         let engine = DwindleLayoutEngine()
         let wsId = UUID()

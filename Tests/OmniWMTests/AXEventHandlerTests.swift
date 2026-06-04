@@ -10968,4 +10968,58 @@ private func waitUntilAXEventTest(
         // Should have created workspace "1" as fallback instead of crashing
         #expect(controller.workspaceManager.descriptor(for: workspaceId) != nil)
     }
+
+    @Test @MainActor func miniaturizeThenActivationCancelsPendingRemoval() async {
+        let controller = makeAXEventTestController()
+        controller.hasStartedServices = true
+        guard let workspaceId = controller.activeWorkspace()?.id,
+              let monitor = controller.workspaceManager.monitors.first
+        else {
+            Issue.record("Missing active workspace for miniaturize cancellation test")
+            return
+        }
+
+        let windowPid: pid_t = 9_300
+        let windowId = 930
+        let token = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: windowId),
+            pid: windowPid,
+            windowId: windowId,
+            to: workspaceId
+        )
+        _ = controller.workspaceManager.setManagedFocus(
+            token,
+            in: workspaceId,
+            onMonitor: monitor.id
+        )
+
+        controller.axEventHandler.isFullscreenProvider = { _ in false }
+        controller.axEventHandler.focusedWindowRefProvider = { pid in
+            guard pid == windowPid else { return nil }
+            return AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: windowId)
+        }
+        controller.axManager.frameApplyOverrideForTests = { _ in [] }
+
+        #expect(controller.workspaceManager.entry(for: token) != nil)
+
+        // Miniaturize the window, starting the 300ms delayed removal task.
+        controller.axEventHandler.handleWindowMiniaturized(pid: windowPid, windowId: windowId)
+
+        #expect(controller.axEventHandler.isWindowMiniaturized(windowId))
+
+        // Immediately un-miniaturize by re-activating the app, which cancels the
+        // pending removal task and removes the windowId from miniaturizedWindowIds.
+        controller.axEventHandler.handleAppActivation(
+            pid: windowPid,
+            source: .workspaceDidActivateApplication
+        )
+
+        #expect(!controller.axEventHandler.isWindowMiniaturized(windowId))
+
+        // Wait longer than the 300ms miniaturize delay to confirm the window
+        // was NOT removed from the layout (the pending task was cancelled).
+        try? await Task.sleep(nanoseconds: 400_000_000)
+
+        #expect(controller.workspaceManager.entry(for: token) != nil)
+    }
 }

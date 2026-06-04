@@ -1549,4 +1549,35 @@ private func waitForFocusRefresh(on controller: WMController) async {
 
         #expect(controller.commandHandler.performCommand(.toggleFocusedWindowFloating) == .notFound)
     }
+
+    @Test @MainActor func transitionWindowModeFloatingToTilingClearsRestoreToFloating() {
+        let operations = WindowFocusOperations(
+            activateApp: { _ in },
+            focusSpecificWindow: { _, _, _ in },
+            raiseWindow: { _ in }
+        )
+        let (controller, workspaceId, _) = makeFocusTestController(windowFocusOperations: operations)
+        let monitor = controller.workspaceManager.monitors[0]
+        let testFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        controller.liveFrameProviderForTests = { _ in testFrame }
+        let tiledHandle = addManagedTestWindow(
+            on: controller,
+            pid: 80,
+            windowId: 801,
+            workspaceId: workspaceId,
+            mode: .tiling
+        )
+
+        #expect(controller.transitionWindowMode(for: tiledHandle.id, to: .floating))
+        #expect(controller.workspaceManager.windowMode(for: tiledHandle.id) == .floating)
+        let floatingAfterToggle = controller.workspaceManager.floatingState(for: tiledHandle.id)
+        #expect(floatingAfterToggle != nil, "floating state should exist after transition to floating")
+        #expect(floatingAfterToggle?.restoreToFloating == true, "restoreToFloating is true after tiling→floating (normal behavior)")
+
+        #expect(controller.transitionWindowMode(for: tiledHandle.id, to: .tiling, preferredMonitor: monitor))
+        #expect(controller.workspaceManager.windowMode(for: tiledHandle.id) == .tiling)
+        let floatingAfterRetile = controller.workspaceManager.floatingState(for: tiledHandle.id)
+        #expect(floatingAfterRetile != nil, "floating state preserved for toggle-back")
+        #expect(floatingAfterRetile?.restoreToFloating == false, "restoreToFloating cleared on tiling (bug #27 fix)")
+    }
 }

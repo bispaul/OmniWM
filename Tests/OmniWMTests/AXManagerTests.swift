@@ -416,4 +416,51 @@ private func axManagerTestWriteResult(
         #expect(snapshot.rekeyedWindowIdCount == 0)
         #expect(snapshot.forceApplyWindowIdCount == 1)
     }
+
+    @Test @MainActor func verificationMismatchCooldownSuppressesSubsequentApply() async {
+        let controller = makeLayoutPlanTestController()
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id
+        else {
+            Issue.record("Missing monitor or active workspace for verificationMismatch cooldown test")
+            return
+        }
+
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 920)
+        let firstFrame = CGRect(x: 100, y: 80, width: 800, height: 600)
+        let secondFrame = CGRect(x: 200, y: 160, width: 700, height: 500)
+
+        var appliedWindowIds: [Int] = []
+        controller.axManager.frameApplyOverrideForTests = { requests in
+            appliedWindowIds.append(contentsOf: requests.map(\.windowId))
+            return requests.map { request in
+                AXFrameApplyResult(
+                    requestId: request.requestId,
+                    pid: request.pid,
+                    windowId: request.windowId,
+                    targetFrame: request.frame,
+                    currentFrameHint: request.currentFrameHint,
+                    writeResult: axManagerTestWriteResult(
+                        targetFrame: request.frame,
+                        currentFrameHint: request.currentFrameHint,
+                        observedFrame: request.currentFrameHint,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        // First apply — triggers the override which returns verificationMismatch.
+        // This sets the cooldown timestamp for windowId 920.
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, firstFrame)])
+        #expect(appliedWindowIds.count == 1, "Initial apply should trigger one override call")
+
+        // Wait for any async retry to settle
+        try? await Task.sleep(for: .milliseconds(50))
+        let countAfterRetries = appliedWindowIds.count
+
+        // Second apply with a DIFFERENT frame — should be suppressed by 500ms cooldown
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, secondFrame)])
+        #expect(appliedWindowIds.count == countAfterRetries, "Second apply should be suppressed by cooldown")
+    }
 }
