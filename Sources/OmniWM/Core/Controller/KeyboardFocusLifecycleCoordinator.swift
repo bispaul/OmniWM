@@ -31,11 +31,16 @@ struct ManagedFocusRequest: Equatable {
     }
 
     let requestId: UInt64
+    let createdAt: CFAbsoluteTime
     var token: WindowToken
     var workspaceId: WorkspaceDescriptor.ID
     var retryCount: Int = 0
     var lastActivationSource: ActivationEventSource?
     var status: Status = .pending
+
+    var age: CFAbsoluteTime {
+        CFAbsoluteTimeGetCurrent() - createdAt
+    }
 }
 
 @MainActor
@@ -61,6 +66,7 @@ final class FocusBridgeCoordinator {
         WMLog.focus.debug("Focus request begin")
         let request = ManagedFocusRequest(
             requestId: nextRequestId,
+            createdAt: CFAbsoluteTimeGetCurrent(),
             token: token,
             workspaceId: workspaceId
         )

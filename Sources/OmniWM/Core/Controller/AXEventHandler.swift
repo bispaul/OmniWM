@@ -1282,7 +1282,8 @@ final class AXEventHandler: CGSEventDelegate {
             case let .conflictsWithPendingRequest(request):
                 if shouldHonorObservedFocusOverPendingRequest(
                     source: source,
-                    origin: origin
+                    origin: origin,
+                    pendingRequest: request
                 ) {
                     clearManagedFocusState(
                         matching: request.token,
@@ -1337,7 +1338,8 @@ final class AXEventHandler: CGSEventDelegate {
             case let .conflictsWithPendingRequest(request):
                 if shouldHonorObservedFocusOverPendingRequest(
                     source: source,
-                    origin: origin
+                    origin: origin,
+                    pendingRequest: request
                 ) {
                     clearManagedFocusState(
                         matching: request.token,
@@ -1387,7 +1389,8 @@ final class AXEventHandler: CGSEventDelegate {
              let .conflictsWithPendingRequest(request):
             if shouldHonorObservedFocusOverPendingRequest(
                 source: source,
-                origin: origin
+                origin: origin,
+                pendingRequest: request
             ) {
                 clearManagedFocusState(
                     matching: request.token,
@@ -1481,7 +1484,8 @@ final class AXEventHandler: CGSEventDelegate {
         case let .conflictsWithPendingRequest(request):
             if shouldHonorObservedFocusOverPendingRequest(
                 source: source,
-                origin: origin
+                origin: origin,
+                pendingRequest: request
             ) {
                 clearManagedFocusState(
                     matching: request.token,
@@ -3208,7 +3212,8 @@ final class AXEventHandler: CGSEventDelegate {
              let .conflictsWithPendingRequest(request):
             if shouldHonorObservedFocusOverPendingRequest(
                 source: source,
-                origin: origin
+                origin: origin,
+                pendingRequest: request
             ) {
                 clearManagedFocusState(
                     matching: request.token,
@@ -3285,11 +3290,15 @@ final class AXEventHandler: CGSEventDelegate {
         }
     }
 
+    private static let managedRequestGracePeriod: CFAbsoluteTime = 0.3
+
     private func shouldHonorObservedFocusOverPendingRequest(
         source: ActivationEventSource,
-        origin: ActivationCallOrigin
+        origin: ActivationCallOrigin,
+        pendingRequest: ManagedFocusRequest
     ) -> Bool {
-        source.isAuthoritative && origin == .external
+        guard source.isAuthoritative, origin == .external else { return false }
+        return pendingRequest.age > Self.managedRequestGracePeriod
     }
 
     func cleanupFocusStateForTerminatedApp(pid: pid_t) {
