@@ -856,7 +856,7 @@ import os
 
         guard let controller else { return false }
 
-        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive {
+        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive || controller.isFrontmostAppScreenCapture() {
             return false
         }
 
@@ -885,7 +885,7 @@ import os
 
         guard let controller else { return false }
 
-        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive {
+        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive || controller.isFrontmostAppScreenCapture() {
             return false
         }
 
@@ -929,7 +929,7 @@ import os
         }
 
         guard let controller else { return false }
-        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive {
+        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive || controller.isFrontmostAppScreenCapture() {
             return false
         }
 
@@ -1019,7 +1019,7 @@ import os
         guard let controller else { return false }
         controller.axEventHandler.resetManagedReplacementState()
 
-        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive {
+        if controller.isFrontmostAppLockScreen() || controller.isLockScreenActive || controller.isFrontmostAppScreenCapture() {
             return false
         }
 
