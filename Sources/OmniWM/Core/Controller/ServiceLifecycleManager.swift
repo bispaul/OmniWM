@@ -257,18 +257,23 @@ final class ServiceLifecycleManager {
         }
         let flooredWidth = max(acceptedWidth, effectiveMinWidth)
 
+        var widthChanged = false
         if let engine = controller.niriEngine,
            let node = engine.findNode(for: token),
-           let column = engine.column(of: node)
+           let column = engine.column(of: node),
+           abs(column.cachedWidth - flooredWidth) > 0.5
         {
             WMLog.ax.info("handleFrameAcceptedAtDifferentSize: niri cachedWidth \(column.cachedWidth, privacy: .public) → \(flooredWidth, privacy: .public) windowId=\(windowId, privacy: .public)")
             column.cachedWidth = flooredWidth
+            widthChanged = true
         }
 
-        controller.layoutRefreshController.requestRelayout(
-            reason: .frameAcceptedAtDifferentSize,
-            affectedWorkspaceIds: [workspaceId]
-        )
+        if widthChanged {
+            controller.layoutRefreshController.requestRelayout(
+                reason: .frameAcceptedAtDifferentSize,
+                affectedWorkspaceIds: [workspaceId]
+            )
+        }
     }
 
     func handleUnlockDetected() {
