@@ -56,8 +56,6 @@ final class AXManager {
     private var lastAppliedFrames: [Int: CGRect] = [:]
     private var pendingFrameWrites: [Int: CGRect] = [:]
     private var recentFrameWriteFailures: [Int: AXFrameWriteFailureReason] = [:]
-    private var frameWriteFailureCooldownExpiry: [Int: TimeInterval] = [:]
-    private let verificationMismatchCooldownDuration: TimeInterval = 0.5
     private var retryBudgetByWindowId: [Int: Int] = [:]
     private var forceApplyWindowIds: Set<Int> = []
     private var pendingFrameObserversByRequestId: [AXFrameRequestId: PendingFrameObserver] = [:]
@@ -136,11 +134,6 @@ final class AXManager {
 
     func forceApplyNextFrame(for windowId: Int) {
         forceApplyWindowIds.insert(windowId)
-    }
-
-    func isInFrameWriteCooldown(for windowId: Int) -> Bool {
-        guard let expiry = frameWriteFailureCooldownExpiry[windowId] else { return false }
-        return CACurrentMediaTime() < expiry
     }
 
     func clearForceApplyFlagForTests(for windowId: Int) {
@@ -229,10 +222,6 @@ final class AXManager {
             recentFrameWriteFailures[newWindowId] = failure
         }
 
-        if let expiry = frameWriteFailureCooldownExpiry.removeValue(forKey: oldWindowId) {
-            frameWriteFailureCooldownExpiry[newWindowId] = expiry
-        }
-
         if let retryBudget = retryBudgetByWindowId.removeValue(forKey: oldWindowId) {
             retryBudgetByWindowId[newWindowId] = retryBudget
         }
@@ -260,7 +249,6 @@ final class AXManager {
         WMLog.ax.debug("Frame write confirmed")
         lastAppliedFrames[windowId] = frame
         recentFrameWriteFailures.removeValue(forKey: windowId)
-        frameWriteFailureCooldownExpiry.removeValue(forKey: windowId)
         retryBudgetByWindowId.removeValue(forKey: windowId)
         clearSettledRekeyMappings(to: windowId)
     }
@@ -295,7 +283,6 @@ final class AXManager {
         lastAppliedFrames.removeValue(forKey: windowId)
         pendingFrameWrites.removeValue(forKey: windowId)
         recentFrameWriteFailures.removeValue(forKey: windowId)
-        frameWriteFailureCooldownExpiry.removeValue(forKey: windowId)
         retryBudgetByWindowId.removeValue(forKey: windowId)
         forceApplyWindowIds.remove(windowId)
         inactiveWorkspaceWindowIds.remove(windowId)
@@ -458,38 +445,9 @@ final class AXManager {
             }
 
             // Skip write if in cooldown after verificationMismatch or cacheMiss (unless force-apply)
-            if let failureReason = recentFrameWriteFailures[windowId],
-               (failureReason == .verificationMismatch || failureReason == .cacheMiss),
-               let expiry = frameWriteFailureCooldownExpiry[windowId],
-               CACurrentMediaTime() < expiry,
-               !forceApplyWindowIds.contains(windowId)
-            {
-                WMLog.ax.debug("enqueueFrameApplications: skippedCooldown windowId=\(windowId, privacy: .public)")
-                continue
-            }
-
             let cachedFrame = lastAppliedFrames[windowId]
             let pendingFrame = pendingFrameWrites[windowId]
-            let hasRecentFailure: Bool
-            if let failureReason = recentFrameWriteFailures[windowId] {
-                if (failureReason == .verificationMismatch || failureReason == .cacheMiss),
-                   let expiry = frameWriteFailureCooldownExpiry[windowId],
-                   CACurrentMediaTime() < expiry
-                {
-                    hasRecentFailure = false
-                } else if (failureReason == .verificationMismatch || failureReason == .cacheMiss),
-                          let expiry = frameWriteFailureCooldownExpiry[windowId],
-                          CACurrentMediaTime() >= expiry
-                {
-                    recentFrameWriteFailures.removeValue(forKey: windowId)
-                    frameWriteFailureCooldownExpiry.removeValue(forKey: windowId)
-                    hasRecentFailure = false
-                } else {
-                    hasRecentFailure = true
-                }
-            } else {
-                hasRecentFailure = false
-            }
+            let hasRecentFailure = recentFrameWriteFailures[windowId] != nil
             let shouldForceApply = forceApplyWindowIds.remove(windowId) != nil
             if !shouldForceApply {
                 if let pendingFrame,
@@ -540,7 +498,6 @@ final class AXManager {
             let requestId = makeNextFrameApplicationRequestId()
             pendingFrameWrites[windowId] = frame
             recentFrameWriteFailures.removeValue(forKey: windowId)
-            frameWriteFailureCooldownExpiry.removeValue(forKey: windowId)
             if isRetry,
                let existingObserverRequestId,
                var pendingObserver = pendingFrameObserversByRequestId[existingObserverRequestId],
@@ -644,7 +601,6 @@ final class AXManager {
             lastAppliedFrames.removeValue(forKey: windowId)
             pendingFrameWrites.removeValue(forKey: windowId)
             recentFrameWriteFailures.removeValue(forKey: windowId)
-            frameWriteFailureCooldownExpiry.removeValue(forKey: windowId)
             retryBudgetByWindowId.removeValue(forKey: windowId)
             forceApplyWindowIds.remove(windowId)
         }
@@ -737,7 +693,6 @@ final class AXManager {
             if let confirmedFrame = resolvedResult.confirmedFrame {
                 lastAppliedFrames[resolvedWindowId] = confirmedFrame
                 recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
-                frameWriteFailureCooldownExpiry.removeValue(forKey: resolvedWindowId)
                 retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                 appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
                 notifyPendingFrameObserver(with: resolvedResult)
@@ -755,7 +710,6 @@ final class AXManager {
                 {
                     lastAppliedFrames[resolvedWindowId] = observedFrame
                     recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
-                    frameWriteFailureCooldownExpiry.removeValue(forKey: resolvedWindowId)
                     retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                     appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
                     WMLog.ax.info("Frame accepted at different size windowId=\(resolvedWindowId, privacy: .public) target=\(resolvedResult.targetFrame.debugDescription, privacy: .public) observed=\(observedFrame.debugDescription, privacy: .public)")
@@ -766,9 +720,6 @@ final class AXManager {
                 }
 
                 recentFrameWriteFailures[resolvedWindowId] = failureReason
-                if failureReason == .verificationMismatch || failureReason == .cacheMiss {
-                    frameWriteFailureCooldownExpiry[resolvedWindowId] = CACurrentMediaTime() + verificationMismatchCooldownDuration
-                }
             }
 
             if resolvedResult.writeResult.failureReason == .appBusy,
