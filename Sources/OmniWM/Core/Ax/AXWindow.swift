@@ -46,6 +46,7 @@ enum AXFrameWriteFailureReason: Equatable, Sendable {
     case sizeWriteFailed(AXError)
     case positionWriteFailed(AXError)
     case staleElement
+    case appBusy
     case cacheMiss
     case contextUnavailable
     case readbackFailed
@@ -67,7 +68,7 @@ struct AXFrameWriteResult: Equatable, Sendable {
     }
 
     var shouldRetryAfterRefresh: Bool {
-        failureReason == .staleElement || failureReason == .cacheMiss
+        failureReason == .staleElement || failureReason == .appBusy || failureReason == .cacheMiss
     }
 
     static func skipped(
@@ -808,8 +809,11 @@ enum AXWindowService {
         _ error: AXError,
         attribute: FrameWriteAttribute
     ) -> AXFrameWriteFailureReason {
-        if error == .invalidUIElement || error == .cannotComplete {
+        if error == .invalidUIElement {
             return .staleElement
+        }
+        if error == .cannotComplete {
+            return .appBusy
         }
 
         return switch attribute {
