@@ -75,6 +75,9 @@ final class ServiceLifecycleManager {
         controller.axManager.onAppTerminated = { [weak self] pid in
             self?.handleAppTerminated(pid: pid)
         }
+        controller.axManager.onFrameAcceptedAtDifferentSize = { [weak self] windowId, observedFrame in
+            self?.handleFrameAcceptedAtDifferentSize(windowId: windowId, observedFrame: observedFrame)
+        }
         AppAXContext.onWindowDestroyed = { [weak controller] pid, windowId in
             guard let controller else { return }
             controller.axEventHandler.handleRemoved(pid: pid, winId: windowId)
@@ -234,6 +237,40 @@ final class ServiceLifecycleManager {
         controller?.layoutRefreshController.requestFullRescan(reason: .appLaunched)
     }
 
+    private func handleFrameAcceptedAtDifferentSize(windowId: Int, observedFrame: CGRect) {
+        guard let controller else { return }
+        guard let entry = controller.workspaceManager.entry(forWindowId: windowId) else {
+            WMLog.ax.debug("handleFrameAcceptedAtDifferentSize: no entry for windowId=\(windowId, privacy: .public)")
+            return
+        }
+
+        let workspaceId = entry.workspaceId
+        let token = entry.token
+        let acceptedWidth = observedFrame.width
+
+        let effectiveMinWidth: CGFloat
+        if let constraints = entry.cachedConstraints?.normalized() {
+            let placeholderMin = entry.resizePlaceholderState?.minimumSize.width ?? 0
+            effectiveMinWidth = max(constraints.minSize.width, placeholderMin)
+        } else {
+            effectiveMinWidth = 1
+        }
+        let flooredWidth = max(acceptedWidth, effectiveMinWidth)
+
+        if let engine = controller.niriEngine,
+           let node = engine.findNode(for: token),
+           let column = engine.column(of: node)
+        {
+            WMLog.ax.info("handleFrameAcceptedAtDifferentSize: niri cachedWidth \(column.cachedWidth, privacy: .public) → \(flooredWidth, privacy: .public) windowId=\(windowId, privacy: .public)")
+            column.cachedWidth = flooredWidth
+        }
+
+        controller.layoutRefreshController.requestRelayout(
+            reason: .frameAcceptedAtDifferentSize,
+            affectedWorkspaceIds: [workspaceId]
+        )
+    }
+
     func handleUnlockDetected() {
         guard let controller else { return }
         controller.layoutRefreshController.requestFullRescan(reason: .unlock)
@@ -364,6 +401,7 @@ final class ServiceLifecycleManager {
         AppAXContext.onFocusedWindowChanged = nil
         controller.axManager.onAppLaunched = nil
         controller.axManager.onAppTerminated = nil
+        controller.axManager.onFrameAcceptedAtDifferentSize = nil
         controller.workspaceManager.onGapsChanged = nil
 
         controller.layoutRefreshController.resetState()
