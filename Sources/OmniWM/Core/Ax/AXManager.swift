@@ -20,6 +20,8 @@ final class AXManager {
         let observerRequestIdCount: Int
         let rekeyedWindowIdCount: Int
         let inactiveWorkspaceWindowIdCount: Int
+        let frameAdaptationStateCount: Int
+        let appBusyBackoffDelayCount: Int
     }
 
     struct FullRescanEnumerationSnapshot {
@@ -66,6 +68,19 @@ final class AXManager {
 
     /// Window IDs belonging to inactive workspaces — checked LIVE in applyFramesParallel.
     private(set) var inactiveWorkspaceWindowIds: Set<Int> = []
+
+    struct FrameAdaptationState {
+        var lastObservedWidth: CGFloat
+        var stableCount: Int = 1
+        var adaptationCount: Int = 0
+        var adaptationWindowStart: TimeInterval = 0
+        var isPinned: Bool = false
+    }
+
+    var acceptAndAdaptEnabled: Bool = true
+    var onFrameAcceptedAtDifferentSize: ((Int, CGRect) -> Void)?
+    private var frameAdaptationState: [Int: FrameAdaptationState] = [:]
+    private var appBusyBackoffDelay: [Int: TimeInterval] = [:]
 
     init() {
         setupTerminationObserver()
@@ -186,7 +201,9 @@ final class AXManager {
             pendingFrameObserverCount: pendingFrameObserversByRequestId.count,
             observerRequestIdCount: observerRequestIdByWindowId.count,
             rekeyedWindowIdCount: rekeyedWindowIdsByPreviousId.count,
-            inactiveWorkspaceWindowIdCount: inactiveWorkspaceWindowIds.count
+            inactiveWorkspaceWindowIdCount: inactiveWorkspaceWindowIds.count,
+            frameAdaptationStateCount: frameAdaptationState.count,
+            appBusyBackoffDelayCount: appBusyBackoffDelay.count
         )
     }
 
@@ -231,6 +248,14 @@ final class AXManager {
 
         if forceApplyWindowIds.remove(oldWindowId) != nil {
             forceApplyWindowIds.insert(newWindowId)
+        }
+
+        if let adaptState = frameAdaptationState.removeValue(forKey: oldWindowId) {
+            frameAdaptationState[newWindowId] = adaptState
+        }
+
+        if let delay = appBusyBackoffDelay.removeValue(forKey: oldWindowId) {
+            appBusyBackoffDelay[newWindowId] = delay
         }
 
         if let requestId = observerRequestIdByWindowId.removeValue(forKey: oldWindowId) {
@@ -287,6 +312,8 @@ final class AXManager {
         retryBudgetByWindowId.removeValue(forKey: windowId)
         forceApplyWindowIds.remove(windowId)
         inactiveWorkspaceWindowIds.remove(windowId)
+        frameAdaptationState.removeValue(forKey: windowId)
+        appBusyBackoffDelay.removeValue(forKey: windowId)
         pruneRekeyMappingsAfterRemovingWindowState(for: windowId)
 
         for (pendingObserver, result) in cancelledResults {
