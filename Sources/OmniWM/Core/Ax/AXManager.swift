@@ -787,12 +787,11 @@ final class AXManager {
                 }
             }
 
-            if resolvedResult.writeResult.failureReason == .appBusy {
-                let current = retryBudgetByWindowId[resolvedWindowId] ?? 0
-                retryBudgetByWindowId[resolvedWindowId] = max(current, 3)
-                if appBusyBackoffDelay[resolvedWindowId] == nil {
-                    appBusyBackoffDelay[resolvedWindowId] = 0.1
-                }
+            if resolvedResult.writeResult.failureReason == .appBusy,
+               appBusyBackoffDelay[resolvedWindowId] == nil
+            {
+                retryBudgetByWindowId[resolvedWindowId] = 3
+                appBusyBackoffDelay[resolvedWindowId] = 0.1
             }
 
             let remainingRetries = retryBudgetByWindowId[resolvedWindowId] ?? 0

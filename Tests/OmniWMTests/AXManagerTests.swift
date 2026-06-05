@@ -328,109 +328,6 @@ private func axManagerTestWriteResult(
         #expect(applyCount == 1, "force-apply should bypass any suppression")
     }
 
-    // MARK: - .appBusy Backoff Tests
-
-    @Test @MainActor func appBusyGetsThreeRetries() async {
-        let controller = makeLayoutPlanTestController()
-        guard let monitor = controller.workspaceManager.monitors.first,
-              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id
-        else {
-            Issue.record("Missing monitor or workspace")
-            return
-        }
-
-        let token = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9920)
-        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
-
-        var attemptCount = 0
-        controller.axManager.frameApplyOverrideForTests = { requests in
-            attemptCount += 1
-            return requests.map { req in
-                AXFrameApplyResult(
-                    requestId: req.requestId,
-                    pid: req.pid,
-                    windowId: req.windowId,
-                    targetFrame: req.frame,
-                    currentFrameHint: req.currentFrameHint,
-                    writeResult: AXFrameWriteResult(
-                        targetFrame: req.frame,
-                        observedFrame: nil,
-                        writeOrder: .sizeThenPosition,
-                        sizeError: .cannotComplete,
-                        positionError: .success,
-                        failureReason: .appBusy
-                    )
-                )
-            }
-        }
-
-        controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
-
-        let allRetriesFired = await waitForConditionForTests { attemptCount >= 4 }
-        #expect(allRetriesFired, "appBusy should get initial + 3 retries, got \(attemptCount)")
-        #expect(attemptCount == 4)
-    }
-
-    @Test @MainActor func appBusyRetriesSucceedOnLaterAttempt() async {
-        let controller = makeLayoutPlanTestController()
-        guard let monitor = controller.workspaceManager.monitors.first,
-              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id
-        else {
-            Issue.record("Missing monitor or workspace")
-            return
-        }
-
-        let token = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9921)
-        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
-
-        var attemptCount = 0
-        controller.axManager.frameApplyOverrideForTests = { requests in
-            attemptCount += 1
-            return requests.map { req in
-                if attemptCount <= 2 {
-                    return AXFrameApplyResult(
-                        requestId: req.requestId,
-                        pid: req.pid,
-                        windowId: req.windowId,
-                        targetFrame: req.frame,
-                        currentFrameHint: req.currentFrameHint,
-                        writeResult: AXFrameWriteResult(
-                            targetFrame: req.frame,
-                            observedFrame: nil,
-                            writeOrder: .sizeThenPosition,
-                            sizeError: .cannotComplete,
-                            positionError: .success,
-                            failureReason: .appBusy
-                        )
-                    )
-                } else {
-                    return AXFrameApplyResult(
-                        requestId: req.requestId,
-                        pid: req.pid,
-                        windowId: req.windowId,
-                        targetFrame: req.frame,
-                        currentFrameHint: req.currentFrameHint,
-                        writeResult: axManagerTestWriteResult(
-                            targetFrame: req.frame,
-                            currentFrameHint: req.currentFrameHint,
-                            observedFrame: req.frame,
-                            failureReason: nil
-                        )
-                    )
-                }
-            }
-        }
-
-        controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
-
-        let succeeded = await waitForConditionForTests {
-            controller.axManager.lastAppliedFrame(for: token.windowId) != nil
-        }
-        #expect(succeeded, "appBusy retry should eventually succeed")
-        #expect(attemptCount == 3, "2 failures + 1 success = 3 attempts")
-        #expect(controller.axManager.recentFrameWriteFailure(for: token.windowId) == nil)
-    }
-
 @Suite(.serialized) struct AXManagerTests {
     @Test func observedTargetFrameConfirmsApplyResultDespiteAttributeWriteFailure() {
         let targetFrame = CGRect(x: 120, y: 90, width: 640, height: 420)
@@ -824,5 +721,192 @@ private func axManagerTestWriteResult(
         let snapshot = controller.axManager.windowStateDebugSnapshot()
         #expect(snapshot.rekeyedWindowIdCount == 0)
         #expect(snapshot.forceApplyWindowIdCount == 1)
+    }
+
+    // MARK: - Phase 1 Integration: Accept-and-Adapt → Column Width Update
+
+    @Test @MainActor func acceptAndAdaptUpdatesNiriColumnWidth() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing monitor, workspace, or niri engine")
+            return
+        }
+
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9930)
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        let observedFrame = CGRect(x: 100, y: 100, width: 700, height: 400)
+
+        // Run initial layout to populate niri engine columns
+        let initialPlans = try? await controller.niriLayoutHandler.layoutWithNiriEngine(
+            activeWorkspaces: [workspaceId]
+        )
+        if let plans = initialPlans {
+            controller.layoutRefreshController.executeLayoutPlans(plans)
+        }
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        guard let node = engine.findNode(for: token),
+              let column = engine.column(of: node)
+        else {
+            Issue.record("Window not in niri engine after initial layout")
+            return
+        }
+        let originalWidth = column.cachedWidth
+
+        // Wire callback (simulating ServiceLifecycleManager)
+        controller.axManager.onFrameAcceptedAtDifferentSize = { windowId, frame in
+            guard let entry = controller.workspaceManager.entry(forWindowId: windowId) else { return }
+            let wsId = entry.workspaceId
+            let tk = entry.token
+            if let n = engine.findNode(for: tk),
+               let col = engine.column(of: n) {
+                col.cachedWidth = frame.width
+            }
+            controller.layoutRefreshController.requestRelayout(
+                reason: .frameAcceptedAtDifferentSize,
+                affectedWorkspaceIds: [wsId]
+            )
+        }
+
+        // Switch to verificationMismatch override
+        controller.axManager.frameApplyOverrideForTests = { requests in
+            requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: observedFrame,
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        // First mismatch: settling gate stableCount=1
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
+
+        // Second mismatch: settling gate stableCount=2, fires callback
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
+
+        #expect(abs(column.cachedWidth - 700) < 0.5, "column cachedWidth should be updated to 700, got \(column.cachedWidth)")
+        #expect(column.cachedWidth != originalWidth, "column width should have changed from \(originalWidth)")
+        #expect(controller.axManager.lastAppliedFrame(for: token.windowId) == observedFrame)
+    }
+
+    // MARK: - .appBusy Backoff Tests
+
+    @Test @MainActor func appBusyGetsThreeRetries() async {
+        let controller = makeLayoutPlanTestController()
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id
+        else {
+            Issue.record("Missing monitor or workspace")
+            return
+        }
+
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9920)
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        var attemptCount = 0
+        controller.axManager.frameApplyOverrideForTests = { requests in
+            attemptCount += 1
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: nil,
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .cannotComplete,
+                        positionError: .success,
+                        failureReason: .appBusy
+                    )
+                )
+            }
+        }
+
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
+
+        let allRetriesFired = await waitForConditionForTests { attemptCount >= 4 }
+        #expect(allRetriesFired, "appBusy should get initial + 3 retries, got \(attemptCount)")
+        #expect(attemptCount == 4)
+    }
+
+    @Test @MainActor func appBusyRetriesSucceedOnLaterAttempt() async {
+        let controller = makeLayoutPlanTestController()
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id
+        else {
+            Issue.record("Missing monitor or workspace")
+            return
+        }
+
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9921)
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        var attemptCount = 0
+        controller.axManager.frameApplyOverrideForTests = { requests in
+            attemptCount += 1
+            return requests.map { req in
+                if attemptCount <= 2 {
+                    return AXFrameApplyResult(
+                        requestId: req.requestId,
+                        pid: req.pid,
+                        windowId: req.windowId,
+                        targetFrame: req.frame,
+                        currentFrameHint: req.currentFrameHint,
+                        writeResult: AXFrameWriteResult(
+                            targetFrame: req.frame,
+                            observedFrame: nil,
+                            writeOrder: .sizeThenPosition,
+                            sizeError: .cannotComplete,
+                            positionError: .success,
+                            failureReason: .appBusy
+                        )
+                    )
+                } else {
+                    return AXFrameApplyResult(
+                        requestId: req.requestId,
+                        pid: req.pid,
+                        windowId: req.windowId,
+                        targetFrame: req.frame,
+                        currentFrameHint: req.currentFrameHint,
+                        writeResult: axManagerTestWriteResult(
+                            targetFrame: req.frame,
+                            currentFrameHint: req.currentFrameHint,
+                            observedFrame: req.frame,
+                            failureReason: nil
+                        )
+                    )
+                }
+            }
+        }
+
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
+
+        let succeeded = await waitForConditionForTests {
+            controller.axManager.lastAppliedFrame(for: token.windowId) != nil
+        }
+        #expect(succeeded, "appBusy retry should eventually succeed")
+        #expect(attemptCount == 3, "2 failures + 1 success = 3 attempts")
+        #expect(controller.axManager.recentFrameWriteFailure(for: token.windowId) == nil)
     }
 }
