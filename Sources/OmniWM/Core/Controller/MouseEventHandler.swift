@@ -985,7 +985,7 @@ final class MouseEventHandler {
                 controller.workspaceManager.withNiriViewportState(for: wsId, mutate)
             }
         ) {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
         }
     }
 
@@ -1013,7 +1013,7 @@ final class MouseEventHandler {
                     )
                 }
                 if didEnd {
-                    controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture)
+                    controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
                 }
             }
 
@@ -1045,7 +1045,7 @@ final class MouseEventHandler {
                 )
             }
             if hadInteractiveResize {
-                controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture)
+                controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
             }
         }
 
@@ -1374,7 +1374,7 @@ final class MouseEventHandler {
             didApply = true
         }
         if didApply {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
         }
     }
 
@@ -1434,7 +1434,7 @@ final class MouseEventHandler {
         }
 
         if didApply {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
             if shouldStartAnimation {
                 controller.layoutRefreshController.startScrollAnimation(for: wsId)
             }
@@ -1512,7 +1512,7 @@ final class MouseEventHandler {
             didCancel = true
         }
         if didCancel {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
         }
     }
 

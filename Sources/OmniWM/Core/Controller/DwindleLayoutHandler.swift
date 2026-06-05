@@ -145,7 +145,8 @@ import QuartzCore
                     )
                 )
                 controller.layoutRefreshController.requestImmediateRelayout(
-                    reason: .layoutCommand
+                    reason: .layoutCommand,
+                    affectedWorkspaceIds: [wsId]
                 ) { [weak controller] in
                     controller?.focusWindow(token)
                 }
@@ -172,7 +173,8 @@ import QuartzCore
             )
         )
         controller.layoutRefreshController.requestImmediateRelayout(
-            reason: .layoutCommand
+            reason: .layoutCommand,
+            affectedWorkspaceIds: [workspaceId]
         ) { [weak controller] in
             controller?.focusWindow(token)
         }
@@ -182,7 +184,7 @@ import QuartzCore
         guard let controller else { return }
         withDwindleContext { engine, wsId in
             if engine.swapWindows(direction: direction, in: wsId) {
-                controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+                controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             }
         }
     }
@@ -198,7 +200,7 @@ import QuartzCore
                         rememberedFocusToken: token
                     )
                 )
-                controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+                controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             }
         }
     }
@@ -207,7 +209,7 @@ import QuartzCore
         guard let controller else { return }
         withDwindleContext { engine, wsId in
             engine.cycleSplitRatio(forward: forward, in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         }
     }
 
@@ -215,7 +217,7 @@ import QuartzCore
         guard let controller else { return }
         withDwindleContext { engine, wsId in
             engine.balanceSizes(in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         }
     }
 
