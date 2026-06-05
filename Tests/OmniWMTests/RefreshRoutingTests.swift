@@ -678,6 +678,9 @@ private func syncNiriWorkspaceStatesForRefreshTests(
     }
 }
 
+
+
+
 @Suite(.serialized) struct RefreshRoutingTests {
     @Test func relayoutPoliciesAreExplicit() {
         #expect(RefreshReason.axWindowChanged.relayoutSchedulingPolicy == .debounced(

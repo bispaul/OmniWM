@@ -5165,6 +5165,38 @@ private func makeCenteredCrossMonitorFixture(
         )
     }
 
+    @Test @MainActor func toggleColumnFullWidthScopesRelayoutToActiveWorkspace() async throws {
+        let fixture = try await makeDisabledMotionWidthCommandFixture()
+
+        var capturedAffectedIds: Set<WorkspaceDescriptor.ID>?
+        fixture.controller.layoutRefreshController.resetDebugState()
+        fixture.controller.layoutRefreshController.debugHooks.onRelayout = { _, _ in
+            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?.affectedWorkspaceIds
+            return true
+        }
+
+        fixture.controller.commandHandler.handleCommand(.toggleColumnFullWidth)
+        await waitForLayoutPlanRefreshWork(on: fixture.controller)
+
+        #expect(capturedAffectedIds == [fixture.workspaceId])
+    }
+
+    @Test @MainActor func balanceSizesScopesRelayoutToActiveWorkspace() async throws {
+        let fixture = try await makeDisabledMotionWidthCommandFixture()
+
+        var capturedAffectedIds: Set<WorkspaceDescriptor.ID>?
+        fixture.controller.layoutRefreshController.resetDebugState()
+        fixture.controller.layoutRefreshController.debugHooks.onRelayout = { _, _ in
+            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?.affectedWorkspaceIds
+            return true
+        }
+
+        fixture.controller.commandHandler.handleCommand(.balanceSizes)
+        await waitForLayoutPlanRefreshWork(on: fixture.controller)
+
+        #expect(capturedAffectedIds == [fixture.workspaceId])
+    }
+
     @Test func toggleColumnWidthForwardChoosesNextLargerResolvedPreset() {
         let engine = NiriLayoutEngine()
         engine.presetColumnWidths = [.fixed(600), .fixed(900)]

@@ -1107,7 +1107,7 @@ enum NiriWindowMoveResult {
         ) {
             activateNode(
                 newNode, in: wsId, state: &state,
-                options: .init(activateWindow: false, ensureVisible: false)
+                options: .init(activateWindow: false, ensureVisible: false, preserveViewportAnchor: true)
             )
         }
         _ = controller.workspaceManager.applySessionPatch(
@@ -1129,7 +1129,7 @@ enum NiriWindowMoveResult {
 
             engine.toggleFullscreen(windowNode, motion: motion, state: &state)
 
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1151,7 +1151,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1172,7 +1172,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1191,7 +1191,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1212,7 +1212,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1233,7 +1233,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1246,7 +1246,7 @@ enum NiriWindowMoveResult {
             else { return }
 
             engine.resetWindowHeight(windowNode, in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1262,7 +1262,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             ) else { return }
 
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1278,7 +1278,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             ) else { return }
 
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1300,7 +1300,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1321,7 +1321,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1340,7 +1340,7 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1354,7 +1354,7 @@ enum NiriWindowMoveResult {
                 workingAreaWidth: workingFrame.width,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             if engine.hasAnyColumnAnimationsRunning(in: wsId) {
                 controller.layoutRefreshController.startScrollAnimation(for: wsId)
             }
@@ -1489,7 +1489,8 @@ enum NiriWindowMoveResult {
                 )
             }
             controller.layoutRefreshController.requestImmediateRelayout(
-                reason: .layoutCommand
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [workspaceId]
             ) { [weak controller] in
                 if let focusToken {
                     controller?.focusWindow(focusToken)
@@ -1881,7 +1882,7 @@ struct NodeActivationOptions {
             newFrames: newFrames,
             motion: motion
         )
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         return hasPendingAnimationWork(state: state)
     }
 
@@ -1889,7 +1890,7 @@ struct NodeActivationOptions {
         state: ViewportState,
         oldFrames: [WindowToken: CGRect]
     ) -> Bool {
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         let newFrames = engine.captureWindowFrames(in: wsId)
         _ = engine.triggerMoveAnimations(
             in: wsId,
@@ -1901,7 +1902,7 @@ struct NodeActivationOptions {
     }
 
     func commitSimple(state: ViewportState) -> Bool {
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
         return hasPendingAnimationWork(state: state)
     }
 }
