@@ -627,4 +627,44 @@ private func makeViewportGestureContainers(
             #expect(state.activatePrevColumnOnRemoval == nil, Comment(rawValue: scenario.label))
         }
     }
+
+    // MARK: - Overspread
+
+    @Test func overspreadCentersColumnsWhenTotalWidthLessThanViewport() {
+        var state = ViewportState()
+        let columns = makeViewportGestureContainers(widths: [300, 300])
+        let gap: CGFloat = 8
+        let viewportWidth: CGFloat = 1_000
+
+        // totalWidth = 300 + 8 + 300 = 608
+        // excessSpace = 1000 - 608 = 392
+        // targetOffset = -(392 / 2) = -196
+        state.applyOverspread(
+            containers: columns,
+            gap: gap,
+            viewportSpan: viewportWidth,
+            sizeKeyPath: \.cachedWidth,
+            animate: false
+        )
+
+        #expect(abs(Double(state.viewOffsetPixels.target()) + 196) < 0.001)
+    }
+
+    @Test func overspreadNoOpWhenTotalWidthExceedsViewport() {
+        var state = ViewportState()
+        let columns = makeViewportGestureContainers(widths: [500, 500, 500])
+        let gap: CGFloat = 8
+        let viewportWidth: CGFloat = 1_000
+
+        // totalWidth = 500 + 8 + 500 + 8 + 500 = 1516 > 1000
+        state.applyOverspread(
+            containers: columns,
+            gap: gap,
+            viewportSpan: viewportWidth,
+            sizeKeyPath: \.cachedWidth,
+            animate: false
+        )
+
+        #expect(abs(Double(state.viewOffsetPixels.target())) < 0.001)
+    }
 }

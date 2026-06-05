@@ -54,6 +54,40 @@ enum NiriWindowMoveResult {
         controller.layoutRefreshController.startScrollAnimation(for: workspaceId)
     }
 
+    /// Adjusts the viewport offset to center the column group when all columns
+    /// fit within the viewport with space to spare.
+    private func applyOverspreadIfNeeded(
+        wsId: WorkspaceDescriptor.ID,
+        state: inout ViewportState,
+        engine: NiriLayoutEngine
+    ) {
+        guard let controller else { return }
+        guard let monitor = controller.workspaceManager.monitor(for: wsId) else { return }
+        let workingFrame = controller.insetWorkingFrame(for: monitor)
+        let gap = CGFloat(controller.workspaceManager.gaps)
+        let columns = engine.columns(in: wsId)
+        let orientation = engine.monitor(for: monitor.id)?.orientation ?? .horizontal
+
+        switch orientation {
+        case .horizontal:
+            state.applyOverspread(
+                containers: columns,
+                gap: gap,
+                viewportSpan: workingFrame.width,
+                sizeKeyPath: \.cachedWidth,
+                motion: controller.motionPolicy.snapshot()
+            )
+        case .vertical:
+            state.applyOverspread(
+                containers: columns,
+                gap: gap,
+                viewportSpan: workingFrame.height,
+                sizeKeyPath: \.cachedHeight,
+                motion: controller.motionPolicy.snapshot()
+            )
+        }
+    }
+
     func registerScrollAnimation(_ workspaceId: WorkspaceDescriptor.ID, on displayId: CGDirectDisplayID) -> Bool {
         if scrollAnimationByDisplay[displayId] == workspaceId {
             return false
@@ -1111,6 +1145,7 @@ enum NiriWindowMoveResult {
                 options: .init(activateWindow: false, ensureVisible: false, preserveViewportAnchor: true)
             )
         }
+        applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
         _ = controller.workspaceManager.applySessionPatch(
             .init(
                 workspaceId: wsId,
@@ -1131,6 +1166,7 @@ enum NiriWindowMoveResult {
             engine.toggleFullscreen(windowNode, motion: motion, state: &state)
 
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1153,6 +1189,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1174,6 +1211,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1214,6 +1252,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1235,6 +1274,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1248,6 +1288,7 @@ enum NiriWindowMoveResult {
 
             engine.resetWindowHeight(windowNode, in: wsId)
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1302,6 +1343,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1323,6 +1365,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1348,7 +1391,7 @@ enum NiriWindowMoveResult {
 
     func balanceSizes() {
         guard let controller else { return }
-        withNiriWorkspaceContext { engine, wsId, motion, _, _, workingFrame, gaps in
+        withNiriWorkspaceContext { engine, wsId, motion, state, _, workingFrame, gaps in
             engine.balanceSizes(
                 in: wsId,
                 motion: motion,
@@ -1356,6 +1399,7 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             if engine.hasAnyColumnAnimationsRunning(in: wsId) {
                 controller.layoutRefreshController.startScrollAnimation(for: wsId)
             }
