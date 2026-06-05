@@ -39,7 +39,7 @@ yabai explicitly says: "Attempting to check the window frame cache is not reliab
 
 **Architectural lesson:** The convergence mechanism was designed from theory (what if apps oscillate?) rather than observation (what do apps actually do?). The 3-expert review validated against bug scenarios but not against normal startup and user-initiated operations. Future guards should be added only after observing the specific failure mode in production, not preemptively.
 
-**Phase 1b (deferred):** Remove cooldown/suppression band-aids AFTER accept-and-adapt is proven stable in real usage with Chrome, Ghostty, and Electron apps. Phase 1 adds accept-and-adapt ALONGSIDE existing cooldowns as a safety net. Add feature flag `acceptAndAdaptEnabled: Bool` (default true) for fallback during testing.
+**Phase 1b (DONE):** Cooldown/suppression band-aids removed. Accept-and-adapt proven stable with Chrome, Ghostty, and Electron apps — zero mismatch loops, zero flutter in production. Feature flag `acceptAndAdaptEnabled: Bool` (default true) retained for rollback safety.
 
 **Keeps:** Retry for actual AX errors (`.sizeWriteFailed`, `.appBusy`, `.cacheMiss`). Resize placeholder for `sizeWriteFailed`.
 
@@ -157,8 +157,8 @@ Classification checks (in order):
 
 | Phase | Principle | Scope | Dependencies | Notes |
 |---|---|---|---|---|
-| **Phase 1** | Never Fight the App | AXManager, NiriLayoutHandler, DwindleLayoutHandler | None | Add accept-and-adapt ALONGSIDE existing cooldowns. Use `requestRelayout` (coalesced) for callbacks. |
-| **Phase 1b** | Remove cooldowns | AXManager, AXEventHandler | Phase 1 proven stable | Only after Chrome, Ghostty, Electron apps tested. Feature flag for fallback. |
+| **Phase 1** | Never Fight the App | AXManager, NiriLayoutHandler, DwindleLayoutHandler | None | **DONE (build 72).** Accept-and-adapt with immediate callback. Width-change guard prevents position/height loops. |
+| **Phase 1b** | Remove cooldowns | AXManager, AXEventHandler | Phase 1 proven stable | **DONE (build 72).** Cooldowns removed — accept-and-adapt handles all cases. |
 | **Phase 2** | Dirty + Reflow | AXEventHandler, LayoutRefreshController | Phase 1 | Accepted frames don't interfere with batching. |
 | **Phase 3** | Viewport Camera | ViewportState, NiriLayoutHandler | Phase 1 required, Phase 2 recommended | Viewport policies are pure functions of layout state. |
 | **Phase 4** | Classify Before Admit | AXEventHandler, WindowRuleEngine | Independent, after core pipeline stable | |
@@ -169,7 +169,8 @@ Each phase produces a working, testable system. Tests can be written per-phase.
 ## What Gets Reverted (from this session)
 
 - `applyOverspreadIfNeeded` calls from individual toggle/resize operations (moved to viewport policy stack in Phase 3)
-- Cooldown/suppression code — deferred to Phase 1b after accept-and-adapt is proven stable
+- Cooldown/suppression code — **removed in Phase 1b** (accept-and-adapt proven stable)
+- Settling gate + adaptation counter + permanent pinning — **removed** (over-engineered, harmful in production)
 
 ## What Stays (from this session)
 
