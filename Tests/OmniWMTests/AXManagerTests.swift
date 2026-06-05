@@ -92,7 +92,7 @@ private func axManagerTestWriteResult(
         manager.clearForceApplyFlagForTests(for: windowId)
     }
 
-    @Test @MainActor func verificationMismatchFiresCallbackAfterSettling() {
+    @Test @MainActor func verificationMismatchFiresCallbackImmediately() {
         let manager = AXManager()
         let pid: pid_t = getpid()
         let windowId = 9904
@@ -126,11 +126,6 @@ private func axManagerTestWriteResult(
             }
         }
 
-        // First call: settling gate stableCount=1, callback NOT fired
-        manager.applyFramesParallel([(pid, windowId, targetFrame)])
-        #expect(callbackWindowIds.isEmpty, "settling gate should require 2 stable reads")
-
-        // Second call: same observed width, stableCount=2, callback fires
         manager.applyFramesParallel([(pid, windowId, targetFrame)])
         #expect(callbackWindowIds == [windowId])
         #expect(callbackFrames.first == observedFrame)
@@ -204,91 +199,6 @@ private func axManagerTestWriteResult(
         manager.applyFramesParallel([(pid, windowId, targetFrame)])
         #expect(manager.lastAppliedFrame(for: windowId) == nil, "nil observedFrame — no acceptance")
         #expect(callbackCount == 0)
-    }
-
-    @Test @MainActor func settlingGateResetsOnWidthChange() {
-        let manager = AXManager()
-        let pid: pid_t = getpid()
-        let windowId = 9907
-        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
-
-        var callbackCount = 0
-        manager.onFrameAcceptedAtDifferentSize = { _, _ in callbackCount += 1 }
-
-        var currentObservedWidth: CGFloat = 600
-        manager.frameApplyOverrideForTests = { requests in
-            return requests.map { req in
-                AXFrameApplyResult(
-                    requestId: req.requestId,
-                    pid: req.pid,
-                    windowId: req.windowId,
-                    targetFrame: req.frame,
-                    currentFrameHint: req.currentFrameHint,
-                    writeResult: AXFrameWriteResult(
-                        targetFrame: req.frame,
-                        observedFrame: CGRect(x: 100, y: 100, width: currentObservedWidth, height: 400),
-                        writeOrder: .sizeThenPosition,
-                        sizeError: .success,
-                        positionError: .success,
-                        failureReason: .verificationMismatch
-                    )
-                )
-            }
-        }
-
-        // First: width=600, stableCount=1
-        manager.applyFramesParallel([(pid, windowId, targetFrame)])
-        #expect(callbackCount == 0)
-
-        // Second: width=650, stableCount resets to 1
-        currentObservedWidth = 650
-        manager.applyFramesParallel([(pid, windowId, targetFrame)])
-        #expect(callbackCount == 0)
-
-        // Third: width=650, stableCount=2, fires
-        manager.applyFramesParallel([(pid, windowId, targetFrame)])
-        #expect(callbackCount == 1)
-    }
-
-    @Test @MainActor func adaptationCounterPinsAfterRapidChanges() {
-        let manager = AXManager()
-        let pid: pid_t = getpid()
-        let windowId = 9908
-        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
-
-        var callbackCount = 0
-        manager.onFrameAcceptedAtDifferentSize = { _, _ in callbackCount += 1 }
-
-        var currentObservedWidth: CGFloat = 600
-        manager.frameApplyOverrideForTests = { requests in
-            return requests.map { req in
-                AXFrameApplyResult(
-                    requestId: req.requestId,
-                    pid: req.pid,
-                    windowId: req.windowId,
-                    targetFrame: req.frame,
-                    currentFrameHint: req.currentFrameHint,
-                    writeResult: AXFrameWriteResult(
-                        targetFrame: req.frame,
-                        observedFrame: CGRect(x: 100, y: 100, width: currentObservedWidth, height: 400),
-                        writeOrder: .sizeThenPosition,
-                        sizeError: .success,
-                        positionError: .success,
-                        failureReason: .verificationMismatch
-                    )
-                )
-            }
-        }
-
-        // Fire 4 accepted adaptations rapidly (each needs 2 calls for settling)
-        for width in stride(from: CGFloat(600), through: 660, by: 20) {
-            currentObservedWidth = width
-            manager.applyFramesParallel([(pid, windowId, targetFrame)])
-            manager.applyFramesParallel([(pid, windowId, targetFrame)])
-        }
-
-        // adaptationCount reaches 4 within 500ms, should pin after 3rd
-        #expect(callbackCount == 3, "adaptation counter should pin after 3 rapid changes, got \(callbackCount)")
     }
 
     @Test @MainActor func forceApplyBypassesCooldown() {
@@ -796,10 +706,7 @@ private func axManagerTestWriteResult(
             }
         }
 
-        // First mismatch: settling gate stableCount=1
-        controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
-
-        // Second mismatch: settling gate stableCount=2, fires callback
+        // Mismatch: callback fires immediately, column width updates
         controller.axManager.applyFramesParallel([(token.pid, token.windowId, targetFrame)])
 
         #expect(abs(column.cachedWidth - 700) < 0.5, "column cachedWidth should be updated to 700, got \(column.cachedWidth)")
