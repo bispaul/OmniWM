@@ -760,6 +760,26 @@ final class AXManager {
 
             if let failureReason = resolvedResult.writeResult.failureReason {
                 WMLog.ax.error("Frame write failed windowId=\(resolvedWindowId, privacy: .public) reason=\(String(describing: failureReason), privacy: .public)")
+
+                if failureReason == .verificationMismatch,
+                   acceptAndAdaptEnabled,
+                   let observedFrame = resolvedResult.writeResult.observedFrame,
+                   !inactiveWorkspaceWindowIds.contains(resolvedWindowId)
+                {
+                    lastAppliedFrames[resolvedWindowId] = observedFrame
+                    recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
+                    frameWriteFailureCooldownExpiry.removeValue(forKey: resolvedWindowId)
+                    retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
+                    appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
+                    WMLog.ax.info("Frame accepted at different size windowId=\(resolvedWindowId, privacy: .public) target=\(resolvedResult.targetFrame.debugDescription, privacy: .public) observed=\(observedFrame.debugDescription, privacy: .public)")
+                    if applySettlingGate(windowId: resolvedWindowId, observedWidth: observedFrame.width) {
+                        onFrameAcceptedAtDifferentSize?(resolvedWindowId, observedFrame)
+                    }
+                    notifyPendingFrameObserver(with: resolvedResult)
+                    clearSettledRekeyMappings(to: resolvedWindowId)
+                    continue
+                }
+
                 recentFrameWriteFailures[resolvedWindowId] = failureReason
                 if failureReason == .verificationMismatch || failureReason == .cacheMiss {
                     frameWriteFailureCooldownExpiry[resolvedWindowId] = CACurrentMediaTime() + verificationMismatchCooldownDuration
@@ -808,13 +828,60 @@ final class AXManager {
         guard let failureReason = result.writeResult.failureReason else { return false }
         switch failureReason {
         case .cancelled,
-             .suppressed:
+             .suppressed,
+             .verificationMismatch:
             WMLog.ax.debug("shouldRetryFrameWrite: noRetry reason=\(String(describing: failureReason), privacy: .public)")
             return false
         default:
             WMLog.ax.debug("shouldRetryFrameWrite: willRetry reason=\(String(describing: failureReason), privacy: .public)")
             return true
         }
+    }
+
+    private func applySettlingGate(windowId: Int, observedWidth: CGFloat) -> Bool {
+        guard var state = frameAdaptationState[windowId] else {
+            frameAdaptationState[windowId] = FrameAdaptationState(lastObservedWidth: observedWidth)
+            return false
+        }
+
+        if state.isPinned {
+            WMLog.ax.warning("applySettlingGate: pinned windowId=\(windowId, privacy: .public)")
+            return false
+        }
+
+        if abs(state.lastObservedWidth - observedWidth) <= 1.0 {
+            state.stableCount += 1
+        } else {
+            state.lastObservedWidth = observedWidth
+            state.stableCount = 1
+        }
+
+        frameAdaptationState[windowId] = state
+
+        guard state.stableCount >= 2 else {
+            return false
+        }
+
+        let now = CACurrentMediaTime()
+        if state.adaptationCount == 0 {
+            state.adaptationWindowStart = now
+        }
+        state.adaptationCount += 1
+
+        if state.adaptationCount > 3, (now - state.adaptationWindowStart) < 0.5 {
+            state.isPinned = true
+            WMLog.ax.warning("applySettlingGate: pinning windowId=\(windowId, privacy: .public) adaptationCount=\(state.adaptationCount, privacy: .public)")
+            frameAdaptationState[windowId] = state
+            return false
+        }
+
+        if (now - state.adaptationWindowStart) >= 0.5 {
+            state.adaptationCount = 1
+            state.adaptationWindowStart = now
+        }
+
+        frameAdaptationState[windowId] = state
+        return true
     }
 
     private func makeNextFrameApplicationRequestId() -> AXFrameRequestId {

@@ -24,11 +24,14 @@ private func axManagerTestWriteResult(
 }
 
 
-    @Test @MainActor func verificationMismatchSetsCooldownFlags() {
+    // MARK: - Accept-and-Adapt Tests (Phase 1)
+
+    @Test @MainActor func verificationMismatchAcceptsObservedFrame() {
         let manager = AXManager()
         let pid: pid_t = getpid()
         let windowId = 9903
-        let frame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        let observedFrame = CGRect(x: 100, y: 100, width: 600, height: 400)
 
         manager.frameApplyOverrideForTests = { requests in
             return requests.map { req in
@@ -40,7 +43,7 @@ private func axManagerTestWriteResult(
                     currentFrameHint: req.currentFrameHint,
                     writeResult: AXFrameWriteResult(
                         targetFrame: req.frame,
-                        observedFrame: CGRect(x: 100, y: 100, width: 600, height: 400),
+                        observedFrame: observedFrame,
                         writeOrder: .sizeThenPosition,
                         sizeError: .success,
                         positionError: .success,
@@ -50,23 +53,21 @@ private func axManagerTestWriteResult(
             }
         }
 
-        manager.applyFramesParallel([(pid, windowId, frame)])
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
 
-        // Check that the failure flags are set
-        #expect(manager.recentFrameWriteFailure(for: windowId) == .verificationMismatch, "verificationMismatch should set recentFrameWriteFailures")
+        #expect(manager.lastAppliedFrame(for: windowId) == observedFrame, "verificationMismatch should accept observedFrame")
+        #expect(manager.recentFrameWriteFailure(for: windowId) == nil, "acceptance should clear failure state")
     }
 
-    @Test @MainActor func verificationMismatchCooldownSuppressesRetryOfSameFrame() {
+    @Test @MainActor func verificationMismatchDoesNotRetry() {
         let manager = AXManager()
         let pid: pid_t = getpid()
         let windowId = 9901
         let frame = CGRect(x: 100, y: 100, width: 500, height: 400)
 
         var applyCallCount = 0
-        var applyCallsLog: [String] = []
         manager.frameApplyOverrideForTests = { requests in
             applyCallCount += 1
-            applyCallsLog.append("Call #\(applyCallCount): \(requests.count) request(s)")
             return requests.map { req in
                 AXFrameApplyResult(
                     requestId: req.requestId,
@@ -87,15 +88,207 @@ private func axManagerTestWriteResult(
         }
 
         manager.applyFramesParallel([(pid, windowId, frame)])
-        #expect(applyCallCount == 1, "First apply should call override once, got \(applyCallCount). Log: \(applyCallsLog)")
-
-        // After the first failure, AXManager schedules an async retry and sets forceApplyWindowIds.
-        // For this test, we clear the force-apply flag to test the cooldown without interference.
+        #expect(applyCallCount == 1, "verificationMismatch should not trigger retry")
         manager.clearForceApplyFlagForTests(for: windowId)
+    }
 
-        let beforeSecondCall = applyCallCount
-        manager.applyFramesParallel([(pid, windowId, frame)])
-        #expect(applyCallCount == beforeSecondCall, "Second apply should not call override (cooldown active), but got \(applyCallCount - beforeSecondCall) extra call(s). Log: \(applyCallsLog)")
+    @Test @MainActor func verificationMismatchFiresCallbackAfterSettling() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9904
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        let observedFrame = CGRect(x: 100, y: 100, width: 600, height: 400)
+
+        var callbackWindowIds: [Int] = []
+        var callbackFrames: [CGRect] = []
+        manager.onFrameAcceptedAtDifferentSize = { wid, frame in
+            callbackWindowIds.append(wid)
+            callbackFrames.append(frame)
+        }
+
+        manager.frameApplyOverrideForTests = { requests in
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: observedFrame,
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        // First call: settling gate stableCount=1, callback NOT fired
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        #expect(callbackWindowIds.isEmpty, "settling gate should require 2 stable reads")
+
+        // Second call: same observed width, stableCount=2, callback fires
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        #expect(callbackWindowIds == [windowId])
+        #expect(callbackFrames.first == observedFrame)
+    }
+
+    @Test @MainActor func verificationMismatchDisabledByFeatureFlag() {
+        let manager = AXManager()
+        manager.acceptAndAdaptEnabled = false
+        let pid: pid_t = getpid()
+        let windowId = 9905
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        let observedFrame = CGRect(x: 100, y: 100, width: 600, height: 400)
+
+        var callbackCount = 0
+        manager.onFrameAcceptedAtDifferentSize = { _, _ in callbackCount += 1 }
+
+        manager.frameApplyOverrideForTests = { requests in
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: observedFrame,
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        #expect(manager.lastAppliedFrame(for: windowId) == nil, "acceptance disabled — no lastAppliedFrame")
+        #expect(callbackCount == 0, "acceptance disabled — no callback")
+    }
+
+    @Test @MainActor func verificationMismatchIgnoredWhenObservedFrameNil() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9906
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        var callbackCount = 0
+        manager.onFrameAcceptedAtDifferentSize = { _, _ in callbackCount += 1 }
+
+        manager.frameApplyOverrideForTests = { requests in
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: nil,
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        #expect(manager.lastAppliedFrame(for: windowId) == nil, "nil observedFrame — no acceptance")
+        #expect(callbackCount == 0)
+    }
+
+    @Test @MainActor func settlingGateResetsOnWidthChange() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9907
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        var callbackCount = 0
+        manager.onFrameAcceptedAtDifferentSize = { _, _ in callbackCount += 1 }
+
+        var currentObservedWidth: CGFloat = 600
+        manager.frameApplyOverrideForTests = { requests in
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: CGRect(x: 100, y: 100, width: currentObservedWidth, height: 400),
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        // First: width=600, stableCount=1
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        #expect(callbackCount == 0)
+
+        // Second: width=650, stableCount resets to 1
+        currentObservedWidth = 650
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        #expect(callbackCount == 0)
+
+        // Third: width=650, stableCount=2, fires
+        manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        #expect(callbackCount == 1)
+    }
+
+    @Test @MainActor func adaptationCounterPinsAfterRapidChanges() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9908
+        let targetFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        var callbackCount = 0
+        manager.onFrameAcceptedAtDifferentSize = { _, _ in callbackCount += 1 }
+
+        var currentObservedWidth: CGFloat = 600
+        manager.frameApplyOverrideForTests = { requests in
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: CGRect(x: 100, y: 100, width: currentObservedWidth, height: 400),
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        // Fire 4 accepted adaptations rapidly (each needs 2 calls for settling)
+        for width in stride(from: CGFloat(600), through: 660, by: 20) {
+            currentObservedWidth = width
+            manager.applyFramesParallel([(pid, windowId, targetFrame)])
+            manager.applyFramesParallel([(pid, windowId, targetFrame)])
+        }
+
+        // adaptationCount reaches 4 within 500ms, should pin after 3rd
+        #expect(callbackCount == 3, "adaptation counter should pin after 3 rapid changes, got \(callbackCount)")
     }
 
     @Test @MainActor func forceApplyBypassesCooldown() {
@@ -132,7 +325,7 @@ private func axManagerTestWriteResult(
         applyCount = 0
         manager.forceApplyNextFrame(for: windowId)
         manager.applyFramesParallel([(pid, windowId, frame)])
-        #expect(applyCount == 1)
+        #expect(applyCount == 1, "force-apply should bypass any suppression")
     }
 
 @Suite(.serialized) struct AXManagerTests {
@@ -265,6 +458,7 @@ private func axManagerTestWriteResult(
         #expect(attemptCount == 2)
         #expect(observerResults.count == 1)
         #expect(observerResults.first?.writeResult.failureReason == .verificationMismatch)
+        // observedFrame is nil (currentFrameHint is nil on retry), so accept-and-adapt skips
         #expect(controller.axManager.lastAppliedFrame(for: token.windowId) == nil)
         #expect(controller.axManager.recentFrameWriteFailure(for: token.windowId) == .verificationMismatch)
     }
