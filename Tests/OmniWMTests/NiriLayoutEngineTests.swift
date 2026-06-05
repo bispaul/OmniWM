@@ -4533,7 +4533,9 @@ private func makeCenteredCrossMonitorFixture(
             animationTime: nil
         )
 
-        #expect(hiddenLayout.hiddenHandles[bottomHandle.id] == .left)
+        // The left column is the first hidden column on the minimum side,
+        // so it is promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[bottomHandle.id] == nil)
         guard let canonicalBottomFrame = bottomWindow.frame,
               let canonicalBottomHeight = bottomWindow.resolvedHeight
         else {
@@ -6383,7 +6385,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
-        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == .right)
+        // At zero offset, column is fully off-viewport → promoted to adjacent.
+        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == nil)
 
         var partialRevealState = hiddenState
         partialRevealState.viewOffsetPixels = .static(20)
@@ -6395,6 +6398,7 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
+        // Partially revealed but bleeds into neighbour → still hidden.
         #expect(partialRevealLayout.hiddenHandles[leakingWindow.token] == .right)
 
         var fullRevealState = hiddenState
@@ -6449,8 +6453,9 @@ private func makeCenteredCrossMonitorFixture(
             animationTime: nil
         )
 
-        #expect(fullscreenLayout.hiddenHandles[leakingWindow.token] == .right)
-        #expect(maximizedLayout.hiddenHandles[leakingWindow.token] == .right)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(fullscreenLayout.hiddenHandles[leakingWindow.token] == nil)
+        #expect(maximizedLayout.hiddenHandles[leakingWindow.token] == nil)
     }
 
     @Test func neighboringLeftMonitorKeepsPartiallyRevealedColumnHiddenUntilFullyContained() {
@@ -6474,7 +6479,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
-        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == .left)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == nil)
 
         var partialRevealState = hiddenState
         partialRevealState.viewOffsetPixels = .static(-20)
@@ -6486,6 +6492,7 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
+        // Partially revealed but bleeds into neighbour → hidden.
         #expect(partialRevealLayout.hiddenHandles[leakingWindow.token] == .left)
 
         var fullRevealState = hiddenState
@@ -6553,7 +6560,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: area,
             animationTime: nil
         )
-        #expect(hiddenLayout.hiddenHandles[revealedWindow.token] == .right)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[revealedWindow.token] == nil)
 
         var partialRevealState = hiddenState
         partialRevealState.viewOffsetPixels = .static(20)
@@ -6628,7 +6636,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: area,
             animationTime: baseTime
         )
-        #expect(hiddenLayout.hiddenHandles[revealedWindow.token] == .right)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[revealedWindow.token] == nil)
 
         revealedColumn.animateMoveFrom(
             displacement: CGPoint(x: -40, y: 0),
@@ -6691,7 +6700,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: baseTime
         )
-        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == .right)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == nil)
 
         leakingColumn.animateMoveFrom(
             displacement: CGPoint(x: -40, y: 0),
@@ -6718,6 +6728,8 @@ private func makeCenteredCrossMonitorFixture(
         }
 
         #expect(leakingColumn.renderOffset(at: partialTime).x < -8)
+        // With render offset the column partially overlaps viewport but bleeds
+        // into neighbour → hidden (not promoted because it intersects viewport).
         #expect(partialLayout.hiddenHandles[leakingWindow.token] == .right)
         #expect(!hiddenPlacementFrame.intersects(secondaryMonitor.frame))
 
@@ -6771,7 +6783,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
-        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == .right)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == nil)
 
         var partialRevealState = hiddenState
         partialRevealState.viewOffsetPixels = .static(20)
@@ -6783,6 +6796,7 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
+        // Partially revealed but bleeds into neighbour → hidden.
         #expect(partialRevealLayout.hiddenHandles[leakingWindow.token] == .right)
 
         var fullRevealState = hiddenState
@@ -6827,7 +6841,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
-        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == .left)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == nil)
 
         var partialRevealState = hiddenState
         partialRevealState.viewOffsetPixels = .static(-20)
@@ -6839,6 +6854,7 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: nil
         )
+        // Partially revealed but bleeds into neighbour → hidden.
         #expect(partialRevealLayout.hiddenHandles[leakingWindow.token] == .left)
 
         var fullRevealState = hiddenState
@@ -6962,7 +6978,8 @@ private func makeCenteredCrossMonitorFixture(
             workingArea: fixture.area,
             animationTime: baseTime
         )
-        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == .right)
+        // Fully off-viewport → promoted to adjacent (not in hiddenHandles).
+        #expect(hiddenLayout.hiddenHandles[leakingWindow.token] == nil)
 
         let revealTarget = lowerMonitor.visibleFrame.height + fixture.gap
         var animatingState = state
@@ -7075,7 +7092,9 @@ private func makeCenteredCrossMonitorFixture(
             return
         }
 
-        #expect(hasHideVisibilityChange(initialPlan.diff.visibilityChanges, token: transitioningToken, side: .right))
+        // With adjacent tier, the column is promoted to adjacent (not hidden)
+        // so no hide visibility change is emitted — just a frame change.
+        #expect(!hasAnyVisibilityChange(initialPlan.diff.visibilityChanges, token: transitioningToken))
         await executeAndSettleLayoutPlans(initialPlans, on: controller)
 
         let stableHiddenPlans = try await controller.niriLayoutHandler.layoutWithNiriEngine(
@@ -7100,8 +7119,9 @@ private func makeCenteredCrossMonitorFixture(
             return
         }
 
-        #expect(hasShowVisibilityChange(revealPlan.diff.visibilityChanges, token: transitioningToken))
-        #expect(!hasHideVisibilityChange(revealPlan.diff.visibilityChanges, token: transitioningToken))
+        // Adjacent→visible transition does not emit a show visibility change
+        // (adjacents are already receiving frame writes).
+        #expect(!hasAnyVisibilityChange(revealPlan.diff.visibilityChanges, token: transitioningToken))
         await executeAndSettleLayoutPlans(revealPlans, on: controller)
         controller.workspaceManager.withNiriViewportState(for: workspaceId) { state in
             state.selectedNodeId = firstNode.id
@@ -7178,12 +7198,12 @@ private func makeCenteredCrossMonitorFixture(
             return
         }
 
-        assertHideOnlyMonitorBoundaryDiff(
-            primaryPlan,
-            token: leakingWindow.token,
-            side: .right,
-            disallowedMonitor: fixture.neighboringMonitor
-        )
+        // With adjacent tier, the leaking column may be adjacent (sliver) rather
+        // than fully hidden.  The core invariant is: no emitted frame crosses the
+        // neighbouring monitor boundary.
+        for change in primaryPlan.diff.frameChanges {
+            #expect(!change.frame.intersects(fixture.neighboringMonitor.frame))
+        }
     }
 
     @Test @MainActor func centeredColumnsDoNotEmitSecondaryWorkspaceFramesAcrossPrimaryMonitorBoundary() async throws {
@@ -7244,12 +7264,12 @@ private func makeCenteredCrossMonitorFixture(
             return
         }
 
-        assertHideOnlyMonitorBoundaryDiff(
-            secondaryPlan,
-            token: leakingWindow.token,
-            side: .left,
-            disallowedMonitor: fixture.neighboringMonitor
-        )
+        // With adjacent tier, the leaking column may be adjacent (sliver) rather
+        // than fully hidden.  The core invariant is: no emitted frame crosses the
+        // neighbouring monitor boundary.
+        for change in secondaryPlan.diff.frameChanges {
+            #expect(!change.frame.intersects(fixture.neighboringMonitor.frame))
+        }
     }
 
     @Test @MainActor func layoutHiddenPlacementMatchesLiveHideOriginForHiddenLeftColumn() async throws {
@@ -8383,5 +8403,166 @@ private func makeCenteredCrossMonitorFixture(
 
         #expect(controller.niriLayoutHandler.scrollAnimationByDisplay[monitor.displayId] == nil)
         #expect(controller.workspaceManager.hiddenState(for: token)?.workspaceInactive == true)
+    }
+
+    // MARK: - Adjacent column visibility (tiered hiding)
+
+    @Test func adjacentColumnGetsSliverPositionAndIsNotHidden() {
+        // 3 columns of 500px on a 500x400 viewport (gap=8).
+        // Column 0 is visible, column 1 should be adjacent (not in hiddenHandles),
+        // column 2 should be hidden (in hiddenHandles).
+        // NOTE: viewport must be landscape (width >= height) for horizontal orientation.
+        let engine = NiriLayoutEngine(maxVisibleColumns: 1)
+        engine.centerFocusedColumn = .never
+
+        let workspaceId = UUID()
+        var windows: [NiriWindow] = []
+        var previousSelection: NodeId?
+
+        for index in 0 ..< 3 {
+            let handle = makeTestHandle(pid: pid_t(300 + index))
+            let window = engine.addWindow(
+                handle: handle,
+                to: workspaceId,
+                afterSelection: previousSelection
+            )
+            windows.append(window)
+            previousSelection = window.id
+        }
+
+        let viewportWidth: CGFloat = 500
+        let viewportHeight: CGFloat = 400
+        let monitor = makeLayoutPlanTestMonitor(width: viewportWidth, height: viewportHeight)
+        let gap: CGFloat = 8
+        let gaps = LayoutGaps(horizontal: gap, vertical: gap)
+        let area = WorkingAreaContext(
+            workingFrame: monitor.visibleFrame,
+            viewFrame: monitor.frame,
+            scale: 2.0
+        )
+
+        let columnWidth: CGFloat = 500
+        for column in engine.columns(in: workspaceId) {
+            column.width = .fixed(columnWidth)
+            column.cachedWidth = columnWidth
+        }
+
+        // Viewport at column 0 (active = 0, offset = 0).
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(0)
+        state.selectedNodeId = windows[0].id
+
+        let layout = engine.calculateCombinedLayoutUsingPools(
+            in: workspaceId,
+            monitor: monitor,
+            gaps: gaps,
+            state: state,
+            workingArea: area,
+            animationTime: 0
+        )
+
+        let token0 = windows[0].token
+        let token1 = windows[1].token
+        let token2 = windows[2].token
+
+        // Column 0 is visible — not in hiddenHandles, has a frame.
+        #expect(layout.hiddenHandles[token0] == nil)
+        #expect(layout.frames[token0] != nil)
+
+        // Column 1 is adjacent — NOT in hiddenHandles, has a frame with
+        // ~5px sliver visible at the right viewport edge.
+        #expect(layout.hiddenHandles[token1] == nil)
+        guard let adjacentFrame = layout.frames[token1] else {
+            Issue.record("Expected frame for adjacent column 1")
+            return
+        }
+        // Adjacent column should be positioned with a sliver visible at the right
+        // viewport edge. With HiddenWindowPlacementResolver, reveal = baseReveal/scale
+        // = 5.0/2.0 = 2.5. For .maximum edge: x = visibleFrame.maxX - reveal = 500 - 2.5.
+        let expectedSliverX: CGFloat = viewportWidth - (5.0 / 2.0)
+        #expect(abs(adjacentFrame.minX - expectedSliverX) < 1.0)
+
+        // Column 2 is far hidden — in hiddenHandles.
+        #expect(layout.hiddenHandles[token2] == .right)
+    }
+
+    @Test func adjacentColumnTierPromotesFirstHiddenOnEachSide() {
+        // 5 columns of 500px on a 1000x600 viewport (gap=8).
+        // Columns 0-1 visible, column 2 adjacent, columns 3-4 hidden.
+        // NOTE: viewport must be landscape (width >= height) for horizontal orientation.
+        let engine = NiriLayoutEngine(maxVisibleColumns: 2)
+        engine.centerFocusedColumn = .never
+
+        let workspaceId = UUID()
+        var windows: [NiriWindow] = []
+        var previousSelection: NodeId?
+
+        for index in 0 ..< 5 {
+            let handle = makeTestHandle(pid: pid_t(400 + index))
+            let window = engine.addWindow(
+                handle: handle,
+                to: workspaceId,
+                afterSelection: previousSelection
+            )
+            windows.append(window)
+            previousSelection = window.id
+        }
+
+        let viewportWidth: CGFloat = 1000
+        let viewportHeight: CGFloat = 600
+        let monitor = makeLayoutPlanTestMonitor(width: viewportWidth, height: viewportHeight)
+        let gap: CGFloat = 8
+        let gaps = LayoutGaps(horizontal: gap, vertical: gap)
+        let area = WorkingAreaContext(
+            workingFrame: monitor.visibleFrame,
+            viewFrame: monitor.frame,
+            scale: 2.0
+        )
+
+        let columnWidth: CGFloat = 500
+        for column in engine.columns(in: workspaceId) {
+            column.width = .fixed(columnWidth)
+            column.cachedWidth = columnWidth
+        }
+
+        // Viewport at column 0 (active = 0, offset = 0).
+        // Columns layout:
+        //   col0: 0..500   — visible
+        //   col1: 508..1008 — partially visible (overlaps 0..1000)
+        //   col2: 1016..1516 — hidden → adjacent
+        //   col3: 1524..2024 — hidden → far
+        //   col4: 2032..2532 — hidden → far
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(0)
+        state.selectedNodeId = windows[0].id
+
+        let layout = engine.calculateCombinedLayoutUsingPools(
+            in: workspaceId,
+            monitor: monitor,
+            gaps: gaps,
+            state: state,
+            workingArea: area,
+            animationTime: 0
+        )
+
+        let token0 = windows[0].token
+        let token1 = windows[1].token
+        let token2 = windows[2].token
+        let token3 = windows[3].token
+        let token4 = windows[4].token
+
+        // Columns 0 and 1 are visible.
+        #expect(layout.hiddenHandles[token0] == nil)
+        #expect(layout.hiddenHandles[token1] == nil)
+
+        // Column 2 is adjacent — NOT in hiddenHandles.
+        #expect(layout.hiddenHandles[token2] == nil)
+        #expect(layout.frames[token2] != nil)
+
+        // Columns 3 and 4 are far hidden — IN hiddenHandles.
+        #expect(layout.hiddenHandles[token3] == .right)
+        #expect(layout.hiddenHandles[token4] == .right)
     }
 }

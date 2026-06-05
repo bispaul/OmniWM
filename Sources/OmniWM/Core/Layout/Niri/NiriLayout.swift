@@ -41,6 +41,7 @@ struct LayoutResult {
 
 private enum ContainerVisibilityState {
     case visible
+    case adjacent(AxisHideEdge)
     case hidden(AxisHideEdge)
 }
 
@@ -195,42 +196,107 @@ extension NiriLayoutEngine {
         let activePos = containers.isEmpty ? 0 : containerPositions[activeIdx]
         let viewPos = activePos + viewOffset
 
+        // --- Pass 1: compute raw visibility for every container ---
+        var visibilityStates = [ContainerVisibilityState]()
+        visibilityStates.reserveCapacity(containers.count)
+        var canonicalContainerRects = [CGRect]()
+        canonicalContainerRects.reserveCapacity(containers.count)
+        var visibilityRects = [CGRect]()
+        visibilityRects.reserveCapacity(containers.count)
+
         for idx in 0 ..< containers.count {
-            let containerPos = containerPositions[idx]
-            let containerSpan = containerSpans[idx]
-            let renderOffset = containerRenderOffsets[idx]
-            let canonicalContainerRect = canonicalContainerRect(
-                position: containerPos,
-                span: containerSpan,
+            let canonicalRect = canonicalContainerRect(
+                position: containerPositions[idx],
+                span: containerSpans[idx],
                 workingFrame: workingFrame,
                 scale: effectiveScale,
                 orientation: orientation
             )
-            let visibilityRect = visibleRenderedContainerRect(
-                canonicalRect: canonicalContainerRect,
+            canonicalContainerRects.append(canonicalRect)
+
+            let visRect = visibleRenderedContainerRect(
+                canonicalRect: canonicalRect,
                 viewPosition: viewPos,
                 workspaceOffset: workspaceOffset,
-                renderOffset: renderOffset,
+                renderOffset: containerRenderOffsets[idx],
                 scale: effectiveScale,
                 orientation: orientation
             )
+            visibilityRects.append(visRect)
+
+            visibilityStates.append(
+                containerVisibilityState(
+                    for: visRect,
+                    viewportFrame: workingFrame,
+                    fallback: idx == 0 ? .minimum : .maximum,
+                    orientation: orientation,
+                    hiddenPlacementMonitor: hiddenPlacementMonitor,
+                    hiddenPlacementMonitors: hiddenPlacementMonitors
+                )
+            )
+        }
+
+        // --- Pass 2: promote the first hidden column on each side to adjacent ---
+        // Only columns that are fully off-viewport (don't intersect at all)
+        // are eligible.  Columns hidden because they overflow into a
+        // neighbouring monitor are already partially on-screen and must stay
+        // as `.hidden` to preserve existing suppression behaviour.
+        var firstVisibleIdx: Int?
+        var lastVisibleIdx: Int?
+        for idx in 0 ..< containers.count {
+            if case .visible = visibilityStates[idx] {
+                if firstVisibleIdx == nil { firstVisibleIdx = idx }
+                lastVisibleIdx = idx
+            }
+        }
+
+        if let firstVis = firstVisibleIdx {
+            // Promote the first fully-off-viewport hidden container on the minimum side.
+            for idx in stride(from: firstVis - 1, through: 0, by: -1) {
+                if case let .hidden(edge) = visibilityStates[idx],
+                   !containerIntersectsViewport(visibilityRects[idx], viewportFrame: workingFrame, orientation: orientation)
+                {
+                    visibilityStates[idx] = .adjacent(edge)
+                    break
+                }
+            }
+        }
+        if let lastVis = lastVisibleIdx {
+            // Promote the first fully-off-viewport hidden container on the maximum side.
+            for idx in (lastVis + 1) ..< containers.count {
+                if case let .hidden(edge) = visibilityStates[idx],
+                   !containerIntersectsViewport(visibilityRects[idx], viewportFrame: workingFrame, orientation: orientation)
+                {
+                    visibilityStates[idx] = .adjacent(edge)
+                    break
+                }
+            }
+        }
+
+        // --- Pass 3: produce rendered rects & populate hiddenHandles ---
+        for idx in 0 ..< containers.count {
             let renderedContainerRect: CGRect
-            switch containerVisibilityState(
-                for: visibilityRect,
-                viewportFrame: workingFrame,
-                fallback: idx == 0 ? .minimum : .maximum,
-                orientation: orientation,
-                hiddenPlacementMonitor: hiddenPlacementMonitor,
-                hiddenPlacementMonitors: hiddenPlacementMonitors
-            ) {
+            switch visibilityStates[idx] {
             case .visible:
-                renderedContainerRect = visibilityRect
+                renderedContainerRect = visibilityRects[idx]
+            case let .adjacent(adjacentEdge):
+                // Adjacent columns get a 5 px sliver reveal and DO receive
+                // frame writes (not added to hiddenHandles).
+                renderedContainerRect = adjacentRenderedContainerRect(
+                    canonicalRect: canonicalContainerRects[idx],
+                    edge: adjacentEdge,
+                    viewFrame: viewFrame,
+                    scale: effectiveScale,
+                    orientation: orientation,
+                    hiddenPlacementMonitor: hiddenPlacementMonitor,
+                    hiddenPlacementMonitors: hiddenPlacementMonitors
+                )
             case let .hidden(hiddenEdge):
                 for window in containerWindowNodes[idx] {
                     hiddenHandles[window.token] = hiddenEdge.encodedHideSide
                 }
                 renderedContainerRect = hiddenRenderedContainerRect(
-                    canonicalRect: canonicalContainerRect,
+                    canonicalRect: canonicalContainerRects[idx],
                     edge: hiddenEdge,
                     viewFrame: viewFrame,
                     scale: effectiveScale,
@@ -242,7 +308,7 @@ extension NiriLayoutEngine {
 
             layoutContainer(
                 container: containers[idx],
-                canonicalContainerRect: canonicalContainerRect,
+                canonicalContainerRect: canonicalContainerRects[idx],
                 renderedContainerRect: renderedContainerRect,
                 fullscreenRect: canonicalFullscreenRect,
                 renderedFullscreenRect: renderedFullscreenRect,
@@ -554,6 +620,71 @@ extension NiriLayoutEngine {
             }
 
             return hiddenRowRect(
+                edge: edge,
+                width: canonicalRect.width,
+                height: canonicalRect.height,
+                screenX: canonicalRect.minX,
+                edgeFrame: viewFrame,
+                scale: scale
+            ).roundedToPhysicalPixels(scale: scale)
+        }
+    }
+
+    /// Compute the rendered rect for an **adjacent** (first-hidden) container.
+    /// Uses a 5 px sliver reveal instead of the 1/scale reveal used for fully
+    /// hidden columns.  Adjacent columns still receive frame writes so macOS
+    /// never sees them as fully off-screen.
+    private func adjacentRenderedContainerRect(
+        canonicalRect: CGRect,
+        edge: AxisHideEdge,
+        viewFrame: CGRect,
+        scale: CGFloat,
+        orientation: Monitor.Orientation,
+        hiddenPlacementMonitor: HiddenPlacementMonitorContext?,
+        hiddenPlacementMonitors: [HiddenPlacementMonitorContext]
+    ) -> CGRect {
+        switch orientation {
+        case .horizontal:
+            if let hiddenPlacementMonitor {
+                return HiddenWindowPlacementResolver.placement(
+                    for: canonicalRect.size,
+                    requestedEdge: edge,
+                    orthogonalOrigin: canonicalRect.minY,
+                    baseReveal: 5.0,
+                    scale: scale,
+                    orientation: .horizontal,
+                    monitor: hiddenPlacementMonitor,
+                    monitors: hiddenPlacementMonitors
+                )
+                .frame(for: canonicalRect.size)
+                .roundedToPhysicalPixels(scale: scale)
+            }
+
+            return sliverColumnRect(
+                edge: edge,
+                width: canonicalRect.width,
+                height: canonicalRect.height,
+                screenY: canonicalRect.minY,
+                edgeFrame: viewFrame,
+                scale: scale
+            ).roundedToPhysicalPixels(scale: scale)
+        case .vertical:
+            if let hiddenPlacementMonitor {
+                return HiddenWindowPlacementResolver.placement(
+                    for: canonicalRect.size,
+                    requestedEdge: edge,
+                    orthogonalOrigin: canonicalRect.minX,
+                    baseReveal: 5.0,
+                    scale: scale,
+                    orientation: .vertical,
+                    monitor: hiddenPlacementMonitor,
+                    monitors: hiddenPlacementMonitors
+                )
+                .frame(for: canonicalRect.size)
+                .roundedToPhysicalPixels(scale: scale)
+            }
+
+            return sliverRowRect(
                 edge: edge,
                 width: canonicalRect.width,
                 height: canonicalRect.height,
@@ -926,6 +1057,28 @@ extension NiriLayoutEngine {
         return CGRect(origin: origin, size: CGSize(width: width, height: height))
     }
 
+    /// Like `hiddenRowRect` but with a larger reveal (5 px) so macOS
+    /// treats the window as partially on-screen, avoiding `verificationMismatch`.
+    private func sliverRowRect(
+        edge: AxisHideEdge,
+        width: CGFloat,
+        height: CGFloat,
+        screenX: CGFloat,
+        edgeFrame: CGRect,
+        scale: CGFloat
+    ) -> CGRect {
+        let sliverReveal: CGFloat = 5.0
+        let y: CGFloat
+        switch edge {
+        case .minimum:
+            y = edgeFrame.minY - height + sliverReveal
+        case .maximum:
+            y = edgeFrame.maxY - sliverReveal
+        }
+        let origin = CGPoint(x: screenX, y: y)
+        return CGRect(origin: origin, size: CGSize(width: width, height: height))
+    }
+
     private func hiddenColumnRect(
         edge: AxisHideEdge,
         width: CGFloat,
@@ -941,6 +1094,28 @@ extension NiriLayoutEngine {
             x = edgeFrame.minX - width + edgeReveal
         case .maximum:
             x = edgeFrame.maxX - edgeReveal
+        }
+        let origin = CGPoint(x: x, y: screenY)
+        return CGRect(origin: origin, size: CGSize(width: width, height: height))
+    }
+
+    /// Like `hiddenColumnRect` but with a larger reveal (5 px) so macOS
+    /// treats the window as partially on-screen, avoiding `verificationMismatch`.
+    private func sliverColumnRect(
+        edge: AxisHideEdge,
+        width: CGFloat,
+        height: CGFloat,
+        screenY: CGFloat,
+        edgeFrame: CGRect,
+        scale: CGFloat
+    ) -> CGRect {
+        let sliverReveal: CGFloat = 5.0
+        let x: CGFloat
+        switch edge {
+        case .minimum:
+            x = edgeFrame.minX - width + sliverReveal
+        case .maximum:
+            x = edgeFrame.maxX - sliverReveal
         }
         let origin = CGPoint(x: x, y: screenY)
         return CGRect(origin: origin, size: CGSize(width: width, height: height))
