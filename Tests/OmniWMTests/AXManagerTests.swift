@@ -23,6 +23,118 @@ private func axManagerTestWriteResult(
     )
 }
 
+
+    @Test @MainActor func verificationMismatchSetsCooldownFlags() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9903
+        let frame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        manager.frameApplyOverrideForTests = { requests in
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: CGRect(x: 100, y: 100, width: 600, height: 400),
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        manager.applyFramesParallel([(pid, windowId, frame)])
+
+        // Check that the failure flags are set
+        #expect(manager.recentFrameWriteFailure(for: windowId) == .verificationMismatch, "verificationMismatch should set recentFrameWriteFailures")
+    }
+
+    @Test @MainActor func verificationMismatchCooldownSuppressesRetryOfSameFrame() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9901
+        let frame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        var applyCallCount = 0
+        var applyCallsLog: [String] = []
+        manager.frameApplyOverrideForTests = { requests in
+            applyCallCount += 1
+            applyCallsLog.append("Call #\(applyCallCount): \(requests.count) request(s)")
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: CGRect(x: 100, y: 100, width: 600, height: 400),
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        manager.applyFramesParallel([(pid, windowId, frame)])
+        #expect(applyCallCount == 1, "First apply should call override once, got \(applyCallCount). Log: \(applyCallsLog)")
+
+        // After the first failure, AXManager schedules an async retry and sets forceApplyWindowIds.
+        // For this test, we clear the force-apply flag to test the cooldown without interference.
+        manager.clearForceApplyFlagForTests(for: windowId)
+
+        let beforeSecondCall = applyCallCount
+        manager.applyFramesParallel([(pid, windowId, frame)])
+        #expect(applyCallCount == beforeSecondCall, "Second apply should not call override (cooldown active), but got \(applyCallCount - beforeSecondCall) extra call(s). Log: \(applyCallsLog)")
+    }
+
+    @Test @MainActor func forceApplyBypassesCooldown() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9902
+        let frame = CGRect(x: 100, y: 100, width: 500, height: 400)
+
+        var applyCount = 0
+        manager.frameApplyOverrideForTests = { requests in
+            applyCount += requests.count
+            return requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: CGRect(x: 100, y: 100, width: 600, height: 400),
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        manager.applyFramesParallel([(pid, windowId, frame)])
+        #expect(applyCount == 1)
+
+        applyCount = 0
+        manager.forceApplyNextFrame(for: windowId)
+        manager.applyFramesParallel([(pid, windowId, frame)])
+        #expect(applyCount == 1)
+    }
+
 @Suite(.serialized) struct AXManagerTests {
     @Test func observedTargetFrameConfirmsApplyResultDespiteAttributeWriteFailure() {
         let targetFrame = CGRect(x: 120, y: 90, width: 640, height: 420)
