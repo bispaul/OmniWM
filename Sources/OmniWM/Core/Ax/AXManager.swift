@@ -753,6 +753,7 @@ final class AXManager {
                 recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
                 frameWriteFailureCooldownExpiry.removeValue(forKey: resolvedWindowId)
                 retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
+                appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
                 notifyPendingFrameObserver(with: resolvedResult)
                 clearSettledRekeyMappings(to: resolvedWindowId)
                 continue
@@ -786,12 +787,21 @@ final class AXManager {
                 }
             }
 
+            if resolvedResult.writeResult.failureReason == .appBusy {
+                let current = retryBudgetByWindowId[resolvedWindowId] ?? 0
+                retryBudgetByWindowId[resolvedWindowId] = max(current, 3)
+                if appBusyBackoffDelay[resolvedWindowId] == nil {
+                    appBusyBackoffDelay[resolvedWindowId] = 0.1
+                }
+            }
+
             let remainingRetries = retryBudgetByWindowId[resolvedWindowId] ?? 0
             guard remainingRetries > 0,
                   shouldRetryFrameWrite(after: resolvedResult)
             else {
                 WMLog.ax.debug("handleFrameApplyResults: retryExhausted windowId=\(resolvedWindowId, privacy: .public) remainingRetries=\(remainingRetries, privacy: .public)")
                 retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
+                appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
                 notifyPendingFrameObserver(with: resolvedResult)
                 clearSettledRekeyMappings(to: resolvedWindowId)
                 continue
@@ -803,8 +813,15 @@ final class AXManager {
 
             let pid = resolvedResult.pid
             let frame = resolvedResult.targetFrame
+            let backoffDelay = appBusyBackoffDelay[resolvedWindowId]
+            if let backoffDelay {
+                appBusyBackoffDelay[resolvedWindowId] = min(backoffDelay * 2, 0.4)
+            }
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                if let backoffDelay {
+                    try? await Task.sleep(nanoseconds: UInt64(backoffDelay * 1_000_000_000))
+                }
                 let currentWindowId = self.resolveWindowId(for: resolvedWindowId)
                 guard self.pendingFrameWrites[currentWindowId] == nil else { return }
                 self.enqueueFrameApplications([(pid, currentWindowId, frame)], isRetry: true)
