@@ -1166,7 +1166,6 @@ enum NiriWindowMoveResult {
             engine.toggleFullscreen(windowNode, motion: motion, state: &state)
 
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1252,7 +1251,6 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             )
             controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }

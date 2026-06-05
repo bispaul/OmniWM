@@ -131,6 +131,11 @@ final class AXManager {
         forceApplyWindowIds.insert(windowId)
     }
 
+    func isInFrameWriteCooldown(for windowId: Int) -> Bool {
+        guard let expiry = frameWriteFailureCooldownExpiry[windowId] else { return false }
+        return CACurrentMediaTime() < expiry
+    }
+
     func clearForceApplyFlagForTests(for windowId: Int) {
         forceApplyWindowIds.remove(windowId)
     }
@@ -439,9 +444,9 @@ final class AXManager {
                 continue
             }
 
-            // Skip write if in cooldown after verificationMismatch (unless force-apply)
+            // Skip write if in cooldown after verificationMismatch or cacheMiss (unless force-apply)
             if let failureReason = recentFrameWriteFailures[windowId],
-               failureReason == .verificationMismatch,
+               (failureReason == .verificationMismatch || failureReason == .cacheMiss),
                let expiry = frameWriteFailureCooldownExpiry[windowId],
                CACurrentMediaTime() < expiry,
                !forceApplyWindowIds.contains(windowId)
@@ -454,12 +459,12 @@ final class AXManager {
             let pendingFrame = pendingFrameWrites[windowId]
             let hasRecentFailure: Bool
             if let failureReason = recentFrameWriteFailures[windowId] {
-                if failureReason == .verificationMismatch,
+                if (failureReason == .verificationMismatch || failureReason == .cacheMiss),
                    let expiry = frameWriteFailureCooldownExpiry[windowId],
                    CACurrentMediaTime() < expiry
                 {
                     hasRecentFailure = false
-                } else if failureReason == .verificationMismatch,
+                } else if (failureReason == .verificationMismatch || failureReason == .cacheMiss),
                           let expiry = frameWriteFailureCooldownExpiry[windowId],
                           CACurrentMediaTime() >= expiry
                 {
@@ -729,7 +734,7 @@ final class AXManager {
             if let failureReason = resolvedResult.writeResult.failureReason {
                 WMLog.ax.error("Frame write failed windowId=\(resolvedWindowId, privacy: .public) reason=\(String(describing: failureReason), privacy: .public)")
                 recentFrameWriteFailures[resolvedWindowId] = failureReason
-                if failureReason == .verificationMismatch {
+                if failureReason == .verificationMismatch || failureReason == .cacheMiss {
                     frameWriteFailureCooldownExpiry[resolvedWindowId] = CACurrentMediaTime() + verificationMismatchCooldownDuration
                 }
             }

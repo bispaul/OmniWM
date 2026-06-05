@@ -677,6 +677,11 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
 
+        if controller.axManager.isInFrameWriteCooldown(for: entry.windowId) {
+            WMLog.ax.debug("Frame change suppressed (cooldown): windowId=\(entry.windowId, privacy: .public)")
+            return
+        }
+
         WMLog.ax.debug("Frame change triggered relayout: windowId=\(entry.windowId, privacy: .public)")
         debugCounters.geometryRelayoutRequests += 1
         debugCounters.scopedGeometryRelayoutRequests += 1
