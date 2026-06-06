@@ -33,8 +33,12 @@ final class CommandHandler {
     @discardableResult
     func performCommand(_ command: HotkeyCommand) -> ExternalCommandResult {
         guard let controller else { return .notFound }
-        guard controller.isEnabled else { return .ignoredDisabled }
+        guard controller.isEnabled else {
+            WMLog.input.info("performCommand: ignored command=\(String(describing: command), privacy: .public) reason=disabled")
+            return .ignoredDisabled
+        }
         guard !Self.shouldIgnoreCommand(command, isOverviewOpen: controller.isOverviewOpen()) else {
+            WMLog.input.info("performCommand: ignored command=\(String(describing: command), privacy: .public) reason=overview")
             return .ignoredOverview
         }
 
@@ -44,10 +48,12 @@ final class CommandHandler {
         case (.niri, .dwindle),
              (.dwindle, .niri),
              (.dwindle, .defaultLayout):
+            WMLog.input.info("performCommand: ignored command=\(String(describing: command), privacy: .public) reason=layoutMismatch(\(String(describing: layoutType), privacy: .public))")
             return .ignoredLayoutMismatch
         default:
             break
         }
+        WMLog.input.info("performCommand: executing command=\(String(describing: command), privacy: .public)")
 
         switch command {
         case let .focus(direction):

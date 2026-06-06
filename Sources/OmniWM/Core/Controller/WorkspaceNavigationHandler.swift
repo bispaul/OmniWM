@@ -438,23 +438,42 @@ final class WorkspaceNavigationHandler {
         to targetWorkspaceId: WorkspaceDescriptor.ID,
         columnIndex: Int? = nil
     ) -> Bool {
-        guard sourceWorkspaceId != targetWorkspaceId else { return false }
-        guard let controller else { return false }
+        WMLog.workspace.info("atomicTransfer: called windowId=\(token.windowId, privacy: .public)")
+        guard sourceWorkspaceId != targetWorkspaceId else {
+            WMLog.workspace.info("atomicTransfer: rejected reason=sameWorkspace")
+            return false
+        }
+        guard let controller else {
+            WMLog.workspace.info("atomicTransfer: rejected reason=nilController")
+            return false
+        }
 
-        guard controller.workspaceManager.windowMode(for: token) == .tiling else { return false }
+        guard controller.workspaceManager.windowMode(for: token) == .tiling else {
+            WMLog.workspace.info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=floating")
+            return false
+        }
 
         guard let engine = controller.niriEngine else { return false }
         let sourceLayout = controller.workspaceManager.descriptor(for: sourceWorkspaceId)
             .map { controller.settings.layoutType(for: $0.name) } ?? .defaultLayout
         let targetLayout = controller.workspaceManager.descriptor(for: targetWorkspaceId)
             .map { controller.settings.layoutType(for: $0.name) } ?? .defaultLayout
-        guard sourceLayout != .dwindle, targetLayout != .dwindle else { return false }
+        guard sourceLayout != .dwindle, targetLayout != .dwindle else {
+            WMLog.workspace.info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=dwindle")
+            return false
+        }
 
         guard let windowNode = engine.findNode(for: token),
               let column = engine.findColumn(containing: windowNode, in: sourceWorkspaceId)
-        else { return false }
+        else {
+            WMLog.workspace.info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=notInEngine")
+            return false
+        }
 
-        guard column.windowNodes.count == 1 else { return false }
+        guard column.windowNodes.count == 1 else {
+            WMLog.workspace.info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=multiWindowColumn(\(column.windowNodes.count, privacy: .public))")
+            return false
+        }
 
         var sourceState = controller.workspaceManager.niriViewportState(for: sourceWorkspaceId)
         var targetState = controller.workspaceManager.niriViewportState(for: targetWorkspaceId)
@@ -469,6 +488,10 @@ final class WorkspaceNavigationHandler {
         ) else {
             return false
         }
+
+        let sourceName = controller.workspaceManager.descriptor(for: sourceWorkspaceId)?.name ?? "?"
+        let targetName = controller.workspaceManager.descriptor(for: targetWorkspaceId)?.name ?? "?"
+        WMLog.workspace.info("atomicTransfer: success windowId=\(token.windowId, privacy: .public) from=ws\(sourceName, privacy: .public) to=ws\(targetName, privacy: .public) width=\(column.cachedWidth, privacy: .public)")
 
         controller.reassignManagedWindow(token, to: targetWorkspaceId)
 
@@ -496,6 +519,7 @@ final class WorkspaceNavigationHandler {
         from sourceWsId: WorkspaceDescriptor.ID?,
         to targetWsId: WorkspaceDescriptor.ID
     ) -> WindowTransferResult {
+        WMLog.workspace.info("transferWindowFromSourceEngine: windowId=\(token.windowId, privacy: .public)")
         guard let controller else {
             return WindowTransferResult(succeeded: false, newSourceFocusToken: nil, usedAtomicPath: false)
         }
@@ -616,15 +640,31 @@ final class WorkspaceNavigationHandler {
     }
 
     func moveWindowToAdjacentWorkspace(direction: Direction) {
-        guard let controller else { return }
-        guard let token = controller.workspaceManager.focusedToken else { return }
+        WMLog.workspace.info("moveWindowToAdjacentWorkspace: direction=\(String(describing: direction), privacy: .public)")
+        guard let controller else {
+            WMLog.workspace.info("moveWindowToAdjacentWorkspace: bail reason=nilController")
+            return
+        }
+        guard let token = controller.workspaceManager.focusedToken else {
+            WMLog.workspace.info("moveWindowToAdjacentWorkspace: bail reason=noFocusedToken")
+            return
+        }
         guard let currentMonitorId = interactionMonitorId(for: controller)
-        else { return }
-        guard let wsId = controller.activeWorkspace()?.id else { return }
+        else {
+            WMLog.workspace.info("moveWindowToAdjacentWorkspace: bail reason=noInteractionMonitor")
+            return
+        }
+        guard let wsId = controller.activeWorkspace()?.id else {
+            WMLog.workspace.info("moveWindowToAdjacentWorkspace: bail reason=noActiveWorkspace")
+            return
+        }
 
         guard let targetWorkspace = resolveOrCreateAdjacentWorkspace(
             from: wsId, direction: direction, on: currentMonitorId
-        ) else { return }
+        ) else {
+            WMLog.workspace.info("moveWindowToAdjacentWorkspace: bail reason=noAdjacentWorkspace")
+            return
+        }
 
         saveNiriViewportState(for: wsId)
 
