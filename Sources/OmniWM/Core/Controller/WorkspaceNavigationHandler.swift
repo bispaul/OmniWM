@@ -843,7 +843,9 @@ final class WorkspaceNavigationHandler {
         let transferResult = transferWindowFromSourceEngine(token: token, from: currentWorkspaceId, to: target.id)
         guard transferResult.succeeded else { return }
 
-        controller.reassignManagedWindow(token, to: target.id)
+        if !transferResult.usedAtomicPath {
+            controller.reassignManagedWindow(token, to: target.id)
+        }
 
         let shouldFollowFocus = controller.settings.focusFollowsWindowToMonitor
         if shouldFollowFocus {
@@ -933,7 +935,9 @@ final class WorkspaceNavigationHandler {
         )
         guard transferResult.succeeded else { return false }
 
-        controller.reassignManagedWindow(token, to: targetWsId)
+        if !transferResult.usedAtomicPath {
+            controller.reassignManagedWindow(token, to: targetWsId)
+        }
         applySessionPatch(workspaceId: targetWsId, rememberedFocusToken: token)
 
         if let currentWorkspaceId {
