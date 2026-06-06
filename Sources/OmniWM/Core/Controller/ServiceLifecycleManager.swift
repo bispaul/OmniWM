@@ -444,8 +444,11 @@ final class ServiceLifecycleManager {
         // Validate windows still exist
         validateRestoredWindows(from: snapshot)
 
-        // Trigger layout reflow
-        controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+        // Trigger layout reflow — NOT fullRescan (that would re-admit all windows and destroy our restore)
+        controller.layoutRefreshController.requestImmediateRelayout(
+            reason: .workspaceTransition,
+            affectedWorkspaceIds: Set(snapshot.niriPlacements.keys)
+        )
     }
 
     private func validateRestoredWindows(from snapshot: SleepStateSnapshot) {
