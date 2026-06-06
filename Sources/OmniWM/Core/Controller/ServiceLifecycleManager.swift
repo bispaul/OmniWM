@@ -188,7 +188,8 @@ final class ServiceLifecycleManager {
         // (prevents stale geometry when display ID or coordinate space changes, e.g. KVM switch)
         controller.focusBorderController.hide()
         guard !currentMonitors.isEmpty else { return }
-        WMLog.workspace.info("applyMonitorConfigurationChanged: monitorCount=\(currentMonitors.count, privacy: .public)")
+        WMLog.workspace
+            .info("applyMonitorConfigurationChanged: monitorCount=\(currentMonitors.count, privacy: .public)")
         guard currentMonitors.allSatisfy({ $0.frame.width > 1 && $0.frame.height > 1 }) else { return }
 
         controller.workspaceManager.applyMonitorConfigurationChange(currentMonitors)
@@ -263,16 +264,16 @@ final class ServiceLifecycleManager {
            let column = engine.column(of: node),
            abs(column.cachedWidth - flooredWidth) > 0.5
         {
-            WMLog.ax.info("handleFrameAcceptedAtDifferentSize: niri cachedWidth \(column.cachedWidth, privacy: .public) → \(flooredWidth, privacy: .public) windowId=\(windowId, privacy: .public)")
+            WMLog.ax
+                .info(
+                    "handleFrameAcceptedAtDifferentSize: niri cachedWidth \(column.cachedWidth, privacy: .public) → \(flooredWidth, privacy: .public) windowId=\(windowId, privacy: .public)"
+                )
             column.cachedWidth = flooredWidth
             widthChanged = true
         }
 
         if widthChanged {
-            controller.layoutRefreshController.requestRelayout(
-                reason: .frameAcceptedAtDifferentSize,
-                affectedWorkspaceIds: [workspaceId]
-            )
+            controller.layoutRefreshController.markWorkspaceDirty(workspaceId)
         }
     }
 

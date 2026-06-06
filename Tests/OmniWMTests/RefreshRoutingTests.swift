@@ -678,9 +678,6 @@ private func syncNiriWorkspaceStatesForRefreshTests(
     }
 }
 
-
-
-
 @Suite(.serialized) struct RefreshRoutingTests {
     @Test func relayoutPoliciesAreExplicit() {
         #expect(RefreshReason.axWindowChanged.relayoutSchedulingPolicy == .debounced(
@@ -832,7 +829,7 @@ private func syncNiriWorkspaceStatesForRefreshTests(
                 for: "1",
                 createIfMissing: false
             ),
-                  let engine = relaunchedController.niriEngine
+                let engine = relaunchedController.niriEngine
             else {
                 Issue.record("Missing relaunched Niri restore fixture")
                 return
@@ -841,14 +838,17 @@ private func syncNiriWorkspaceStatesForRefreshTests(
             let restoredTokenA = WindowToken(pid: getpid(), windowId: 6_201)
             let restoredTokenB = WindowToken(pid: getpid(), windowId: 6_202)
             let restoredTokenC = WindowToken(pid: getpid(), windowId: 6_203)
-            #expect(Set(relaunchedController.workspaceManager.allEntries().compactMap(\.managedReplacementMetadata?.bundleId)) == [bundleId])
-            #expect(Set(relaunchedController.workspaceManager.allEntries().compactMap(\.managedReplacementMetadata?.title)) == Set(titlesByRelaunchedWindowId.values))
+            #expect(Set(relaunchedController.workspaceManager.allEntries()
+                    .compactMap(\.managedReplacementMetadata?.bundleId)) == [bundleId])
+            #expect(Set(relaunchedController.workspaceManager.allEntries()
+                    .compactMap(\.managedReplacementMetadata?.title)) == Set(titlesByRelaunchedWindowId.values))
             #expect(relaunchedController.workspaceManager.consumedBootPersistedWindowRestoreEntryCountForTests() == 3)
-            #expect(workspaceManagerTokenSet(controller: relaunchedController, workspaceId: restoredWorkspaceId) == Set([
-                restoredTokenA,
-                restoredTokenB,
-                restoredTokenC
-            ]))
+            #expect(workspaceManagerTokenSet(controller: relaunchedController, workspaceId: restoredWorkspaceId) ==
+                Set([
+                    restoredTokenA,
+                    restoredTokenB,
+                    restoredTokenC
+                ]))
             #expect(niriColumnTokenSnapshot(controller: relaunchedController, workspaceId: restoredWorkspaceId) == [
                 [restoredTokenA, restoredTokenB],
                 [restoredTokenC]
@@ -922,8 +922,18 @@ private func syncNiriWorkspaceStatesForRefreshTests(
             to: workspaceId,
             mode: .tiling
         )
-        let parentNode = engine.addWindow(token: parentToken, to: workspaceId, afterSelection: nil, focusedToken: parentToken)
-        _ = engine.addWindow(token: siblingToken, to: workspaceId, afterSelection: parentNode.id, focusedToken: parentToken)
+        let parentNode = engine.addWindow(
+            token: parentToken,
+            to: workspaceId,
+            afterSelection: nil,
+            focusedToken: parentToken
+        )
+        _ = engine.addWindow(
+            token: siblingToken,
+            to: workspaceId,
+            afterSelection: parentNode.id,
+            focusedToken: parentToken
+        )
         guard let parentColumn = engine.column(of: parentNode),
               let parentColumnIndex = engine.columnIndex(of: parentColumn, in: workspaceId)
         else {
@@ -2387,7 +2397,12 @@ private func syncNiriWorkspaceStatesForRefreshTests(
 
         let previousFastFrameProvider = AXWindowService.fastFrameProviderForTests
         let previousSetFrameProvider = AXWindowService.setFrameResultProviderForTests
-        let nativeFrame = CGRect(x: monitor.visibleFrame.minX + 40, y: monitor.visibleFrame.minY + 50, width: 620, height: 430)
+        let nativeFrame = CGRect(
+            x: monitor.visibleFrame.minX + 40,
+            y: monitor.visibleFrame.minY + 50,
+            width: 620,
+            height: 430
+        )
         var frameWrites: [CGRect] = []
         AXWindowService.fastFrameProviderForTests = { axRef in
             if axRef.windowId == token.windowId {
@@ -3125,7 +3140,8 @@ private func syncNiriWorkspaceStatesForRefreshTests(
         #expect(controller.workspaceManager.entry(for: targetToken) != nil)
     }
 
-    @Test @MainActor func nativeFullscreenExitPreservesInactiveWorkspaceWindowsWhenLifecycleClearsDuringEnumeration() async {
+    @Test @MainActor func nativeFullscreenExitPreservesInactiveWorkspaceWindowsWhenLifecycleClearsDuringEnumeration(
+    ) async {
         let controller = makeRefreshTestController()
         defer { cleanupRefreshTestController(controller) }
         controller.motionPolicy.animationsEnabled = false
@@ -4891,13 +4907,14 @@ private func syncNiriWorkspaceStatesForRefreshTests(
             observer.enqueueEventForTests(.frameChanged(windowId: 6403))
             observer.enqueueEventForTests(.frameChanged(windowId: 6403))
             observer.flushPendingCGSEventsForTests()
+            controller.layoutRefreshController.drainDirtyWorkspacesForTests()
             await waitForRefreshWork(on: controller)
 
-            #expect(recorder.relayoutEvents.map(\.0) == [.axWindowChanged])
+            #expect(recorder.relayoutEvents.map(\.0) == [.dirtyWorkspaceReflow])
             #expect(recorder.relayoutEvents.map(\.1) == [.relayout])
             #expect(
                 controller.layoutRefreshController.refreshDebugSnapshot()
-                    .lastAffectedWorkspaceIdsByReason[.axWindowChanged] == [workspaceId]
+                    .lastAffectedWorkspaceIdsByReason[.dirtyWorkspaceReflow] == [workspaceId]
             )
             #expect(recorder.fullRescanReasons.isEmpty)
             #expect(recorder.visibilityReasons.isEmpty)

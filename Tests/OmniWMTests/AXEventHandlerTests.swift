@@ -3102,7 +3102,8 @@ private func waitUntilAXEventTest(
             width: 400,
             height: 300
         ))
-        #expect(controller.workspaceManager.nativeFullscreenRecord(for: replacementToken)?.currentToken == replacementToken)
+        #expect(controller.workspaceManager.nativeFullscreenRecord(for: replacementToken)?
+            .currentToken == replacementToken)
     }
 
     @Test @MainActor func resizePlaceholderClearsWithManagedWindowIdentityRekey() async throws {
@@ -3419,7 +3420,8 @@ private func waitUntilAXEventTest(
         controller.axEventHandler.handleRemoved(token: removedToken)
 
         #expect(controller.nativeFullscreenPlaceholderManager.snapshotForTests()[removedToken] == nil)
-        #expect(controller.workspaceManager.nativeFullscreenRecord(for: removedToken)?.availability == .temporarilyUnavailable)
+        #expect(controller.workspaceManager.nativeFullscreenRecord(for: removedToken)?
+            .availability == .temporarilyUnavailable)
     }
 
     @Test @MainActor func workspaceDidActivateApplicationRevealsRestoredManagedWindowOnInactiveWorkspace() {
@@ -3637,9 +3639,10 @@ private func waitUntilAXEventTest(
             CGSEventObserver.shared,
             didReceive: .frameChanged(windowId: 811)
         )
+        controller.layoutRefreshController.drainDirtyWorkspacesForTests()
         await controller.layoutRefreshController.waitForRefreshWorkForTests()
 
-        #expect(relayoutReasons == [.axWindowChanged])
+        #expect(relayoutReasons == [.dirtyWorkspaceReflow])
     }
 
     @Test @MainActor func nativeHiddenMoveResizeEventsDoNotRelayout() async {
@@ -3718,14 +3721,15 @@ private func waitUntilAXEventTest(
             observer.enqueueEventForTests(.frameChanged(windowId: 814))
             observer.enqueueEventForTests(.frameChanged(windowId: 814))
             observer.flushPendingCGSEventsForTests()
+            controller.layoutRefreshController.drainDirtyWorkspacesForTests()
             await controller.layoutRefreshController.waitForRefreshWorkForTests()
 
-            #expect(relayoutReasons == [.axWindowChanged])
+            #expect(relayoutReasons == [.dirtyWorkspaceReflow])
             #expect(controller.axEventHandler.debugCounters.geometryRelayoutRequests == 1)
             #expect(controller.axEventHandler.debugCounters.scopedGeometryRelayoutRequests == 1)
             #expect(
                 controller.layoutRefreshController.refreshDebugSnapshot()
-                    .lastAffectedWorkspaceIdsByReason[.axWindowChanged] == [workspaceId]
+                    .lastAffectedWorkspaceIdsByReason[.dirtyWorkspaceReflow] == [workspaceId]
             )
         }
     }
@@ -3779,10 +3783,11 @@ private func waitUntilAXEventTest(
             CGSEventObserver.shared,
             didReceive: .frameChanged(windowId: 819)
         )
+        controller.layoutRefreshController.drainDirtyWorkspacesForTests()
         await controller.layoutRefreshController.waitForRefreshWorkForTests()
 
         #expect(capturedTarget == handle)
-        #expect(relayoutReasons == [.axWindowChanged])
+        #expect(relayoutReasons == [.dirtyWorkspaceReflow])
         #expect(lastAppliedBorderWindowId(on: controller) == 819)
         #expect(lastAppliedBorderFrame(on: controller) == observedFrame)
     }
@@ -9684,8 +9689,18 @@ private func waitUntilAXEventTest(
             return
         }
 
-        let parentNode = engine.addWindow(token: parentToken, to: workspaceId, afterSelection: nil, focusedToken: parentToken)
-        _ = engine.addWindow(token: siblingToken, to: workspaceId, afterSelection: parentNode.id, focusedToken: parentToken)
+        let parentNode = engine.addWindow(
+            token: parentToken,
+            to: workspaceId,
+            afterSelection: nil,
+            focusedToken: parentToken
+        )
+        _ = engine.addWindow(
+            token: siblingToken,
+            to: workspaceId,
+            afterSelection: parentNode.id,
+            focusedToken: parentToken
+        )
         guard let parentColumn = engine.column(of: parentNode),
               let parentColumnIndex = engine.columnIndex(of: parentColumn, in: workspaceId)
         else {

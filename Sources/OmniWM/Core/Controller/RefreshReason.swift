@@ -52,6 +52,7 @@ enum RefreshReason: String, Sendable {
     case axWindowCreated
     case axWindowChanged
     case frameAcceptedAtDifferentSize
+    case dirtyWorkspaceReflow
     case windowDestroyed
     case appHidden
     case appUnhidden
@@ -75,7 +76,8 @@ enum RefreshReason: String, Sendable {
              .windowRuleReevaluation,
              .axWindowCreated,
              .axWindowChanged,
-             .frameAcceptedAtDifferentSize:
+             .frameAcceptedAtDifferentSize,
+             .dirtyWorkspaceReflow:
             .relayout
         case .workspaceTransition,
              .appActivationTransition,
@@ -120,7 +122,8 @@ enum RefreshReason: String, Sendable {
             .debounced(nanoseconds: 8_000_000, dropWhileBusy: true)
         case .frameAcceptedAtDifferentSize:
             .debounced(nanoseconds: 8_000_000, dropWhileBusy: false)
-        case .windowDestroyed:
+        case .dirtyWorkspaceReflow,
+             .windowDestroyed:
             .plain
         }
     }

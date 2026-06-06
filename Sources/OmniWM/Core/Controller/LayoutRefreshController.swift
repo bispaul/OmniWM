@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
-import QuartzCore
 import os
+import QuartzCore
 
 @MainActor final class LayoutRefreshController: NSObject {
     typealias PostLayoutAction = @MainActor () -> Void
@@ -173,6 +173,7 @@ import os
         var displayLinksByDisplay: [CGDirectDisplayID: CADisplayLink] = [:]
         var refreshRateByDisplay: [CGDirectDisplayID: Double] = [:]
         var closingAnimationsByDisplay: [CGDirectDisplayID: [Int: ClosingAnimation]] = [:]
+        var dirtyWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
         var screenChangeObserver: NSObjectProtocol?
         var hasCompletedInitialRefresh: Bool = false
         var didExecuteRefreshExecutionPlan: Bool = false
@@ -274,6 +275,22 @@ import os
         niriHandler.tickScrollAnimation(targetTime: displayLink.targetTimestamp, displayId: displayId)
         dwindleHandler.tickDwindleAnimation(targetTime: displayLink.targetTimestamp, displayId: displayId)
         tickClosingAnimations(targetTime: displayLink.targetTimestamp, displayId: displayId)
+        drainDirtyWorkspaces(displayId: displayId)
+    }
+
+    private func drainDirtyWorkspaces(displayId: CGDirectDisplayID) {
+        guard !layoutState.dirtyWorkspaceIds.isEmpty else { return }
+        let drained = layoutState.dirtyWorkspaceIds
+        layoutState.dirtyWorkspaceIds.removeAll()
+        WMLog.layout.debug("Dirty reflow: \(drained.count, privacy: .public) workspace(s)")
+        enqueueRefresh(
+            .init(
+                kind: .relayout,
+                reason: .dirtyWorkspaceReflow,
+                affectedWorkspaceIds: drained
+            )
+        )
+        stopDisplayLinkIfIdle(for: displayId)
     }
 
     func startScrollAnimation(for workspaceId: WorkspaceDescriptor.ID) {
@@ -375,7 +392,8 @@ import os
     private func stopDisplayLinkIfIdle(for displayId: CGDirectDisplayID) {
         if niriHandler.scrollAnimationByDisplay[displayId] == nil,
            dwindleHandler.dwindleAnimationByDisplay[displayId] == nil,
-           layoutState.closingAnimationsByDisplay[displayId].map({ $0.isEmpty }) ?? true
+           layoutState.closingAnimationsByDisplay[displayId].map({ $0.isEmpty }) ?? true,
+           layoutState.dirtyWorkspaceIds.isEmpty
         {
             // Idle display links must not remain cached after teardown.
             if let link = layoutState.displayLinksByDisplay.removeValue(forKey: displayId) {
@@ -739,6 +757,21 @@ import os
         )
     }
 
+    func markWorkspaceDirty(_ workspaceId: WorkspaceDescriptor.ID) {
+        layoutState.dirtyWorkspaceIds.insert(workspaceId)
+        guard let controller else { return }
+        let targetDisplayId: CGDirectDisplayID
+        if let monitor = controller.workspaceManager.monitor(for: workspaceId) {
+            targetDisplayId = monitor.displayId
+        } else if let mainDisplayId = NSScreen.main?.displayId {
+            targetDisplayId = mainDisplayId
+        } else {
+            return
+        }
+        guard let displayLink = getOrCreateDisplayLink(for: targetDisplayId) else { return }
+        displayLink.add(to: .main, forMode: .common)
+    }
+
     func requestImmediateRelayout(
         reason: RefreshReason,
         affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = [],
@@ -951,6 +984,13 @@ import os
         }
     }
 
+    func drainDirtyWorkspacesForTests() {
+        guard let displayId = layoutState.displayLinksByDisplay.keys.first
+            ?? NSScreen.main?.displayId
+        else { return }
+        drainDirtyWorkspaces(displayId: displayId)
+    }
+
     private func settleAllAnimations() {
         let settleTime = CACurrentMediaTime() + 10.0
 
@@ -992,6 +1032,7 @@ import os
         niriHandler.scrollAnimationByDisplay.removeAll()
         dwindleHandler.dwindleAnimationByDisplay.removeAll()
         layoutState.closingAnimationsByDisplay.removeAll()
+        layoutState.dirtyWorkspaceIds.removeAll()
 
         controller?.axManager.clearInactiveWorkspaceWindows()
 
@@ -3118,7 +3159,10 @@ import os
                 pendingResizePlaceholderFallbackEvidenceByToken.removeValue(forKey: entry.token)
                 return nil
             }
-            let constraints = resizePlaceholderFallbackConstraints(for: entry, observedFrame: result.writeResult.observedFrame)
+            let constraints = resizePlaceholderFallbackConstraints(
+                for: entry,
+                observedFrame: result.writeResult.observedFrame
+            )
             let minimumSize = fallbackResizeMinimumSize(
                 targetSize: result.targetFrame.size,
                 observedSize: observedSize,
@@ -3147,7 +3191,10 @@ import os
                 pendingResizePlaceholderFallbackEvidenceByToken.removeValue(forKey: entry.token)
                 return constraints.minSize
             }
-            let constraints = resizePlaceholderFallbackConstraints(for: entry, observedFrame: result.writeResult.observedFrame)
+            let constraints = resizePlaceholderFallbackConstraints(
+                for: entry,
+                observedFrame: result.writeResult.observedFrame
+            )
             let minimumSize = fallbackResizeMinimumSize(
                 targetSize: result.targetFrame.size,
                 observedSize: observedSize,
@@ -3292,24 +3339,25 @@ final class LayoutDiffExecutor {
             return entry
         }
 
-        let placeholderUpdates = diff.nativeFullscreenPlaceholders.compactMap { change -> NativeFullscreenPlaceholderUpdate? in
-            guard let entry = resolveEntry(for: change.token),
-                  entry.workspaceId == plan.workspaceId,
-                  entry.layoutReason == .nativeFullscreen,
-                  controller.workspaceManager.showsNativeFullscreenPlaceholder(for: change.token)
-            else {
-                return nil
+        let placeholderUpdates = diff.nativeFullscreenPlaceholders
+            .compactMap { change -> NativeFullscreenPlaceholderUpdate? in
+                guard let entry = resolveEntry(for: change.token),
+                      entry.workspaceId == plan.workspaceId,
+                      entry.layoutReason == .nativeFullscreen,
+                      controller.workspaceManager.showsNativeFullscreenPlaceholder(for: change.token)
+                else {
+                    return nil
+                }
+                let appInfo = controller.appInfoCache.info(for: entry.pid)
+                return NativeFullscreenPlaceholderUpdate(
+                    token: change.token,
+                    workspaceId: plan.workspaceId,
+                    frame: change.frame,
+                    selected: change.selected,
+                    appName: appInfo?.name,
+                    icon: appInfo?.icon
+                )
             }
-            let appInfo = controller.appInfoCache.info(for: entry.pid)
-            return NativeFullscreenPlaceholderUpdate(
-                token: change.token,
-                workspaceId: plan.workspaceId,
-                frame: change.frame,
-                selected: change.selected,
-                appName: appInfo?.name,
-                icon: appInfo?.icon
-            )
-        }
         controller.nativeFullscreenPlaceholderManager.update(
             placeholders: placeholderUpdates,
             in: plan.workspaceId
@@ -3346,7 +3394,9 @@ final class LayoutDiffExecutor {
             )
         }
         let resizePlaceholderTokens = Set(resizePlaceholderUpdates.map(\.token))
-        if !resizePlaceholderUpdates.isEmpty || controller.resizePlaceholderManager.hasPlaceholders(in: plan.workspaceId) {
+        if !resizePlaceholderUpdates.isEmpty || controller.resizePlaceholderManager
+            .hasPlaceholders(in: plan.workspaceId)
+        {
             for (token, _) in controller.workspaceManager.resizePlaceholderStates(in: plan.workspaceId)
                 where !resizePlaceholderTokens.contains(token)
             {
@@ -3548,7 +3598,10 @@ final class LayoutDiffExecutor {
                     controller.axManager.forceApplyNextFrame(for: entry.windowId)
                     refreshController.clearResizePlaceholderFallbackEvidence(for: change.token)
                     frameUpdates.append((entry.pid, entry.windowId, change.frame))
-                } else if refreshController.shouldObserveResizePlaceholderFallback(entry: entry, targetFrame: change.frame) {
+                } else if refreshController.shouldObserveResizePlaceholderFallback(
+                    entry: entry,
+                    targetFrame: change.frame
+                ) {
                     resizeProbeFrameUpdates.append((entry.pid, entry.windowId, change.frame))
                 } else {
                     frameUpdates.append((entry.pid, entry.windowId, change.frame))
@@ -3559,7 +3612,6 @@ final class LayoutDiffExecutor {
         if !frameUpdates.isEmpty {
             controller.axManager.applyFramesParallel(frameUpdates)
         }
-
 
         if !resizeProbeFrameUpdates.isEmpty {
             controller.axManager.applyFramesParallel(
@@ -3601,5 +3653,4 @@ final class LayoutDiffExecutor {
 
         return controller.workspaceManager.monitors.first(where: { $0.displayId == snapshot.displayId })
     }
-
 }
