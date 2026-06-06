@@ -57,6 +57,8 @@ final class SkyLight {
         -> CGError
     private typealias TransactionSetWindowLevelFunc = @convention(c) (CFTypeRef, UInt32, Int32) -> CGError
     private typealias CopyManagedDisplaySpacesFunc = @convention(c) (Int32) -> CFArray?
+    private typealias CopySpacesForWindowsFunc = @convention(c) (Int32, Int32, CFArray) -> Unmanaged<CFArray>?
+    private typealias SpaceGetTypeFunc = @convention(c) (Int32, UInt64) -> Int32
     private typealias DisplayCreateUUIDFromDisplayIDFunc = @convention(c) (CGDirectDisplayID) -> Unmanaged<CFUUID>?
 
     typealias ConnectionNotifyCallback = @convention(c) (
@@ -138,6 +140,8 @@ final class SkyLight {
     private let newRegionWithRect: NewRegionWithRectFunc?
     private let transactionSetWindowLevel: TransactionSetWindowLevelFunc?
     private let copyManagedDisplaySpaces: CopyManagedDisplaySpacesFunc?
+    private let copySpacesForWindows: CopySpacesForWindowsFunc?
+    private let spaceGetType: SpaceGetTypeFunc?
 
     @MainActor static var orderedStateProviderForTests: ((UInt32) -> Bool?)?
     private static let displayCreateUUIDFromDisplayID: DisplayCreateUUIDFromDisplayIDFunc? = {
@@ -278,10 +282,37 @@ final class SkyLight {
             as: CopyManagedDisplaySpacesFunc.self
         )
             ?? resolveOptional("CGSCopyManagedDisplaySpaces", as: CopyManagedDisplaySpacesFunc.self)
+        copySpacesForWindows = resolveOptional("SLSCopySpacesForWindows", as: CopySpacesForWindowsFunc.self)
+        spaceGetType = resolveOptional("SLSSpaceGetType", as: SpaceGetTypeFunc.self)
     }
 
     func getMainConnectionID() -> Int32 {
         mainConnectionID()
+    }
+
+    func windowIsOnFullscreenSpace(windowId: Int) -> Bool {
+        guard let copySpacesForWindows, let spaceGetType else {
+            WMLog.focus.info("windowIsOnFullscreenSpace: SLS space functions unavailable, fallback=false")
+            return false
+        }
+
+        let conn = getMainConnectionID()
+        let windowArray = [CGWindowID(windowId)] as CFArray
+
+        guard let spacesCF = copySpacesForWindows(conn, 0x7, windowArray)?.takeRetainedValue() as? [UInt64],
+              !spacesCF.isEmpty
+        else {
+            return false
+        }
+
+        for spaceId in spacesCF {
+            let spaceType = spaceGetType(conn, spaceId)
+            if spaceType == 4 {
+                return true
+            }
+        }
+
+        return false
     }
 
     func cornerRadius(forWindowId wid: Int) -> CGFloat? {

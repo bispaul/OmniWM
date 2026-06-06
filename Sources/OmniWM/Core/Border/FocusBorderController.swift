@@ -292,11 +292,12 @@ final class FocusBorderController {
             return .hide
         }
 
-        if target.isManaged,
-           (controller.workspaceManager.isAppFullscreenActive || isManagedWindowFullscreen(target.token))
-        {
-            WMLog.focus.debug("renderEligibility: hide reason=appFullscreen token=\(String(describing: target.token), privacy: .public)")
-            return .hide
+        if target.isManaged {
+            let isOnFullscreenSpace = SkyLight.shared.windowIsOnFullscreenSpace(windowId: target.token.windowId)
+            if isOnFullscreenSpace || isManagedWindowFullscreen(target.token) {
+                WMLog.focus.info("renderEligibility: hide reason=appFullscreen token=\(String(describing: target.token), privacy: .public) spaceCheck=\(isOnFullscreenSpace, privacy: .public)")
+                return .hide
+            }
         }
 
         if target.isManaged,
