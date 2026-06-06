@@ -14,6 +14,7 @@ final class WorkspaceNavigationHandler {
     private struct WindowTransferResult {
         let succeeded: Bool
         let newSourceFocusToken: WindowToken?
+        let usedAtomicPath: Bool
     }
 
     private func applySessionPatch(
@@ -496,7 +497,7 @@ final class WorkspaceNavigationHandler {
         to targetWsId: WorkspaceDescriptor.ID
     ) -> WindowTransferResult {
         guard let controller else {
-            return WindowTransferResult(succeeded: false, newSourceFocusToken: nil)
+            return WindowTransferResult(succeeded: false, newSourceFocusToken: nil, usedAtomicPath: false)
         }
         let sourceLayout: LayoutType = sourceWsId
             .flatMap { controller.workspaceManager.descriptor(for: $0)?.name }
@@ -507,6 +508,7 @@ final class WorkspaceNavigationHandler {
         let targetIsDwindle = targetLayout == .dwindle
         var newSourceFocusToken: WindowToken?
         var movedWithNiri = false
+        var usedAtomic = false
 
         if !sourceIsDwindle,
            !targetIsDwindle,
@@ -514,29 +516,42 @@ final class WorkspaceNavigationHandler {
            let engine = controller.niriEngine,
            let windowNode = engine.findNode(for: token)
         {
-            var sourceState = controller.workspaceManager.niriViewportState(for: sourceWsId)
-            var targetState = controller.workspaceManager.niriViewportState(for: targetWsId)
-            if let result = engine.moveWindowToWorkspace(
-                windowNode,
-                from: sourceWsId,
-                to: targetWsId,
-                sourceState: &sourceState,
-                targetState: &targetState
-            ) {
-                if let newFocusId = result.newFocusNodeId,
-                   let newFocusNode = engine.findNode(by: newFocusId) as? NiriWindow
+            // Try atomic path first (single-window column, preserves width)
+            if atomicTransferWindow(token, from: sourceWsId, to: targetWsId) {
+                let sourceState = controller.workspaceManager.niriViewportState(for: sourceWsId)
+                if let selectedId = sourceState.selectedNodeId,
+                   let selectedNode = engine.findNode(by: selectedId) as? NiriWindow
                 {
-                    newSourceFocusToken = newFocusNode.token
+                    newSourceFocusToken = selectedNode.token
                 }
-                applySessionTransfer(
-                    sourceWorkspaceId: sourceWsId,
-                    sourceState: sourceState,
-                    sourceFocusedToken: newSourceFocusToken,
-                    targetWorkspaceId: targetWsId,
-                    targetState: targetState,
-                    targetFocusedToken: nil
-                )
                 movedWithNiri = true
+                usedAtomic = true
+            } else {
+                // Fallback: moveWindowToWorkspace (multi-window column, tabbed, etc.)
+                var sourceState = controller.workspaceManager.niriViewportState(for: sourceWsId)
+                var targetState = controller.workspaceManager.niriViewportState(for: targetWsId)
+                if let result = engine.moveWindowToWorkspace(
+                    windowNode,
+                    from: sourceWsId,
+                    to: targetWsId,
+                    sourceState: &sourceState,
+                    targetState: &targetState
+                ) {
+                    if let newFocusId = result.newFocusNodeId,
+                       let newFocusNode = engine.findNode(by: newFocusId) as? NiriWindow
+                    {
+                        newSourceFocusToken = newFocusNode.token
+                    }
+                    applySessionTransfer(
+                        sourceWorkspaceId: sourceWsId,
+                        sourceState: sourceState,
+                        sourceFocusedToken: newSourceFocusToken,
+                        targetWorkspaceId: targetWsId,
+                        targetState: targetState,
+                        targetFocusedToken: nil
+                    )
+                    movedWithNiri = true
+                }
             }
         }
 
@@ -597,7 +612,7 @@ final class WorkspaceNavigationHandler {
             succeeded = true
         }
 
-        return WindowTransferResult(succeeded: succeeded, newSourceFocusToken: newSourceFocusToken)
+        return WindowTransferResult(succeeded: succeeded, newSourceFocusToken: newSourceFocusToken, usedAtomicPath: usedAtomic)
     }
 
     func moveWindowToAdjacentWorkspace(direction: Direction) {
@@ -616,7 +631,9 @@ final class WorkspaceNavigationHandler {
         let transferResult = transferWindowFromSourceEngine(token: token, from: wsId, to: targetWorkspace.id)
         guard transferResult.succeeded else { return }
 
-        controller.reassignManagedWindow(token, to: targetWorkspace.id)
+        if !transferResult.usedAtomicPath {
+            controller.reassignManagedWindow(token, to: targetWorkspace.id)
+        }
         applySessionPatch(workspaceId: targetWorkspace.id, rememberedFocusToken: token)
 
         let sourceState = controller.workspaceManager.niriViewportState(for: wsId)
@@ -913,7 +930,9 @@ final class WorkspaceNavigationHandler {
         )
         guard transferResult.succeeded else { return }
 
-        controller.reassignManagedWindow(token, to: targetWsId)
+        if !transferResult.usedAtomicPath {
+            controller.reassignManagedWindow(token, to: targetWsId)
+        }
 
         let shouldFollowFocus = controller.settings.focusFollowsWindowToMonitor
 

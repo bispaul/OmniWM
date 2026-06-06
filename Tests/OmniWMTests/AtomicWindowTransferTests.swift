@@ -282,4 +282,59 @@ import Testing
 
         #expect(!result)
     }
+
+    // MARK: - Task 3: Caller integration
+
+    @Test func moveWindowToAdjacentWorkspacePreservesWidth() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let ws1 = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: ws1, windowId: 7001)
+        _ = controller.workspaceManager.setManagedFocus(token, in: ws1, onMonitor: monitor.id)
+        _ = controller.workspaceManager.setInteractionMonitor(monitor.id)
+
+        // Sync window into engine
+        engine.syncWindows([token], in: ws1, selectedNodeId: nil)
+
+        let plans = try? await controller.niriLayoutHandler.layoutWithNiriEngine(
+            activeWorkspaces: [ws1]
+        )
+        if let plans { controller.layoutRefreshController.executeLayoutPlans(plans) }
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        guard let windowNode = engine.findNode(for: token),
+              let column = engine.findColumn(containing: windowNode, in: ws1)
+        else {
+            Issue.record("Window not in engine")
+            return
+        }
+        let widthBefore = column.cachedWidth
+
+        // Move to adjacent workspace (creates ws if needed)
+        controller.workspaceNavigationHandler.moveWindowToAdjacentWorkspace(direction: .down)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        // Window should be in a different workspace now
+        let newWsId = controller.workspaceManager.workspace(for: token)
+        #expect(newWsId != nil)
+        #expect(newWsId != ws1)
+
+        // Column width should be preserved (atomic transfer path)
+        if let newWsId,
+           let movedNode = engine.findNode(for: token),
+           let movedColumn = engine.findColumn(containing: movedNode, in: newWsId)
+        {
+            #expect(movedColumn.cachedWidth == widthBefore)
+        }
+    }
 }
