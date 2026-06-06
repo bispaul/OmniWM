@@ -160,7 +160,7 @@ Classification checks (in order):
 | **Phase 1** | Never Fight the App | AXManager, NiriLayoutHandler, DwindleLayoutHandler | None | **DONE (build 72).** Accept-and-adapt with immediate callback. Width-change guard prevents position/height loops. |
 | **Phase 1b** | Remove cooldowns | AXManager, AXEventHandler | Phase 1 proven stable | **DONE (build 72).** Cooldowns removed — accept-and-adapt handles all cases. |
 | **Phase 2** | Dirty + Reflow | AXEventHandler, LayoutRefreshController | Phase 1 | **DONE.** App-initiated AX events mark workspaces dirty; drain on CADisplayLink tick coalesces to single reflow. |
-| **Phase 3** | Viewport Camera | ViewportState, NiriLayoutHandler | Phase 1 required, Phase 2 recommended | Viewport policies are pure functions of layout state. |
+| **Phase 3** | Viewport Camera | ViewportState, NiriLayoutHandler | Phase 1 required, Phase 2 recommended | **DONE (build 74).** Unified pipeline: anchor preservation + overspread/center/fit policies. Removed 8 per-operation applyOverspreadIfNeeded calls. |
 | **Phase 4** | Classify Before Admit | AXEventHandler, WindowRuleEngine | Independent, after core pipeline stable | |
 | **Phase 5** | State Reconciliation | WorkspaceManager, ServiceLifecycleManager, FocusPolicyEngine | All other phases | Reconciles the full state atomically. |
 

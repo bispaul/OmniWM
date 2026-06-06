@@ -54,38 +54,98 @@ enum NiriWindowMoveResult {
         controller.layoutRefreshController.startScrollAnimation(for: workspaceId)
     }
 
-    /// Adjusts the viewport offset to center the column group when all columns
-    /// fit within the viewport with space to spare.
-    private func applyOverspreadIfNeeded(
-        wsId: WorkspaceDescriptor.ID,
+    private func applyViewportPipeline(
+        pass: NiriLayoutPass,
         state: inout ViewportState,
-        engine: NiriLayoutEngine
+        priorFocusedColumnPosition: CGFloat?,
+        applyPolicies: Bool
     ) {
         guard let controller else { return }
-        guard let monitor = controller.workspaceManager.monitor(for: wsId) else { return }
-        let workingFrame = controller.insetWorkingFrame(for: monitor)
-        let gap = CGFloat(controller.workspaceManager.gaps)
-        let columns = engine.columns(in: wsId)
-        let orientation = engine.monitor(for: monitor.id)?.orientation ?? .horizontal
+        let engine = pass.engine
+        let columns = engine.columns(in: pass.wsId)
+        guard !columns.isEmpty else { return }
+        let orientation = engine.monitor(for: pass.monitor.id)?.orientation ?? .horizontal
+        let motion = controller.motionPolicy.snapshot()
+        let sizeKeyPath: KeyPath<NiriContainer, CGFloat> = orientation == .horizontal
+            ? \.cachedWidth : \.cachedHeight
 
-        switch orientation {
-        case .horizontal:
-            state.applyOverspread(
-                containers: columns,
-                gap: gap,
-                viewportSpan: workingFrame.width,
-                sizeKeyPath: \.cachedWidth,
-                motion: controller.motionPolicy.snapshot()
-            )
-        case .vertical:
-            state.applyOverspread(
-                containers: columns,
-                gap: gap,
-                viewportSpan: workingFrame.height,
-                sizeKeyPath: \.cachedHeight,
-                motion: controller.motionPolicy.snapshot()
+        if let priorPos = priorFocusedColumnPosition {
+            applyAnchorPreservation(
+                state: &state,
+                priorFocusedColumnPosition: priorPos,
+                columns: columns,
+                gap: pass.gap,
+                sizeKeyPath: sizeKeyPath
             )
         }
+
+        let viewportSpan = orientation == .horizontal
+            ? pass.insetFrame.width : pass.insetFrame.height
+        let totalWidth = columns.enumerated().reduce(CGFloat(0)) { sum, pair in
+            sum + pair.element[keyPath: sizeKeyPath] + (pair.offset < columns.count - 1 ? pass.gap : 0)
+        }
+
+        guard applyPolicies else { return }
+
+        if totalWidth < viewportSpan {
+            state.applyOverspread(
+                containers: columns,
+                gap: pass.gap,
+                viewportSpan: viewportSpan,
+                sizeKeyPath: sizeKeyPath,
+                motion: motion
+            )
+        } else {
+            let settings = engine.effectiveSettings(for: pass.monitor.id)
+            state.ensureContainerVisible(
+                containerIndex: state.activeColumnIndex,
+                containers: columns,
+                gap: pass.gap,
+                viewportSpan: viewportSpan,
+                motion: motion,
+                sizeKeyPath: sizeKeyPath,
+                centerMode: settings.centerFocusedColumn,
+                alwaysCenterSingleColumn: settings.alwaysCenterSingleColumn
+            )
+        }
+    }
+
+    private func applyAnchorPreservation(
+        state: inout ViewportState,
+        priorFocusedColumnPosition: CGFloat,
+        columns: [NiriContainer],
+        gap: CGFloat,
+        sizeKeyPath: KeyPath<NiriContainer, CGFloat>
+    ) {
+        let activeIndex = state.activeColumnIndex
+        guard activeIndex >= 0, activeIndex < columns.count else { return }
+        let currentPos = state.containerPosition(
+            at: activeIndex,
+            containers: columns,
+            gap: gap,
+            sizeKeyPath: sizeKeyPath
+        )
+        let delta = currentPos - priorFocusedColumnPosition
+        guard abs(delta) > 0.5 else { return }
+        state.viewOffsetPixels.offset(delta: Double(-delta))
+    }
+
+    private func captureFocusedColumnPosition(
+        pass: NiriLayoutPass,
+        state: ViewportState
+    ) -> CGFloat? {
+        let columns = pass.engine.columns(in: pass.wsId)
+        let idx = state.activeColumnIndex
+        guard idx >= 0, idx < columns.count else { return nil }
+        let orientation = pass.engine.monitor(for: pass.monitor.id)?.orientation ?? .horizontal
+        let sizeKeyPath: KeyPath<NiriContainer, CGFloat> = orientation == .horizontal
+            ? \.cachedWidth : \.cachedHeight
+        return state.containerPosition(
+            at: idx,
+            containers: columns,
+            gap: pass.gap,
+            sizeKeyPath: sizeKeyPath
+        )
     }
 
     func registerScrollAnimation(_ workspaceId: WorkspaceDescriptor.ID, on displayId: CGDirectDisplayID) -> Bool {
@@ -369,6 +429,9 @@ enum NiriWindowMoveResult {
             insetFrame: snapshot.monitor.workingFrame,
             gap: snapshot.gap
         )
+        let priorFocusedColumnPosition = captureFocusedColumnPosition(
+            pass: pass, state: state
+        )
         let windowTokens = snapshot.windows.map(\.token)
         let currentSelection = state.selectedNodeId
 
@@ -417,11 +480,12 @@ enum NiriWindowMoveResult {
         let plan = computeLayoutPlan(
             pass: pass,
             motion: motion,
-            state: state,
+            state: &state,
             rememberedFocusToken: arrival.rememberedFocusToken ?? selection.rememberedFocusToken,
             newWindowToken: arrival.newWindowToken,
             viewportNeedsRecalc: selection.viewportNeedsRecalc,
-            snapshot: snapshot
+            snapshot: snapshot,
+            priorFocusedColumnPosition: priorFocusedColumnPosition
         )
 
         controller?.workspaceManager.setNiriRestorePlacements(
@@ -722,11 +786,12 @@ enum NiriWindowMoveResult {
     private func computeLayoutPlan(
         pass: NiriLayoutPass,
         motion: MotionSnapshot,
-        state: ViewportState,
+        state: inout ViewportState,
         rememberedFocusToken: WindowToken?,
         newWindowToken: WindowToken?,
         viewportNeedsRecalc: Bool,
-        snapshot: NiriWorkspaceSnapshot
+        snapshot: NiriWorkspaceSnapshot,
+        priorFocusedColumnPosition: CGFloat? = nil
     ) -> WorkspaceLayoutPlan {
         let gaps = LayoutGaps(
             horizontal: pass.gap,
@@ -747,6 +812,13 @@ enum NiriWindowMoveResult {
             state: state,
             workingArea: area,
             animationTime: nil
+        )
+
+        applyViewportPipeline(
+            pass: pass,
+            state: &state,
+            priorFocusedColumnPosition: priorFocusedColumnPosition,
+            applyPolicies: viewportNeedsRecalc || newWindowToken != nil
         )
 
         let hasColumnAnimations = pass.engine.hasAnyColumnAnimationsRunning(in: pass.wsId)
@@ -926,7 +998,11 @@ enum NiriWindowMoveResult {
             guard let workspace = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)
             else { continue }
 
-            infos.append(contentsOf: tabbedColumnOverlayInfos(engine: engine, workspaceId: workspace.id, monitor: monitor))
+            infos.append(contentsOf: tabbedColumnOverlayInfos(
+                engine: engine,
+                workspaceId: workspace.id,
+                monitor: monitor
+            ))
         }
 
         controller.tabbedOverlayManager.updateOverlays(infos, forceOrdering: forceOrdering)
@@ -1139,13 +1215,16 @@ enum NiriWindowMoveResult {
             workingFrame: workingFrame,
             gaps: gap
         ) {
-            WMLog.focus.debug("focusNeighbor: direction=\(String(describing: direction), privacy: .public) currentNode=\(String(describing: currentId), privacy: .public) targetNode=\(String(describing: newNode.id), privacy: .public)")
+            WMLog.focus
+                .debug(
+                    "focusNeighbor: direction=\(String(describing: direction), privacy: .public) currentNode=\(String(describing: currentId), privacy: .public) targetNode=\(String(describing: newNode.id), privacy: .public)"
+                )
             activateNode(
                 newNode, in: wsId, state: &state,
                 options: .init(activateWindow: false, ensureVisible: false, preserveViewportAnchor: true)
             )
         }
-        applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+
         _ = controller.workspaceManager.applySessionPatch(
             .init(
                 workspaceId: wsId,
@@ -1165,7 +1244,10 @@ enum NiriWindowMoveResult {
 
             engine.toggleFullscreen(windowNode, motion: motion, state: &state)
 
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1187,8 +1269,11 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
+
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1209,8 +1294,11 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
+
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1229,7 +1317,10 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1250,7 +1341,10 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1271,8 +1365,11 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
+
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1285,8 +1382,11 @@ enum NiriWindowMoveResult {
             else { return }
 
             engine.resetWindowHeight(windowNode, in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
+
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1302,7 +1402,10 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             ) else { return }
 
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1318,7 +1421,10 @@ enum NiriWindowMoveResult {
                 gaps: gaps
             ) else { return }
 
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1340,8 +1446,11 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
+
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1362,8 +1471,11 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
+
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1382,7 +1494,10 @@ enum NiriWindowMoveResult {
                 workingFrame: workingFrame,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
             startScrollAnimationIfNeeded(for: wsId, state: state, engine: engine)
         }
     }
@@ -1396,8 +1511,11 @@ enum NiriWindowMoveResult {
                 workingAreaWidth: workingFrame.width,
                 gaps: gaps
             )
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
-            applyOverspreadIfNeeded(wsId: wsId, state: &state, engine: engine)
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
+
             if engine.hasAnyColumnAnimationsRunning(in: wsId) {
                 controller.layoutRefreshController.startScrollAnimation(for: wsId)
             }
@@ -1925,7 +2043,10 @@ struct NodeActivationOptions {
             newFrames: newFrames,
             motion: motion
         )
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+        controller.layoutRefreshController.requestImmediateRelayout(
+            reason: .layoutCommand,
+            affectedWorkspaceIds: [wsId]
+        )
         return hasPendingAnimationWork(state: state)
     }
 
@@ -1933,7 +2054,10 @@ struct NodeActivationOptions {
         state: ViewportState,
         oldFrames: [WindowToken: CGRect]
     ) -> Bool {
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+        controller.layoutRefreshController.requestImmediateRelayout(
+            reason: .layoutCommand,
+            affectedWorkspaceIds: [wsId]
+        )
         let newFrames = engine.captureWindowFrames(in: wsId)
         _ = engine.triggerMoveAnimations(
             in: wsId,
@@ -1945,7 +2069,10 @@ struct NodeActivationOptions {
     }
 
     func commitSimple(state: ViewportState) -> Bool {
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+        controller.layoutRefreshController.requestImmediateRelayout(
+            reason: .layoutCommand,
+            affectedWorkspaceIds: [wsId]
+        )
         return hasPendingAnimationWork(state: state)
     }
 }
