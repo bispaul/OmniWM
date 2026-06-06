@@ -182,6 +182,12 @@ final class ServiceLifecycleManager {
 
         switch event {
         case let .disconnected(monitorId, outputId):
+            // Capture rolling snapshot BEFORE disconnect cleanup — preserves state while all monitors are known
+            if self.sleepSnapshot == nil {
+                self.sleepSnapshot = self.captureStateSnapshot()
+                let monCount = self.sleepSnapshot?.monitorIds.count ?? 0
+                WMLog.ax.info("displayDisconnect: rolling snapshot captured monitors=\(monCount, privacy: .public)")
+            }
             handleMonitorDisconnect(monitorId: monitorId, outputId: outputId)
         case .connected,
              .reconfigured:
@@ -376,11 +382,12 @@ final class ServiceLifecycleManager {
             let currentMonitors = Monitor.current()
             let currentIds = Set(currentMonitors.map(\.id))
 
-            if let snapshot = self?.sleepSnapshot, currentIds == snapshot.monitorIds {
-                WMLog.ax.info("wakeReconciliation: same monitors, restoring from snapshot")
+            if let snapshot = self?.sleepSnapshot, snapshot.monitorIds.isSubset(of: currentIds) {
+                WMLog.ax.info("wakeReconciliation: monitors match (snapshot=\(snapshot.monitorIds.count, privacy: .public) current=\(currentIds.count, privacy: .public)), restoring from snapshot")
                 self?.restoreFromSnapshot(snapshot)
             } else {
-                WMLog.ax.info("wakeReconciliation: monitor change detected, full restoration")
+                let snapshotCount = self?.sleepSnapshot?.monitorIds.count ?? 0
+                WMLog.ax.info("wakeReconciliation: monitor mismatch (snapshot=\(snapshotCount, privacy: .public) current=\(currentIds.count, privacy: .public)), full restoration")
                 self?.applyMonitorConfigurationChanged(currentMonitors: currentMonitors)
             }
             self?.sleepSnapshot = nil
