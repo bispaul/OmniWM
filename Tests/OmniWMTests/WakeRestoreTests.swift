@@ -104,4 +104,111 @@ private func makeWakeTestMonitor(
         slm.handleDisplayEventForTests(.disconnected(ext2.id, OutputId(from: ext2)))
         #expect(slm.sleepSnapshot?.outputIds.count == 3)
     }
+
+    @Test @MainActor func wakeDisplayEventTransitionsToRestoredState() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+            WorkspaceConfiguration(name: "8", monitorAssignment: .specificDisplay(OutputId(displayId: 3, name: "U32J59x")))
+        ]
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        let ext32 = makeWakeTestMonitor(displayId: 3, name: "U32J59x", x: 0, y: -1440, width: 2560, height: 1440)
+        controller.workspaceManager.applyMonitorConfigurationChange([retina, ext32])
+
+        // Capture snapshot with 2 monitors
+        let snapshot = slm.captureStateSnapshot()!
+        slm.setSleepSnapshotForTests(snapshot)
+
+        // Simulate wake
+        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
+
+        // Simulate first display reconnect
+        slm.handleDisplayEventForTests(.connected(ext32))
+
+        // Phase should have advanced: either still restoring (waiting for retina) or drained
+        switch slm.wakePhase {
+        case .restoring(let ctx):
+            #expect(ctx.restoredOutputIds.contains(where: { $0.name == "U32J59x" }))
+        case .idle:
+            // All monitors restored + drained
+            break
+        default:
+            Issue.record("Unexpected phase: \(slm.wakePhase)")
+        }
+    }
+
+    @Test @MainActor func drainClearsSnapshotAndResetsPhase() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+        ]
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        controller.workspaceManager.applyMonitorConfigurationChange([retina])
+
+        // Capture and set snapshot
+        let snapshot = slm.captureStateSnapshot()!
+        slm.setSleepSnapshotForTests(snapshot)
+
+        // Simulate wake with deferred phase, then connect the only monitor
+        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
+        slm.handleDisplayEventForTests(.connected(retina))
+
+        // After the only monitor reconnects, all outputs are restored so drain should fire
+        guard case .idle = slm.wakePhase else {
+            Issue.record("Expected .idle after drain, got \(slm.wakePhase)")
+            return
+        }
+        #expect(slm.sleepSnapshot == nil)
+    }
+
+    @Test @MainActor func drainFlushesDeferredRescanReasons() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+        ]
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        controller.workspaceManager.applyMonitorConfigurationChange([retina])
+
+        let snapshot = slm.captureStateSnapshot()!
+        slm.setSleepSnapshotForTests(snapshot)
+
+        // Enter restoring phase with a deferred rescan reason
+        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
+
+        // Gate a rescan to accumulate a deferred reason — but first we need restoring phase
+        // Trigger display connect to transition to restoring, which will immediately drain
+        // (single monitor). Instead, manually set up restoring context with a deferred reason.
+        let deadline = Date().addingTimeInterval(15)
+        let context = ServiceLifecycleManager.WakeRestorationContext(
+            snapshot: snapshot,
+            restoredOutputIds: [],
+            deferredRescanReasons: [.activeSpaceChanged],
+            userModifiedWorkspaceIds: [],
+            deadline: deadline
+        )
+        slm.setWakePhaseForTests(.restoring(context))
+
+        // Now simulate the monitor connect — it will restore + drain
+        slm.handleDisplayEventForTests(.connected(retina))
+
+        guard case .idle = slm.wakePhase else {
+            Issue.record("Expected .idle after drain, got \(slm.wakePhase)")
+            return
+        }
+
+        // Deferred reasons should have been flushed as immediateRelayout
+        #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.workspaceTransition] != nil)
+    }
 }

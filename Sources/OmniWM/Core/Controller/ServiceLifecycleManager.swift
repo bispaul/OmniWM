@@ -421,53 +421,125 @@ final class ServiceLifecycleManager {
     }
 
     private func beginDrain(context: WakeRestorationContext) {
-        // TODO: Full implementation in Task 4
+        guard let controller else { return }
+
+        wakePhase = .draining
+
+        if let focusedToken = context.snapshot.focusedToken,
+           let wsId = controller.workspaceManager.workspace(for: focusedToken),
+           let monitorId = controller.workspaceManager.monitorId(for: wsId)
+        {
+            _ = controller.workspaceManager.setManagedFocus(focusedToken, in: wsId, onMonitor: monitorId)
+        }
+
+        validateRestoredWindows(from: context.snapshot)
+
         wakePhase = .idle
         sleepSnapshot = nil
         wakeTimeoutTask?.cancel()
-        controller?.workspaceManager.isReconciling = false
+        controller.workspaceManager.isReconciling = false
+
+        if !context.deferredRescanReasons.isEmpty {
+            let allWorkspaceIds = Set(controller.workspaceManager.workspaces.map(\.id))
+            WMLog.ax.info(
+                "wakeDrain: flushing \(context.deferredRescanReasons.count, privacy: .public) deferred reasons as immediateRelayout"
+            )
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .workspaceTransition,
+                affectedWorkspaceIds: allWorkspaceIds
+            )
+        }
     }
 
     private func handleWakeDisplayEvent(_ event: DisplayConfigurationObserver.DisplayEvent) {
-        // TODO: Full implementation in Task 4
+        guard case .restoring(var context) = wakePhase else { return }
+
+        switch event {
+        case let .connected(monitor):
+            let outputId = OutputId(from: monitor)
+
+            guard context.snapshot.outputIds.contains(where: {
+                $0.displayId == outputId.displayId ||
+                $0.name.caseInsensitiveCompare(outputId.name) == .orderedSame
+            }) else {
+                applyMonitorConfigurationChanged(
+                    currentMonitors: Monitor.current(),
+                    performPostUpdateActions: false
+                )
+                return
+            }
+
+            restoreWorkspacesForMonitor(monitor, context: &context)
+            context.restoredOutputIds.insert(outputId)
+            wakePhase = .restoring(context)
+
+            let allRestored = context.snapshot.outputIds.allSatisfy { snapshotOutput in
+                context.restoredOutputIds.contains(where: {
+                    $0.displayId == snapshotOutput.displayId ||
+                    $0.name.caseInsensitiveCompare(snapshotOutput.name) == .orderedSame
+                })
+            }
+            if allRestored || Date() >= context.deadline {
+                beginDrain(context: context)
+            }
+
+        case .disconnected:
+            break
+
+        case .reconfigured:
+            applyMonitorConfigurationChanged(
+                currentMonitors: Monitor.current(),
+                performPostUpdateActions: false
+            )
+        }
     }
 
-    private func restoreFromSnapshot(_ snapshot: SleepStateSnapshot) {
+    private func restoreWorkspacesForMonitor(_ monitor: Monitor, context: inout WakeRestorationContext) {
         guard let controller else { return }
         let wm = controller.workspaceManager
 
-        // Restore viewport states
-        for (wsId, viewportState) in snapshot.viewportStates {
-            wm.updateNiriViewportState(viewportState, for: wsId)
-        }
+        applyMonitorConfigurationChanged(
+            currentMonitors: Monitor.current(),
+            performPostUpdateActions: false
+        )
 
-        // Restore Niri column placements (widths, indices)
-        if let engine = controller.niriEngine {
-            for (wsId, placements) in snapshot.niriPlacements {
-                // Clear existing windows from the engine tree so restoreInitialPlacements
-                // can rebuild columns with persisted widths/states. The guard in
-                // restoreInitialPlacements requires missingPlacedTokens to be non-empty.
-                let tokens = Array(placements.keys)
-                for token in tokens {
-                    engine.removeWindow(token: token)
+        let workspacesOnMonitor = wm.workspaces(on: monitor.id)
+        var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
+
+        for ws in workspacesOnMonitor {
+            guard !context.userModifiedWorkspaceIds.contains(ws.id) else { continue }
+
+            for (token, snapshotWsId) in context.snapshot.windowWorkspaces {
+                if snapshotWsId == ws.id, wm.workspace(for: token) != ws.id {
+                    wm.setWorkspace(for: token, to: ws.id)
                 }
-                _ = engine.restoreInitialPlacements(placements, matching: tokens, in: wsId)
             }
+
+            if let viewportState = context.snapshot.viewportStates[ws.id] {
+                wm.updateNiriViewportState(viewportState, for: ws.id)
+            }
+
+            if let placements = context.snapshot.niriPlacements[ws.id],
+               let engine = controller.niriEngine
+            {
+                let tokens = Array(placements.keys)
+                for token in tokens { engine.removeWindow(token: token) }
+                engine.restoreInitialPlacements(placements, matching: tokens, in: ws.id)
+            }
+
+            affectedWorkspaceIds.insert(ws.id)
         }
 
-        // Restore focus
-        if let focusedToken = snapshot.focusedToken,
-           let wsId = wm.workspace(for: focusedToken),
-           let monitorId = wm.monitorId(for: wsId)
-        {
-            _ = wm.setManagedFocus(focusedToken, in: wsId, onMonitor: monitorId)
+        if !affectedWorkspaceIds.isEmpty {
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .workspaceTransition,
+                affectedWorkspaceIds: affectedWorkspaceIds
+            )
         }
 
-        // Validate windows still exist
-        validateRestoredWindows(from: snapshot)
-
-        // Trigger layout reflow
-        controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+        WMLog.ax.info(
+            "wakeRestore: monitor=\(monitor.name, privacy: .public) workspaces=\(affectedWorkspaceIds.count, privacy: .public)"
+        )
     }
 
     private func validateRestoredWindows(from snapshot: SleepStateSnapshot) {
@@ -508,6 +580,10 @@ final class ServiceLifecycleManager {
 
     func setWakePhaseForTests(_ phase: WakePhase) {
         wakePhase = phase
+    }
+
+    func setSleepSnapshotForTests(_ snapshot: SleepStateSnapshot?) {
+        sleepSnapshot = snapshot
     }
 
     func handleUnlockDetected() {
