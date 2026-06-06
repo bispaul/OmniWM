@@ -36,15 +36,17 @@ This single synchronous method:
 
 **Callers that change from remove+readmit to transfer:**
 
-1. **WorkspaceNavigationHandler.transferWindowFromSourceEngine** (line ~500): Currently calls `engine.removeWindow` for cross-layout transfers. Change to: if both workspaces use the same engine, call `transferWindow`. If different engines (Niri→Dwindle), use the existing remove path but with the fullscreen restore map from Phase 5b.
+1. **WorkspaceNavigationHandler.transferWindowFromSourceEngine** (line ~500): Currently calls `engine.removeWindow` for cross-layout transfers. Change to: if both workspaces use the same engine AND the window is the only window in its column, call `transferWindow`. If different engines (Niri→Dwindle), or if the window is in a tabbed column with other windows, use the existing remove path with Phase 5b's fullscreen restore map.
 
 2. **WorkspaceNavigationHandler.moveWindowToAdjacentWorkspace** (line ~560): Currently calls `reassignManagedWindow` which is a registry-only update. Change to: call `transferWindow` which does registry + engine in one step.
 
 3. **WorkspaceNavigationHandler.moveWindowToWorkspaceOnMonitor** (line ~857): Same pattern — use `transferWindow`.
 
-4. **Fullscreen transition path**: Instead of removing window from engine on fullscreen enter, mark it as `layoutReason = .nativeFullscreen` in-place (already done). On fullscreen exit, the window is STILL in the engine (never removed), just needs a relayout. Phase 5b's `fullscreenRestorePositions` becomes unnecessary — the window never left.
+4. **Fullscreen transition path**: Keep current behavior — remove from engine on fullscreen enter, restore on exit. Phase 5b's `fullscreenRestorePositions` (save column index on enter, restore via `moveColumnToIndex` on exit) is the right approach. Do NOT keep fullscreen windows in the engine — `calculateCombinedLayoutUsingPools` would compute tiled frames for them, conflicting with macOS's fullscreen frame.
 
-**AXRaise after transfer:** Call `performWindowFronting` AFTER the layout refresh applies the new frame, not in the completion block where the frame hasn't been written yet. The `commitWorkspaceTransition` completion block should run after `executeLayoutPlan` has applied frames.
+**Scope:** Fix A covers same-engine, single-window-column, non-floating transfers. Tabbed columns, cross-engine, and floating windows keep the existing remove+readmit path. This covers ~80%+ of real-world window moves.
+
+**AXRaise after transfer:** Call `performWindowFronting` in the `handleFrameApplyResults` completion path — AFTER the async frame write via `applyFramesParallel` has completed and confirmed. NOT in `commitWorkspaceTransition`'s completion block (which fires before frame writes are confirmed).
 
 ### What changes in the engine
 
@@ -78,38 +80,54 @@ enum WindowDisplayState {
 }
 ```
 
-**Detection using CGS space type:**
+**Detection using SkyLight/CGS space type:**
+
+Hiro uses SkyLight (SLS) functions, not CGS directly. The Space API functions need to be ADDED to the SkyLight bridge (`Sources/OmniWM/Core/SkyLight/SkyLight.swift`). The actual private API functions are:
+- `SLSCopySpacesForWindows(conn, mask, windowArray as CFArray)` → CFArray of space IDs
+- `SLSSpaceGetType(conn, spaceId)` → UInt32
+
+Space type values (verify empirically on target macOS version — yabai uses `1` for fullscreen):
+- `0` = user/desktop space
+- `1` = fullscreen space (per yabai's `extern.h`)
+- `4` = tiled fullscreen (unverified)
+
 ```swift
 static func windowDisplayState(windowId: Int) -> WindowDisplayState {
-    let conn = CGSMainConnectionID()
-    var spaces = [CGSSpaceID]()
-    // Get spaces containing this window
-    CGSGetWindowWorkspaces(conn, CGWindowID(windowId), &spaces)
-    
-    for spaceId in spaces {
-        let spaceType = CGSSpaceGetType(conn, spaceId)
-        if spaceType == 4 { // kCGSSpaceFullscreen
+    let conn = SLSMainConnectionID()
+    let windowArray = [CGWindowID(windowId)] as CFArray
+    guard let spacesCF = SLSCopySpacesForWindows(conn, 0x7, windowArray) as? [UInt64] else {
+        return .normal // fallback if API unavailable
+    }
+    for spaceId in spacesCF {
+        let spaceType = SLSSpaceGetType(conn, spaceId)
+        if spaceType == 1 { // fullscreen space (verify on target macOS)
             return .nativeFullscreen
         }
     }
-    return .normal // or .maximized if frame == display bounds
+    return .normal
 }
 ```
 
-**Fallback:** If CGS calls fail (SIP restrictions, API changes), fall back to current `isFullscreen` check. Log a warning so we know when the fallback activates.
+**Fallback:** If SLS calls fail (function not resolved, SIP restrictions), fall back to current `AXWindowService.isFullscreen` check. Log a warning so we know when the fallback activates.
 
-**Integration:** In `FocusBorderController.renderEligibility`, replace:
+**Integration:** In `FocusBorderController.renderEligibility`, replace ONLY the `appFullscreen` check:
 ```swift
 // Before:
 if isAppFullscreen { return .hide(reason: .appFullscreen) }
 
 // After:
-if windowDisplayState(windowId:) == .nativeFullscreen { return .hide(reason: .appFullscreen) }
+if SkyLight.shared.windowDisplayState(windowId: entry.windowId) == .nativeFullscreen {
+    return .hide(reason: .appFullscreen)
+}
 ```
+
+Other `renderEligibility` reasons (notDisplayable, etc.) remain unchanged.
 
 ### Verification
 
-Check that `CGSGetWindowWorkspaces` and `CGSSpaceGetType` are available in the SkyLight module that Hiro already uses. If not, add the function declarations to the existing SkyLight bridge.
+1. Add `SLSCopySpacesForWindows` and `SLSSpaceGetType` declarations to SkyLight.swift using the existing `resolveRequired`/`resolveOptional` pattern
+2. Verify space type values on macOS 15 (Sequoia) by toggling a window to native fullscreen and logging the type
+3. Check yabai's [extern.h](https://github.com/koekeishiya/yabai/blob/master/src/misc/extern.h) for canonical CGS Space constants
 
 ---
 
@@ -172,12 +190,17 @@ func startWakeReconciliation() {
 ```
 
 **Targeted validation after restore:**
-Instead of full rescan, iterate over restored windows and check AX reachability:
+Instead of full rescan, iterate over restored windows and verify identity + existence:
 ```swift
 func validateRestoredWindows() {
-    for (token, _) in sleepSnapshot.windowStates {
-        if !isWindowStillAlive(token) {
-            removeWindow(token) // clean removal of dead windows only
+    for (token, entry) in sleepSnapshot.windowStates {
+        // Check both existence AND identity — PIDs can be recycled after app restart
+        guard let app = NSRunningApplication(processIdentifier: token.pid),
+              app.bundleIdentifier != nil,
+              isWindowStillAlive(token)
+        else {
+            removeWindow(token) // clean removal of dead/replaced windows only
+            continue
         }
     }
 }
@@ -185,7 +208,13 @@ func validateRestoredWindows() {
 
 ### DarkWake suppression
 
-DarkWake events (Power Nap, background refresh) fire `didWakeNotification` without actual user wake. Detect via `IOPMAssertionDeclareUserActivity` or check if displays are actually on. If DarkWake, skip reconciliation entirely.
+DarkWake events (Power Nap, background refresh) fire `didWakeNotification` without user-facing wake. The spec originally proposed IOPMAssertionDeclareUserActivity but that's for declaring activity, not checking it.
+
+**Simpler approach:** Only reconcile when one of:
+1. `DisplayConfigurationObserver` fires (screens actually changed) — already debounced at 100ms
+2. First user interaction (mouse move, keypress) detected after wake
+
+Do NOT reconcile on bare `didWakeNotification` alone. Instead, set a `pendingWakeReconciliation` flag and let the first real event (display change or user input) trigger reconciliation. This naturally filters DarkWake — no displays change, no user interaction, no reconciliation.
 
 ---
 
@@ -212,6 +241,8 @@ down = "Built-in Retina Display"
 name = "S27R65x"
 right = "Built-in Retina Display"
 ```
+
+**Monitor matching:** Match by `name` (NSScreen localizedName) for consistency with existing `[[monitor]]` config. If two monitors have similar names (e.g., two Samsung displays), support matching by `displayId` as fallback: `id = "display:2"`.
 
 **Resolution order:**
 1. Explicit adjacency from config (if defined for this monitor + direction)
@@ -242,6 +273,20 @@ The viewport gap on cross-monitor focus is partially a separate issue (viewport 
 - GhosttyKit: keep as pre-built binary dependency (same setup)
 - App icon: keep or create new
 - Code signing: ad-hoc for personal use, or Developer ID for distribution
+
+### License
+Upstream Hiro is MIT-licensed. Fork MUST preserve MIT license with attribution to original author (BarutSRB/Hiro). Add fork-specific copyright line:
+```
+Copyright (c) 2023 Srdan Barut (original Hiro/OmniWM)
+Copyright (c) 2026 Biswadip Paul (fork modifications)
+```
+
+### Migration
+Write `MIGRATION.md` documenting path changes for existing users:
+- IPC socket path change (SketchyBar plugin, shell scripts, launch agents)
+- Log subsystem change (log stream predicates)
+- Settings directory (if changed)
+- The `omniwmctl watch` process must be restarted after upgrades
 
 ---
 
