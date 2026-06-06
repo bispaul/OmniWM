@@ -4,7 +4,7 @@ import Testing
 
 @Suite @MainActor struct SleepWakeSnapshotTests {
 
-    @Test func captureSnapshotStoresMonitorIdsAndPlacements() async {
+    @Test func captureSnapshotStoresOutputIdsAndPlacements() async {
         let controller = makeLayoutPlanTestController()
         controller.enableNiriLayout()
         await controller.layoutRefreshController.waitForRefreshWorkForTests()
@@ -28,14 +28,18 @@ import Testing
 
         let snapshot = controller.serviceLifecycleManager.captureStateSnapshot()
         #expect(snapshot != nil)
-        #expect(snapshot!.monitorIds.contains(monitor.id))
+        #expect(snapshot!.outputIds.contains(where: { $0.displayId == monitor.displayId }))
         #expect(snapshot!.focusedToken == token)
         #expect(!snapshot!.niriPlacements.isEmpty)
+        #expect(snapshot!.windowWorkspaces[token] == ws1)
     }
 
-    @Test func pendingWakeReconciliationDefaultsFalse() {
+    @Test func wakePhaseDefaultsToIdle() {
         let controller = makeLayoutPlanTestController()
-        #expect(!controller.serviceLifecycleManager.pendingWakeReconciliation)
+        guard case .idle = controller.serviceLifecycleManager.wakePhase else {
+            Issue.record("Expected .idle")
+            return
+        }
     }
 
     @Test func snapshotCapturesViewportStates() async {
