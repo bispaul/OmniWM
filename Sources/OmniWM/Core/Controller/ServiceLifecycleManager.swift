@@ -15,6 +15,7 @@ enum ActivationEventSource: String, Sendable {
 final class ServiceLifecycleManager {
     struct SleepStateSnapshot {
         let monitorIds: Set<Monitor.ID>
+        let windowWorkspaces: [WindowToken: WorkspaceDescriptor.ID]
         let niriPlacements: [WorkspaceDescriptor.ID: [WindowToken: PersistedNiriPlacement]]
         let viewportStates: [WorkspaceDescriptor.ID: ViewportState]
         let focusedToken: WindowToken?
@@ -247,6 +248,11 @@ final class ServiceLifecycleManager {
         let wm = controller.workspaceManager
         let monitorIds = Set(wm.monitors.map(\.id))
 
+        var windowWorkspaces: [WindowToken: WorkspaceDescriptor.ID] = [:]
+        for entry in wm.allEntries() {
+            windowWorkspaces[entry.token] = entry.workspaceId
+        }
+
         var niriPlacements: [WorkspaceDescriptor.ID: [WindowToken: PersistedNiriPlacement]] = [:]
         var viewportStates: [WorkspaceDescriptor.ID: ViewportState] = [:]
 
@@ -262,6 +268,7 @@ final class ServiceLifecycleManager {
 
         return SleepStateSnapshot(
             monitorIds: monitorIds,
+            windowWorkspaces: windowWorkspaces,
             niriPlacements: niriPlacements,
             viewportStates: viewportStates,
             focusedToken: wm.focusedToken,
@@ -399,17 +406,25 @@ final class ServiceLifecycleManager {
         guard let controller else { return }
         let wm = controller.workspaceManager
 
-        // Restore viewport states
+        // Step 1: Restore workspace assignments — move windows back to pre-sleep workspaces
+        var reassignedCount = 0
+        for (token, snapshotWsId) in snapshot.windowWorkspaces {
+            let currentWsId = wm.workspace(for: token)
+            if currentWsId != snapshotWsId {
+                wm.setWorkspace(for: token, to: snapshotWsId)
+                reassignedCount += 1
+            }
+        }
+        WMLog.ax.info("wakeRestore: reassigned \(reassignedCount, privacy: .public) windows to pre-sleep workspaces")
+
+        // Step 2: Restore viewport states
         for (wsId, viewportState) in snapshot.viewportStates {
             wm.updateNiriViewportState(viewportState, for: wsId)
         }
 
-        // Restore Niri column placements (widths, indices)
+        // Step 3: Restore Niri column placements (widths, indices)
         if let engine = controller.niriEngine {
             for (wsId, placements) in snapshot.niriPlacements {
-                // Clear existing windows from the engine tree so restoreInitialPlacements
-                // can rebuild columns with persisted widths/states. The guard in
-                // restoreInitialPlacements requires missingPlacedTokens to be non-empty.
                 let tokens = Array(placements.keys)
                 for token in tokens {
                     engine.removeWindow(token: token)
@@ -418,7 +433,7 @@ final class ServiceLifecycleManager {
             }
         }
 
-        // Restore focus
+        // Step 4: Restore focus
         if let focusedToken = snapshot.focusedToken,
            let wsId = wm.workspace(for: focusedToken),
            let monitorId = wm.monitorId(for: wsId)
