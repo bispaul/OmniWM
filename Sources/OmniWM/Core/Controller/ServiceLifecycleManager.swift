@@ -13,6 +13,14 @@ enum ActivationEventSource: String, Sendable {
 
 @MainActor
 final class ServiceLifecycleManager {
+    struct SleepStateSnapshot {
+        let monitorIds: Set<Monitor.ID>
+        let niriPlacements: [WorkspaceDescriptor.ID: [WindowToken: PersistedNiriPlacement]]
+        let viewportStates: [WorkspaceDescriptor.ID: ViewportState]
+        let focusedToken: WindowToken?
+        let timestamp: Date
+    }
+
     weak var controller: WMController?
 
     private var displayObserver: DisplayConfigurationObserver?
@@ -26,6 +34,8 @@ final class ServiceLifecycleManager {
     private var wakeReconciliationTask: Task<Void, Never>?
     private var permissionCheckerTask: Task<Void, Never>?
     private(set) var isSecureInputActive = false
+    private(set) var sleepSnapshot: SleepStateSnapshot?
+    var pendingWakeReconciliation: Bool = false
     var accessibilityPermissionStreamProviderForTests: ((Bool) -> AsyncStream<Bool>)?
     var accessibilityPermissionStateProviderForTests: (() -> Bool)?
     var accessibilityPermissionRequestHandlerForTests: (() -> Bool)?
@@ -163,6 +173,13 @@ final class ServiceLifecycleManager {
     }
 
     private func handleDisplayEvent(_ event: DisplayConfigurationObserver.DisplayEvent) {
+        if pendingWakeReconciliation {
+            pendingWakeReconciliation = false
+            wakeReconciliationTask?.cancel()
+            startWakeReconciliationNow()
+            return
+        }
+
         switch event {
         case let .disconnected(monitorId, outputId):
             handleMonitorDisconnect(monitorId: monitorId, outputId: outputId)
@@ -217,6 +234,33 @@ final class ServiceLifecycleManager {
 
         controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
         controller.workspaceManager.isReconciling = false
+    }
+
+    func captureStateSnapshot() -> SleepStateSnapshot? {
+        guard let controller else { return nil }
+        let wm = controller.workspaceManager
+        let monitorIds = Set(wm.monitors.map(\.id))
+
+        var niriPlacements: [WorkspaceDescriptor.ID: [WindowToken: PersistedNiriPlacement]] = [:]
+        var viewportStates: [WorkspaceDescriptor.ID: ViewportState] = [:]
+
+        if let engine = controller.niriEngine {
+            for ws in wm.workspaces {
+                let placements = engine.persistedPlacements(in: ws.id)
+                if !placements.isEmpty {
+                    niriPlacements[ws.id] = placements
+                }
+                viewportStates[ws.id] = wm.niriViewportState(for: ws.id)
+            }
+        }
+
+        return SleepStateSnapshot(
+            monitorIds: monitorIds,
+            niriPlacements: niriPlacements,
+            viewportStates: viewportStates,
+            focusedToken: wm.focusedToken,
+            timestamp: Date()
+        )
     }
 
     func handleAppTerminated(pid: pid_t) {
@@ -292,6 +336,21 @@ final class ServiceLifecycleManager {
     }
 
     private func startWakeReconciliation() {
+        pendingWakeReconciliation = true
+        controller?.workspaceManager.isReconciling = true
+        WMLog.ax.info("wakeReconciliation: deferred, waiting for display event")
+
+        wakeReconciliationTask?.cancel()
+        wakeReconciliationTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 30_000_000_000)
+            guard !Task.isCancelled, self?.pendingWakeReconciliation == true else { return }
+            WMLog.ax.info("wakeReconciliation: 30s timeout, reconciling without display event")
+            self?.pendingWakeReconciliation = false
+            self?.startWakeReconciliationNow()
+        }
+    }
+
+    private func startWakeReconciliationNow() {
         guard let controller else { return }
         wakeReconciliationTask?.cancel()
         let expectedMonitorIds = Set(controller.workspaceManager.monitors.map(\.id))
@@ -313,8 +372,73 @@ final class ServiceLifecycleManager {
                 self?.controller?.workspaceManager.isReconciling = false
                 return
             }
-            WMLog.ax.info("wakeReconciliation: monitors ready, applying configuration")
-            self?.applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
+
+            let currentMonitors = Monitor.current()
+            let currentIds = Set(currentMonitors.map(\.id))
+
+            if let snapshot = self?.sleepSnapshot, currentIds == snapshot.monitorIds {
+                WMLog.ax.info("wakeReconciliation: same monitors, restoring from snapshot")
+                self?.restoreFromSnapshot(snapshot)
+            } else {
+                WMLog.ax.info("wakeReconciliation: monitor change detected, full restoration")
+                self?.applyMonitorConfigurationChanged(currentMonitors: currentMonitors)
+            }
+            self?.sleepSnapshot = nil
+            self?.controller?.workspaceManager.isReconciling = false
+        }
+    }
+
+    private func restoreFromSnapshot(_ snapshot: SleepStateSnapshot) {
+        guard let controller else { return }
+        let wm = controller.workspaceManager
+
+        // Restore viewport states
+        for (wsId, viewportState) in snapshot.viewportStates {
+            wm.updateNiriViewportState(viewportState, for: wsId)
+        }
+
+        // Restore Niri column placements (widths, indices)
+        if let engine = controller.niriEngine {
+            for (wsId, placements) in snapshot.niriPlacements {
+                // Clear existing windows from the engine tree so restoreInitialPlacements
+                // can rebuild columns with persisted widths/states. The guard in
+                // restoreInitialPlacements requires missingPlacedTokens to be non-empty.
+                let tokens = Array(placements.keys)
+                for token in tokens {
+                    engine.removeWindow(token: token)
+                }
+                _ = engine.restoreInitialPlacements(placements, matching: tokens, in: wsId)
+            }
+        }
+
+        // Restore focus
+        if let focusedToken = snapshot.focusedToken,
+           let wsId = wm.workspace(for: focusedToken),
+           let monitorId = wm.monitorId(for: wsId)
+        {
+            _ = wm.setManagedFocus(focusedToken, in: wsId, onMonitor: monitorId)
+        }
+
+        // Validate windows still exist
+        validateRestoredWindows(from: snapshot)
+
+        // Trigger layout reflow
+        controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+    }
+
+    private func validateRestoredWindows(from snapshot: SleepStateSnapshot) {
+        guard let controller else { return }
+        for (_, placements) in snapshot.niriPlacements {
+            for token in placements.keys {
+                guard NSRunningApplication(processIdentifier: token.pid) != nil else {
+                    WMLog.ax.info(
+                        "wakeValidation: removing dead window pid=\(token.pid, privacy: .public) wid=\(token.windowId, privacy: .public)"
+                    )
+                    _ = controller.workspaceManager.removeWindow(pid: token.pid, windowId: token.windowId)
+                    controller.niriEngine?.removeWindow(token: token)
+                    continue
+                }
+            }
         }
     }
 
@@ -421,6 +545,10 @@ final class ServiceLifecycleManager {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
+                self?.sleepSnapshot = self?.captureStateSnapshot()
+                WMLog.ax.info(
+                    "systemSleep: snapshot captured monitors=\(self?.sleepSnapshot?.monitorIds.count ?? 0, privacy: .public)"
+                )
                 _ = self?.controller?.workspaceManager.recordReconcileEvent(.systemSleep(source: .service))
             }
         }
