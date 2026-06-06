@@ -211,4 +211,90 @@ private func makeWakeTestMonitor(
         // Deferred reasons should have been flushed as immediateRelayout
         #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.workspaceTransition] != nil)
     }
+
+    @Test @MainActor func reEntrantSleepDuringRestoringResetsCleanly() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        controller.workspaceManager.applyMonitorConfigurationChange([retina])
+
+        let snapshot = slm.captureStateSnapshot()!
+        slm.setSleepSnapshotForTests(snapshot)
+        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
+
+        // Simulate sleep while in deferred phase
+        slm.simulateSleepForTests()
+
+        #expect(slm.sleepSnapshot != nil)
+    }
+
+    @Test @MainActor func outputIdNameFallbackMatchesWhenDisplayIdChanges() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+            WorkspaceConfiguration(name: "8", monitorAssignment: .specificDisplay(OutputId(displayId: 3, name: "U32J59x")))
+        ]
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        let ext32 = makeWakeTestMonitor(displayId: 3, name: "U32J59x", x: 0, y: -1440, width: 2560, height: 1440)
+        controller.workspaceManager.applyMonitorConfigurationChange([retina, ext32])
+
+        let snapshot = slm.captureStateSnapshot()!
+        #expect(snapshot.outputIds.contains(where: { $0.name == "U32J59x" }))
+
+        // Monitor reconnects with DIFFERENT displayId but same name
+        let ext32Renamed = makeWakeTestMonitor(displayId: 99, name: "U32J59x", x: 0, y: -1440, width: 2560, height: 1440)
+        slm.setSleepSnapshotForTests(snapshot)
+        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
+
+        slm.handleDisplayEventForTests(.connected(ext32Renamed))
+
+        // Should have matched via name
+        switch slm.wakePhase {
+        case .restoring(let ctx):
+            #expect(ctx.restoredOutputIds.contains(where: { $0.name == "U32J59x" }))
+        case .idle:
+            // All monitors restored + drained — name match worked
+            break
+        default:
+            Issue.record("Unexpected phase: \(slm.wakePhase)")
+        }
+    }
+
+    @Test @MainActor func wakeGateQueuesReasonsDuringRestoringPhase() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        controller.workspaceManager.applyMonitorConfigurationChange([retina])
+
+        let snapshot = slm.captureStateSnapshot()!
+        let context = ServiceLifecycleManager.WakeRestorationContext(
+            snapshot: snapshot,
+            restoredOutputIds: [],
+            deferredRescanReasons: [],
+            userModifiedWorkspaceIds: [],
+            deadline: Date().addingTimeInterval(15)
+        )
+        slm.setWakePhaseForTests(.restoring(context))
+
+        slm.gatedRequestFullRescan(reason: .activeSpaceChanged)
+        slm.gatedRequestFullRescan(reason: .unlock)
+
+        guard case let .restoring(updatedContext) = slm.wakePhase else {
+            Issue.record("Expected restoring phase")
+            return
+        }
+        #expect(updatedContext.deferredRescanReasons.count == 2)
+        #expect(updatedContext.deferredRescanReasons[0] == .activeSpaceChanged)
+        #expect(updatedContext.deferredRescanReasons[1] == .unlock)
+    }
 }

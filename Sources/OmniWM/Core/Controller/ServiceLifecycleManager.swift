@@ -586,6 +586,14 @@ final class ServiceLifecycleManager {
         sleepSnapshot = snapshot
     }
 
+    func simulateSleepForTests() {
+        wakeTimeoutTask?.cancel()
+        if sleepSnapshot == nil {
+            sleepSnapshot = captureStateSnapshot()
+        }
+        _ = controller?.workspaceManager.recordReconcileEvent(.systemSleep(source: .service))
+    }
+
     func handleUnlockDetected() {
         gatedRequestFullRescan(reason: .unlock)
     }
