@@ -2108,13 +2108,31 @@ final class AXEventHandler: CGSEventDelegate {
             return nil
         }
 
+        let earlyBundleId = resolveBundleId(token.pid)
+            ?? NSRunningApplication(processIdentifier: token.pid)?.bundleIdentifier
+        let preFilter = WindowClassifier.preFilter(
+            windowId: Int(windowId),
+            pid: token.pid,
+            windowInfo: windowInfo,
+            bundleId: earlyBundleId
+        )
+        if case let .reject(reason) = preFilter,
+           !controller.windowRuleEngine.hasExplicitUserRule(forBundleId: earlyBundleId)
+        {
+            WMLog.ax.debug(
+                "prepareCreateCandidate: rejected by classifier windowId=\(windowId, privacy: .public) reason=\(reason, privacy: .public)"
+            )
+            discardCreatePlacementContext(windowId: windowId)
+            return nil
+        }
+
         guard let axRef = fallbackAXRef?.windowId == Int(windowId)
             ? fallbackAXRef
             : resolveAXWindowRef(windowId: windowId, pid: token.pid)
         else { return nil }
 
         let app = NSRunningApplication(processIdentifier: token.pid)
-        let bundleId = resolveBundleId(token.pid) ?? app?.bundleIdentifier
+        let bundleId = earlyBundleId ?? app?.bundleIdentifier
         let appFullscreen = isFullscreenProvider?(axRef) ?? AXWindowService.isFullscreen(axRef)
         let matchingWindowInfo = windowInfo.flatMap { pid_t($0.pid) == token.pid ? $0 : nil }
         let evaluation = controller.evaluateWindowDisposition(

@@ -351,7 +351,10 @@ final class WindowRuleEngine {
                effects: effects
            )
         {
-            WMLog.config.info("WindowRuleEngine: matchedUserRule id=\(String(describing: userRule.rule.id), privacy: .public) disposition=\(String(describing: userDecision.disposition), privacy: .public) layoutKind=\(String(describing: userDecision.layoutDecisionKind), privacy: .public)")
+            WMLog.config
+                .info(
+                    "WindowRuleEngine: matchedUserRule id=\(String(describing: userRule.rule.id), privacy: .public) disposition=\(String(describing: userDecision.disposition), privacy: .public) layoutKind=\(String(describing: userDecision.layoutDecisionKind), privacy: .public)"
+                )
             return userDecision
         }
 
@@ -364,7 +367,10 @@ final class WindowRuleEngine {
                effects: effects
            )
         {
-            WMLog.config.info("WindowRuleEngine: matchedBuiltInRule disposition=\(String(describing: builtInDecision.disposition), privacy: .public) layoutKind=\(String(describing: builtInDecision.layoutDecisionKind), privacy: .public)")
+            WMLog.config
+                .info(
+                    "WindowRuleEngine: matchedBuiltInRule disposition=\(String(describing: builtInDecision.disposition), privacy: .public) layoutKind=\(String(describing: builtInDecision.layoutDecisionKind), privacy: .public)"
+                )
             return builtInDecision
         }
 
@@ -431,7 +437,10 @@ final class WindowRuleEngine {
             sizeConstraints: facts.sizeConstraints
         )
 
-        WMLog.config.debug("WindowRuleEngine: heuristic disposition=\(String(describing: heuristic.disposition), privacy: .public) reasons=\(String(describing: heuristic.reasons), privacy: .public)")
+        WMLog.config
+            .debug(
+                "WindowRuleEngine: heuristic disposition=\(String(describing: heuristic.disposition), privacy: .public) reasons=\(String(describing: heuristic.reasons), privacy: .public)"
+            )
         return WindowDecision(
             disposition: heuristic.disposition,
             source: userRule.map { .userRule($0.rule.id) } ?? .heuristic,
@@ -550,6 +559,12 @@ final class WindowRuleEngine {
         }
 
         return best
+    }
+
+    func hasExplicitUserRule(forBundleId bundleId: String?) -> Bool {
+        guard let bundleId else { return false }
+        let lowered = bundleId.lowercased()
+        return compiledUserRules.contains { $0.rule.bundleId.lowercased() == lowered }
     }
 
     private static func titleBundleIds(from rules: [CompiledRule]) -> Set<String> {
