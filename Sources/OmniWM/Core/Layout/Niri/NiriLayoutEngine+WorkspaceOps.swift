@@ -102,6 +102,57 @@ extension NiriLayoutEngine {
         )
     }
 
+    func moveColumnToWorkspace(
+        _ column: NiriContainer,
+        from sourceWorkspaceId: WorkspaceDescriptor.ID,
+        to targetWorkspaceId: WorkspaceDescriptor.ID,
+        sourceState: inout ViewportState,
+        targetState: inout ViewportState,
+        atColumnIndex: Int?
+    ) -> WorkspaceMoveResult? {
+        guard sourceWorkspaceId != targetWorkspaceId else { return nil }
+
+        guard roots[sourceWorkspaceId] != nil,
+              columnIndex(of: column, in: sourceWorkspaceId) != nil
+        else {
+            return nil
+        }
+
+        let targetRoot = ensureRoot(for: targetWorkspaceId)
+
+        removeEmptyColumnsIfWorkspaceEmpty(in: targetRoot)
+
+        let allCols = columns(in: sourceWorkspaceId)
+        var fallbackSelection: NodeId?
+        if let colIdx = columnIndex(of: column, in: sourceWorkspaceId) {
+            if colIdx > 0 {
+                fallbackSelection = allCols[colIdx - 1].firstChild()?.id
+            } else if allCols.count > 1 {
+                fallbackSelection = allCols[1].firstChild()?.id
+            }
+        }
+
+        column.detach()
+
+        if let targetIndex = atColumnIndex {
+            targetRoot.insertChild(column, at: targetIndex)
+        } else {
+            targetRoot.appendChild(column)
+        }
+
+        sourceState.selectedNodeId = fallbackSelection
+
+        targetState.selectedNodeId = column.firstChild()?.id
+
+        let firstWindowHandle = column.windowNodes.first?.handle
+
+        return WorkspaceMoveResult(
+            newFocusNodeId: fallbackSelection,
+            movedHandle: firstWindowHandle,
+            targetWorkspaceId: targetWorkspaceId
+        )
+    }
+
     func adjacentWorkspace(
         from workspaceId: WorkspaceDescriptor.ID,
         direction: Direction,
