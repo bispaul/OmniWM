@@ -253,7 +253,7 @@ final class ServiceLifecycleManager {
             .flatMap { controller.workspaceManager.workspace(for: $0) }
         controller.workspaceManager.garbageCollectUnusedWorkspaces(focusedWorkspaceId: focusedWsId)
 
-        controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+        gatedRequestFullRescan(reason: .monitorConfigurationChanged)
         controller.workspaceManager.isReconciling = false
     }
 
@@ -312,7 +312,7 @@ final class ServiceLifecycleManager {
         }
         _ = controller.focusBorderController.refresh(forceOrdering: true)
         controller.appInfoCache.evict(pid: pid)
-        controller.layoutRefreshController.requestFullRescan(reason: .appTerminated)
+        gatedRequestFullRescan(reason: .appTerminated)
     }
 
     func handleGapsChanged() {
@@ -320,7 +320,7 @@ final class ServiceLifecycleManager {
     }
 
     func handleAppLaunched() {
-        controller?.layoutRefreshController.requestFullRescan(reason: .appLaunched)
+        gatedRequestFullRescan(reason: .appLaunched)
     }
 
     private func handleFrameAcceptedAtDifferentSize(windowId: Int, observedFrame: CGRect) {
@@ -471,9 +471,32 @@ final class ServiceLifecycleManager {
         }
     }
 
-    func handleUnlockDetected() {
+    // MARK: - Wake Gate
+
+    private var isWakeGateActive: Bool {
+        if case .idle = wakePhase { return false }
+        return true
+    }
+
+    func gatedRequestFullRescan(reason: RefreshReason) {
         guard let controller else { return }
-        controller.layoutRefreshController.requestFullRescan(reason: .unlock)
+        if isWakeGateActive {
+            if case .restoring(var context) = wakePhase {
+                context.deferredRescanReasons.append(reason)
+                wakePhase = .restoring(context)
+            }
+            WMLog.ax.info("wakeGate: deferred rescan reason=\(reason.rawValue, privacy: .public)")
+            return
+        }
+        controller.layoutRefreshController.requestFullRescan(reason: reason)
+    }
+
+    func setWakePhaseForTests(_ phase: WakePhase) {
+        wakePhase = phase
+    }
+
+    func handleUnlockDetected() {
+        gatedRequestFullRescan(reason: .unlock)
     }
 
     func performStartupRefresh() {
@@ -485,7 +508,7 @@ final class ServiceLifecycleManager {
         guard let controller else { return }
         controller.focusBorderController.hide()
         controller.workspaceManager.recordReconcileEvent(.activeSpaceChanged(source: .service))
-        controller.layoutRefreshController.requestFullRescan(reason: .activeSpaceChanged)
+        gatedRequestFullRescan(reason: .activeSpaceChanged)
     }
 
     private func setupWorkspaceObservation() {

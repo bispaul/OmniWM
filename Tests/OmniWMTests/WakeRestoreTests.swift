@@ -39,4 +39,28 @@ private func makeWakeTestMonitor(
             return
         }
     }
+
+    @Test @MainActor func wakeGateDefersRescanDuringDeferredPhase() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
+
+        slm.gatedRequestFullRescan(reason: .activeSpaceChanged)
+
+        #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.activeSpaceChanged] == nil)
+    }
+
+    @Test @MainActor func wakeGateForwardsRescanWhenIdle() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        slm.gatedRequestFullRescan(reason: .activeSpaceChanged)
+
+        #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.activeSpaceChanged] == 1)
+    }
 }
