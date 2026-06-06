@@ -162,7 +162,7 @@ Classification checks (in order):
 | **Phase 2** | Dirty + Reflow | AXEventHandler, LayoutRefreshController | Phase 1 | **DONE.** App-initiated AX events mark workspaces dirty; drain on CADisplayLink tick coalesces to single reflow. |
 | **Phase 3** | Viewport Camera | ViewportState, NiriLayoutHandler | Phase 1 required, Phase 2 recommended | **DONE (build 74).** Unified pipeline: anchor preservation + overspread/center/fit policies. Removed 8 per-operation applyOverspreadIfNeeded calls. |
 | **Phase 4** | Classify Before Admit | AXEventHandler, WindowRuleEngine | Independent, after core pipeline stable | **DONE (build 75).** WindowClassifier pre-filter rejects Chromium internal windows before AX queries. User rules always override. |
-| **Phase 5** | State Reconciliation | WorkspaceManager, ServiceLifecycleManager, FocusPolicyEngine | All other phases | Reconciles the full state atomically. |
+| **Phase 5** | State Reconciliation | WorkspaceManager, ServiceLifecycleManager, FocusPolicyEngine | All other phases | **DONE (build 76).** isReconciling guard, fullscreen column restore, scoped focus lease, progressive wake polling (500ms/15s). |
 
 Each phase produces a working, testable system. Tests can be written per-phase.
 

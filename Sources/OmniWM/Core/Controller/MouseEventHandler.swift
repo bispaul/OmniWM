@@ -900,7 +900,9 @@ final class MouseEventHandler {
     private func shouldSuppressRightMouseEvent(type: CGEventType) -> Bool {
         guard state.activeInteractionButton == .right else { return false }
         switch type {
-        case .rightMouseDown, .rightMouseDragged, .rightMouseUp:
+        case .rightMouseDown,
+             .rightMouseDragged,
+             .rightMouseUp:
             return state.isResizing
         default:
             return false
@@ -983,7 +985,10 @@ final class MouseEventHandler {
                 controller.workspaceManager.withNiriViewportState(for: wsId, mutate)
             }
         ) {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .interactiveGesture,
+                affectedWorkspaceIds: [wsId]
+            )
         }
     }
 
@@ -1011,7 +1016,10 @@ final class MouseEventHandler {
                     )
                 }
                 if didEnd {
-                    controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
+                    controller.layoutRefreshController.requestImmediateRelayout(
+                        reason: .interactiveGesture,
+                        affectedWorkspaceIds: [wsId]
+                    )
                 }
             }
 
@@ -1043,7 +1051,10 @@ final class MouseEventHandler {
                 )
             }
             if hadInteractiveResize {
-                controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
+                controller.layoutRefreshController.requestImmediateRelayout(
+                    reason: .interactiveGesture,
+                    affectedWorkspaceIds: [wsId]
+                )
             }
         }
 
@@ -1104,7 +1115,11 @@ final class MouseEventHandler {
 
     private func handleFocusFollowsMouse(at location: CGPoint) {
         guard let controller else { return }
-        guard controller.focusPolicyEngine.evaluate(.focusFollowsMouse).allowsFocusChange else {
+        let mouseMonitorId = controller.workspaceManager.monitors
+            .first(where: { $0.frame.contains(location) })?.id
+        guard controller.focusPolicyEngine.evaluate(
+            .focusFollowsMouse, onMonitor: mouseMonitorId
+        ).allowsFocusChange else {
             return
         }
         guard !controller.workspaceManager.isNonManagedFocusActive,
@@ -1372,7 +1387,10 @@ final class MouseEventHandler {
             didApply = true
         }
         if didApply {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .interactiveGesture,
+                affectedWorkspaceIds: [wsId]
+            )
         }
     }
 
@@ -1432,7 +1450,10 @@ final class MouseEventHandler {
         }
 
         if didApply {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .interactiveGesture,
+                affectedWorkspaceIds: [wsId]
+            )
             if shouldStartAnimation {
                 controller.layoutRefreshController.startScrollAnimation(for: wsId)
             }
@@ -1510,7 +1531,10 @@ final class MouseEventHandler {
             didCancel = true
         }
         if didCancel {
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .interactiveGesture, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .interactiveGesture,
+                affectedWorkspaceIds: [wsId]
+            )
         }
     }
 

@@ -130,6 +130,38 @@ enum NiriWindowMoveResult {
         state.viewOffsetPixels.offset(delta: Double(-delta))
     }
 
+    private func restoreFullscreenColumnPositions(
+        pass: NiriLayoutPass,
+        motion: MotionSnapshot,
+        state: inout ViewportState
+    ) {
+        guard let controller else { return }
+        let restoreMap = controller.workspaceManager.fullscreenRestorePositions
+        guard !restoreMap.isEmpty else { return }
+
+        var consumed: [WindowToken] = []
+        for (token, info) in restoreMap where info.workspaceId == pass.wsId {
+            guard let node = pass.engine.findNode(for: token),
+                  let column = pass.engine.column(of: node)
+            else { continue }
+            let workingFrame = controller.insetWorkingFrame(for: pass.monitor)
+            _ = pass.engine.moveColumnToIndex(
+                column,
+                info.columnIndex + 1,
+                in: pass.wsId,
+                motion: motion,
+                state: &state,
+                workingFrame: workingFrame,
+                gaps: pass.gap
+            )
+            consumed.append(token)
+        }
+
+        for token in consumed {
+            controller.workspaceManager.fullscreenRestorePositions.removeValue(forKey: token)
+        }
+    }
+
     private func captureFocusedColumnPosition(
         pass: NiriLayoutPass,
         state: ViewportState
@@ -458,6 +490,8 @@ enum NiriWindowMoveResult {
         for window in snapshot.windows {
             engine.updateWindowConstraints(for: window.token, constraints: window.layoutConstraints)
         }
+
+        restoreFullscreenColumnPositions(pass: pass, motion: motion, state: &state)
 
         let selection = resolveSelection(
             pass: pass,

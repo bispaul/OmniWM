@@ -181,6 +181,14 @@ final class WorkspaceManager {
         let monitorDescriptionByWorkspaceName: [String: MonitorDescription]
     }
 
+    struct FullscreenRestoreInfo: Equatable {
+        let workspaceId: WorkspaceDescriptor.ID
+        let columnIndex: Int
+    }
+
+    var isReconciling: Bool = false
+    var fullscreenRestorePositions: [WindowToken: FullscreenRestoreInfo] = [:]
+
     private(set) var monitors: [Monitor] = Monitor.current() {
         didSet { rebuildMonitorIndexes() }
     }
@@ -2227,7 +2235,10 @@ final class WorkspaceManager {
         ruleEffects: ManagedWindowRuleEffects = .none,
         managedReplacementMetadata: ManagedReplacementMetadata? = nil
     ) -> WindowToken {
-        WMLog.workspace.info("Adding window: windowId=\(windowId, privacy: .public) workspace=\(workspace.uuidString, privacy: .public)")
+        WMLog.workspace
+            .info(
+                "Adding window: windowId=\(windowId, privacy: .public) workspace=\(workspace.uuidString, privacy: .public)"
+            )
         let token = windows.upsert(
             window: ax,
             pid: pid,
@@ -2730,11 +2741,19 @@ final class WorkspaceManager {
         windows.isNativeFullscreenSuspended(token)
     }
 
+    var onFullscreenColumnCapture: ((WindowToken, WorkspaceDescriptor.ID) -> Int?)?
+
     func setLayoutReason(_ reason: LayoutReason, for token: WindowToken) {
         windows.setLayoutReason(reason, for: token)
         guard let workspaceId = workspace(for: token) else { return }
         switch reason {
         case .nativeFullscreen:
+            if let columnIndex = onFullscreenColumnCapture?(token, workspaceId) {
+                fullscreenRestorePositions[token] = FullscreenRestoreInfo(
+                    workspaceId: workspaceId,
+                    columnIndex: columnIndex
+                )
+            }
             recordReconcileEvent(
                 .nativeFullscreenTransition(
                     token: token,
@@ -2839,7 +2858,10 @@ final class WorkspaceManager {
         windows.setResizePlaceholderState(state, for: token)
     }
 
-    func resizePlaceholderStates(in workspaceId: WorkspaceDescriptor.ID) -> [(token: WindowToken, state: ResizePlaceholderState)] {
+    func resizePlaceholderStates(in workspaceId: WorkspaceDescriptor.ID) -> [(
+        token: WindowToken,
+        state: ResizePlaceholderState
+    )] {
         windows.resizePlaceholderStates(in: workspaceId)
     }
 

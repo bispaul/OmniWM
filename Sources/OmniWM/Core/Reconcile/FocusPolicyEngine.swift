@@ -11,6 +11,7 @@ struct FocusPolicyLease: Equatable {
     let reason: String
     let suppressesFocusFollowsMouse: Bool
     let expiresAt: Date?
+    let monitorId: Monitor.ID?
 }
 
 enum FocusPolicyRequest: Equatable {
@@ -55,14 +56,16 @@ final class FocusPolicyEngine {
         owner: FocusPolicyLeaseOwner,
         reason: String,
         suppressesFocusFollowsMouse: Bool = true,
-        duration: TimeInterval? = 0.35
+        duration: TimeInterval? = 0.35,
+        monitorId: Monitor.ID? = nil
     ) {
         let expiresAt = duration.map { nowProvider().addingTimeInterval($0) }
         let lease = FocusPolicyLease(
             owner: owner,
             reason: reason,
             suppressesFocusFollowsMouse: suppressesFocusFollowsMouse,
-            expiresAt: expiresAt
+            expiresAt: expiresAt,
+            monitorId: monitorId
         )
         leasesByOwner[owner] = lease
         reconcileActiveLease(notify: true)
@@ -73,12 +76,12 @@ final class FocusPolicyEngine {
         reconcileActiveLease(notify: true)
     }
 
-    func evaluate(_ request: FocusPolicyRequest) -> FocusPolicyDecision {
+    func evaluate(_ request: FocusPolicyRequest, onMonitor monitorId: Monitor.ID? = nil) -> FocusPolicyDecision {
         pruneExpiredLeasesIfNeeded()
 
         switch request {
         case .focusFollowsMouse:
-            guard let lease = suppressingFocusFollowsMouseLease() else { return .allow }
+            guard let lease = suppressingFocusFollowsMouseLease(onMonitor: monitorId) else { return .allow }
             return .deny(reason: lease.reason)
         case let .managedAppActivation(source):
             if let menuLease = leasesByOwner[.nativeMenu], !source.isAuthoritative {
@@ -122,9 +125,12 @@ final class FocusPolicyEngine {
         return nil
     }
 
-    private func suppressingFocusFollowsMouseLease() -> FocusPolicyLease? {
+    private func suppressingFocusFollowsMouseLease(onMonitor monitorId: Monitor.ID? = nil) -> FocusPolicyLease? {
         for owner in Self.effectiveLeasePriority {
             if let lease = leasesByOwner[owner], lease.suppressesFocusFollowsMouse {
+                if let leaseMonitor = lease.monitorId, let queryMonitor = monitorId, leaseMonitor != queryMonitor {
+                    continue
+                }
                 return lease
             }
         }

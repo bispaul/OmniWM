@@ -760,7 +760,8 @@ private func lastWindowRemovedTrace(in manager: WorkspaceManager) -> ReconcileTr
                     owner: .nativeMenu,
                     reason: "menu_anywhere",
                     suppressesFocusFollowsMouse: true,
-                    expiresAt: nil
+                    expiresAt: nil,
+                    monitorId: nil
                 ),
                 source: .focusPolicy
             )

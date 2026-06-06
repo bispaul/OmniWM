@@ -417,6 +417,10 @@ final class AXEventHandler: CGSEventDelegate {
 
     private func processCreatedWindow(windowId: UInt32) {
         guard let controller else { return }
+        if controller.workspaceManager.isReconciling {
+            deferCreatedWindow(windowId)
+            return
+        }
         if controller.isDiscoveryInProgress {
             deferCreatedWindow(windowId)
             return
@@ -630,6 +634,7 @@ final class AXEventHandler: CGSEventDelegate {
 
     private func handleFrameChanged(windowId: UInt32) {
         guard let controller else { return }
+        guard !controller.workspaceManager.isReconciling else { return }
         guard !controller.isOwnedWindow(windowNumber: Int(windowId)) else { return }
         let windowServerToken = resolveWindowToken(windowId)
         let resolvedToken = resolveTrackedToken(
@@ -1206,11 +1211,14 @@ final class AXEventHandler: CGSEventDelegate {
         guard controller.hasStartedServices else { return }
 
         if source != .focusedWindowChanged {
+            let leaseMonitorId = controller.workspaceManager.entries(forPid: pid).first
+                .flatMap { controller.workspaceManager.monitorId(for: $0.workspaceId) }
             controller.focusPolicyEngine.beginLease(
                 owner: .nativeAppSwitch,
                 reason: source.rawValue,
                 suppressesFocusFollowsMouse: true,
-                duration: 0.4
+                duration: 0.4,
+                monitorId: leaseMonitorId
             )
         }
 

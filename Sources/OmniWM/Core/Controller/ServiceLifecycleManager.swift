@@ -23,6 +23,7 @@ final class ServiceLifecycleManager {
     private var workspaceObserver: NSObjectProtocol?
     private var sleepObserver: NSObjectProtocol?
     private var wakeObserver: NSObjectProtocol?
+    private var wakeReconciliationTask: Task<Void, Never>?
     private var permissionCheckerTask: Task<Void, Never>?
     private(set) var isSecureInputActive = false
     var accessibilityPermissionStreamProviderForTests: ((Bool) -> AsyncStream<Bool>)?
@@ -77,6 +78,14 @@ final class ServiceLifecycleManager {
         }
         controller.axManager.onFrameAcceptedAtDifferentSize = { [weak self] windowId, observedFrame in
             self?.handleFrameAcceptedAtDifferentSize(windowId: windowId, observedFrame: observedFrame)
+        }
+        controller.workspaceManager.onFullscreenColumnCapture = { [weak controller] token, workspaceId in
+            guard let engine = controller?.niriEngine,
+                  let node = engine.findNode(for: token),
+                  let column = engine.column(of: node),
+                  let index = engine.columnIndex(of: column, in: workspaceId)
+            else { return nil }
+            return index
         }
         AppAXContext.onWindowDestroyed = { [weak controller] pid, windowId in
             guard let controller else { return }
@@ -192,9 +201,13 @@ final class ServiceLifecycleManager {
             .info("applyMonitorConfigurationChanged: monitorCount=\(currentMonitors.count, privacy: .public)")
         guard currentMonitors.allSatisfy({ $0.frame.width > 1 && $0.frame.height > 1 }) else { return }
 
+        controller.workspaceManager.isReconciling = true
         controller.workspaceManager.applyMonitorConfigurationChange(currentMonitors)
         controller.syncMouseWarpPolicy(for: controller.workspaceManager.monitors)
-        guard performPostUpdateActions else { return }
+        guard performPostUpdateActions else {
+            controller.workspaceManager.isReconciling = false
+            return
+        }
 
         controller.syncMonitorsToNiriEngine()
 
@@ -203,6 +216,7 @@ final class ServiceLifecycleManager {
         controller.workspaceManager.garbageCollectUnusedWorkspaces(focusedWorkspaceId: focusedWsId)
 
         controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+        controller.workspaceManager.isReconciling = false
     }
 
     func handleAppTerminated(pid: pid_t) {
@@ -274,6 +288,33 @@ final class ServiceLifecycleManager {
 
         if widthChanged {
             controller.layoutRefreshController.markWorkspaceDirty(workspaceId)
+        }
+    }
+
+    private func startWakeReconciliation() {
+        guard let controller else { return }
+        wakeReconciliationTask?.cancel()
+        let expectedMonitorIds = Set(controller.workspaceManager.monitors.map(\.id))
+        controller.workspaceManager.isReconciling = true
+
+        wakeReconciliationTask = Task { @MainActor [weak self] in
+            let deadline = Date().addingTimeInterval(15)
+            while Date() < deadline, !Task.isCancelled {
+                let currentIds = Set(Monitor.current().map(\.id))
+                if currentIds.count >= expectedMonitorIds.count {
+                    break
+                }
+                WMLog.ax.debug(
+                    "wakeReconciliation: waiting for monitors current=\(currentIds.count, privacy: .public) expected=\(expectedMonitorIds.count, privacy: .public)"
+                )
+                try? await Task.sleep(nanoseconds: 500_000_000)
+            }
+            guard !Task.isCancelled else {
+                self?.controller?.workspaceManager.isReconciling = false
+                return
+            }
+            WMLog.ax.info("wakeReconciliation: monitors ready, applying configuration")
+            self?.applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
         }
     }
 
@@ -390,10 +431,10 @@ final class ServiceLifecycleManager {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
-                guard let controller = self?.controller else { return }
-                WMLog.ax.info("systemWake: requestFullRescan")
+                guard let self, let controller = self.controller else { return }
+                WMLog.ax.info("systemWake: startWakeReconciliation")
                 _ = controller.workspaceManager.recordReconcileEvent(.systemWake(source: .service))
-                controller.layoutRefreshController.requestFullRescan(reason: .unlock)
+                self.startWakeReconciliation()
             }
         }
     }
