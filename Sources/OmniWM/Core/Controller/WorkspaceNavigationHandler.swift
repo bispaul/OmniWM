@@ -431,6 +431,65 @@ final class WorkspaceNavigationHandler {
         return wm.descriptor(for: targetId)
     }
 
+    func atomicTransferWindow(
+        _ token: WindowToken,
+        from sourceWorkspaceId: WorkspaceDescriptor.ID,
+        to targetWorkspaceId: WorkspaceDescriptor.ID,
+        columnIndex: Int? = nil
+    ) -> Bool {
+        guard sourceWorkspaceId != targetWorkspaceId else { return false }
+        guard let controller else { return false }
+
+        guard controller.workspaceManager.windowMode(for: token) == .tiling else { return false }
+
+        guard let engine = controller.niriEngine else { return false }
+        let sourceLayout = controller.workspaceManager.descriptor(for: sourceWorkspaceId)
+            .map { controller.settings.layoutType(for: $0.name) } ?? .defaultLayout
+        let targetLayout = controller.workspaceManager.descriptor(for: targetWorkspaceId)
+            .map { controller.settings.layoutType(for: $0.name) } ?? .defaultLayout
+        guard sourceLayout != .dwindle, targetLayout != .dwindle else { return false }
+
+        guard let windowNode = engine.findNode(for: token),
+              let column = engine.findColumn(containing: windowNode, in: sourceWorkspaceId)
+        else { return false }
+
+        guard column.windowNodes.count == 1 else { return false }
+
+        var sourceState = controller.workspaceManager.niriViewportState(for: sourceWorkspaceId)
+        var targetState = controller.workspaceManager.niriViewportState(for: targetWorkspaceId)
+
+        guard let result = engine.moveColumnToWorkspace(
+            column,
+            from: sourceWorkspaceId,
+            to: targetWorkspaceId,
+            sourceState: &sourceState,
+            targetState: &targetState,
+            atColumnIndex: columnIndex
+        ) else {
+            return false
+        }
+
+        controller.reassignManagedWindow(token, to: targetWorkspaceId)
+
+        var newSourceFocusToken: WindowToken?
+        if let newFocusId = result.newFocusNodeId,
+           let newFocusNode = engine.findNode(by: newFocusId) as? NiriWindow
+        {
+            newSourceFocusToken = newFocusNode.token
+        }
+
+        applySessionTransfer(
+            sourceWorkspaceId: sourceWorkspaceId,
+            sourceState: sourceState,
+            sourceFocusedToken: newSourceFocusToken,
+            targetWorkspaceId: targetWorkspaceId,
+            targetState: targetState,
+            targetFocusedToken: nil
+        )
+
+        return true
+    }
+
     private func transferWindowFromSourceEngine(
         token: WindowToken,
         from sourceWsId: WorkspaceDescriptor.ID?,
