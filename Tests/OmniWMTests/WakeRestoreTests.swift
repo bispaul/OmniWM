@@ -63,4 +63,45 @@ private func makeWakeTestMonitor(
 
         #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.activeSpaceChanged] == 1)
     }
+
+    @Test @MainActor func rollingSnapshotCapturedOnFirstDisconnect() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+            WorkspaceConfiguration(name: "6", monitorAssignment: .specificDisplay(OutputId(displayId: 2, name: "S27R65x")))
+        ]
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        let external = makeWakeTestMonitor(displayId: 2, name: "S27R65x", x: 1920)
+        controller.workspaceManager.applyMonitorConfigurationChange([retina, external])
+
+        #expect(slm.sleepSnapshot == nil)
+
+        slm.handleDisplayEventForTests(.disconnected(external.id, OutputId(from: external)))
+
+        #expect(slm.sleepSnapshot != nil)
+        #expect(slm.sleepSnapshot?.outputIds.count == 2)
+    }
+
+    @Test @MainActor func rollingSnapshotNotOverwrittenBySecondDisconnect() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        let ext1 = makeWakeTestMonitor(displayId: 2, name: "S27R65x", x: 1920)
+        let ext2 = makeWakeTestMonitor(displayId: 3, name: "U32J59x", x: 0, y: -1080, width: 2560, height: 1440)
+        controller.workspaceManager.applyMonitorConfigurationChange([retina, ext1, ext2])
+
+        slm.handleDisplayEventForTests(.disconnected(ext1.id, OutputId(from: ext1)))
+        let firstSnapshot = slm.sleepSnapshot
+        #expect(firstSnapshot?.outputIds.count == 3)
+
+        slm.handleDisplayEventForTests(.disconnected(ext2.id, OutputId(from: ext2)))
+        #expect(slm.sleepSnapshot?.outputIds.count == 3)
+    }
 }
