@@ -552,9 +552,11 @@ final class ServiceLifecycleManager {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
-                self?.sleepSnapshot = self?.captureStateSnapshot()
+                if self?.sleepSnapshot == nil {
+                    self?.sleepSnapshot = self?.captureStateSnapshot()
+                }
                 WMLog.ax.info(
-                    "systemSleep: snapshot captured monitors=\(self?.sleepSnapshot?.monitorIds.count ?? 0, privacy: .public)"
+                    "systemSleep: snapshot monitors=\(self?.sleepSnapshot?.monitorIds.count ?? 0, privacy: .public) (rolling=\(self?.sleepSnapshot != nil, privacy: .public))"
                 )
                 _ = self?.controller?.workspaceManager.recordReconcileEvent(.systemSleep(source: .service))
             }
