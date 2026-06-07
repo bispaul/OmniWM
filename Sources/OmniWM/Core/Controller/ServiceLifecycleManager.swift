@@ -438,6 +438,24 @@ final class ServiceLifecycleManager {
         }
     }
 
+    private func resolveTrackedToken(for record: SleepWindowRecord, in wm: WorkspaceManager) -> WindowToken? {
+        if wm.entry(for: record.token) != nil { return record.token }
+        let candidates = wm.entries(forPid: record.pid)
+        if candidates.count == 1 { return candidates[0].token }
+        if let bundleId = record.bundleId, let match = candidates.first(where: {
+            NSRunningApplication(processIdentifier: $0.token.pid)?.bundleIdentifier == bundleId
+        }) { return match.token }
+        return nil
+    }
+
+    private func isMonitorPresent(for record: SleepWindowRecord, snapshot: SleepStateSnapshot, currentMonitors: [Monitor]) -> Bool {
+        let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
+        if let originalOutputId {
+            return originalOutputId.resolveMonitor(in: currentMonitors) != nil
+        }
+        return currentMonitors.contains { $0.id == record.monitorId }
+    }
+
     private func tryRestoreWorkspaces(from snapshot: SleepStateSnapshot, tick: Int) {
         guard let controller else { return }
         let wm = controller.workspaceManager
@@ -449,19 +467,11 @@ final class ServiceLifecycleManager {
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
             if record.hiddenReason == .scratchpad { continue }
-            guard wm.entry(for: record.token) != nil else { continue }
+            guard let resolvedToken = resolveTrackedToken(for: record, in: wm) else { continue }
+            guard isMonitorPresent(for: record, snapshot: snapshot, currentMonitors: currentMonitors) else { continue }
 
-            let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
-            let monitorPresent: Bool
-            if let originalOutputId {
-                monitorPresent = originalOutputId.resolveMonitor(in: currentMonitors) != nil
-            } else {
-                monitorPresent = currentMonitors.contains { $0.id == record.monitorId }
-            }
-            guard monitorPresent else { continue }
-
-            if wm.workspace(for: record.token) != record.workspaceId {
-                wm.setWorkspace(for: record.token, to: record.workspaceId)
+            if wm.workspace(for: resolvedToken) != record.workspaceId {
+                wm.setWorkspace(for: resolvedToken, to: record.workspaceId)
                 reassignedCount += 1
                 affectedWorkspaceIds.insert(record.workspaceId)
             }
@@ -488,32 +498,25 @@ final class ServiceLifecycleManager {
         let currentMonitors = Monitor.current()
         var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
 
-        // Final workspace restore (with fallback for missing monitors)
         var reassignedCount = 0
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
             if record.hiddenReason == .scratchpad { continue }
-            guard wm.entry(for: record.token) != nil else { continue }
+            guard let resolvedToken = resolveTrackedToken(for: record, in: wm) else { continue }
 
-            let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
-            let monitorPresent: Bool
-            if let originalOutputId {
-                monitorPresent = originalOutputId.resolveMonitor(in: currentMonitors) != nil
-            } else {
-                monitorPresent = currentMonitors.contains { $0.id == record.monitorId }
-            }
+            let monitorPresent = isMonitorPresent(for: record, snapshot: snapshot, currentMonitors: currentMonitors)
 
             let targetWsId: WorkspaceDescriptor.ID
             if monitorPresent {
                 targetWsId = record.workspaceId
-            } else if let currentWsId = wm.workspace(for: record.token) {
+            } else if let currentWsId = wm.workspace(for: resolvedToken) {
                 targetWsId = currentWsId
             } else {
                 targetWsId = record.workspaceId
             }
 
-            if wm.workspace(for: record.token) != targetWsId {
-                wm.setWorkspace(for: record.token, to: targetWsId)
+            if wm.workspace(for: resolvedToken) != targetWsId {
+                wm.setWorkspace(for: resolvedToken, to: targetWsId)
                 reassignedCount += 1
             }
             affectedWorkspaceIds.insert(targetWsId)
