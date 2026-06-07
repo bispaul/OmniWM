@@ -57,6 +57,8 @@ enum RefreshReason: String, Sendable {
     case appHidden
     case appUnhidden
     case overviewMutation
+    case wakeRescan
+    case wakeRestore
 
     var requestRoute: RefreshRequestRoute {
         switch self {
@@ -67,7 +69,8 @@ enum RefreshReason: String, Sendable {
              .monitorConfigurationChanged,
              .appRulesChanged,
              .workspaceConfigChanged,
-             .appTerminated:
+             .appTerminated,
+             .wakeRescan:
             .fullRescan
         case .layoutConfigChanged,
              .monitorSettingsChanged,
@@ -83,7 +86,8 @@ enum RefreshReason: String, Sendable {
              .appActivationTransition,
              .layoutCommand,
              .interactiveGesture,
-             .overviewMutation:
+             .overviewMutation,
+             .wakeRestore:
             .immediateRelayout
         case .appHidden,
              .appUnhidden:
@@ -114,7 +118,9 @@ enum RefreshReason: String, Sendable {
              .interactiveGesture,
              .appHidden,
              .appUnhidden,
-             .overviewMutation:
+             .overviewMutation,
+             .wakeRescan,
+             .wakeRestore:
             .plain
         case .axWindowCreated:
             .debounced(nanoseconds: 4_000_000, dropWhileBusy: false)

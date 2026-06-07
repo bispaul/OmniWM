@@ -548,7 +548,7 @@ final class ServiceLifecycleManager {
 
         if missingCount > 0 {
             WMLog.ax.info("wakeRestore: \(missingCount, privacy: .public) windows missing from tracking, triggering rescan before final restore")
-            controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+            controller.layoutRefreshController.requestFullRescan(reason: .wakeRescan)
             restoreTimerTask = Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: 3_000_000_000)
                 guard !Task.isCancelled,
@@ -639,7 +639,7 @@ final class ServiceLifecycleManager {
         // Step 6: Relayout
         if !affectedWorkspaceIds.isEmpty {
             controller.layoutRefreshController.requestImmediateRelayout(
-                reason: .workspaceTransition,
+                reason: .wakeRestore,
                 affectedWorkspaceIds: affectedWorkspaceIds
             )
         }

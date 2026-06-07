@@ -154,4 +154,11 @@ private func makeWakeTestMonitor(
         #expect(resolved != nil)
         #expect(resolved?.displayId == 99)
     }
+
+    @Test @MainActor func wakeRestoreRefreshReasonHasCorrectRoutes() {
+        #expect(RefreshReason.wakeRescan.requestRoute == .fullRescan)
+        #expect(RefreshReason.wakeRestore.requestRoute == .immediateRelayout)
+        #expect(RefreshReason.wakeRescan.relayoutSchedulingPolicy == .plain)
+        #expect(RefreshReason.wakeRestore.relayoutSchedulingPolicy == .plain)
+    }
 }
