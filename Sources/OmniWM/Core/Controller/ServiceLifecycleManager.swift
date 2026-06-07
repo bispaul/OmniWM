@@ -430,6 +430,13 @@ final class ServiceLifecycleManager {
             controller?.workspaceManager.isReconciling = false
             return
         }
+
+        // Extract deferred rescan count from context for logging
+        var deferredCount = 0
+        if case .restoring(let context) = wakePhase {
+            deferredCount = context.deferredRescanReasons.count
+        }
+
         let wm = controller.workspaceManager
 
         // Step 1: Reassign windows to pre-sleep workspaces
@@ -474,7 +481,7 @@ final class ServiceLifecycleManager {
         )
 
         WMLog.ax.info(
-            "wakeCorrection: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowWorkspaces.count, privacy: .public)"
+            "wakeCorrection: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowWorkspaces.count, privacy: .public) deferredRescans=\(deferredCount, privacy: .public)"
         )
 
         // Step 7: Clear state
