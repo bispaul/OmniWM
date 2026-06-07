@@ -488,16 +488,7 @@ final class ServiceLifecycleManager {
         return candidates[0].token
     }
 
-    private func buildTokenRemap(from snapshot: SleepStateSnapshot, wm: WorkspaceManager) -> [WindowToken: WindowToken] {
-        matchedTokens.removeAll()
-        var remap: [WindowToken: WindowToken] = [:]
-        for record in snapshot.windowRecords {
-            if let resolved = resolveTrackedToken(for: record, in: wm), resolved != record.token {
-                remap[record.token] = resolved
-            }
-        }
-        return remap
-    }
+
 
     private func isMonitorPresent(for record: SleepWindowRecord, snapshot: SleepStateSnapshot, currentMonitors: [Monitor]) -> Bool {
         let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
@@ -579,12 +570,18 @@ final class ServiceLifecycleManager {
         let currentMonitors = Monitor.current()
         var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
 
+        // Step 1: Workspace assignments — build token remap as side effect
         matchedTokens.removeAll()
+        var tokenRemap: [WindowToken: WindowToken] = [:]
         var reassignedCount = 0
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
             if record.hiddenReason == .scratchpad { continue }
             guard let resolvedToken = resolveTrackedToken(for: record, in: wm) else { continue }
+
+            if resolvedToken != record.token {
+                tokenRemap[record.token] = resolvedToken
+            }
 
             let monitorPresent = isMonitorPresent(for: record, snapshot: snapshot, currentMonitors: currentMonitors)
 
@@ -607,13 +604,12 @@ final class ServiceLifecycleManager {
             affectedWorkspaceIds.insert(targetWsId)
         }
 
-        // Restore Niri placements with token remapping for recycled IDs
+        // Step 2: Niri placements — reuse token remap from step 1 (same matching)
         if let engine = controller.niriEngine {
-            let tokenMap = buildTokenRemap(from: snapshot, wm: wm)
             for (wsId, originalPlacements) in snapshot.niriPlacements {
                 var remapped: [WindowToken: PersistedNiriPlacement] = [:]
                 for (oldToken, placement) in originalPlacements {
-                    let newToken = tokenMap[oldToken] ?? oldToken
+                    let newToken = tokenRemap[oldToken] ?? oldToken
                     remapped[newToken] = placement
                 }
                 let tokens = Array(remapped.keys)
@@ -623,28 +619,22 @@ final class ServiceLifecycleManager {
             }
         }
 
-        // Restore active workspace per monitor
-        let currentMonitorIds = Set(Monitor.current().map(\.id))
+        // Step 3: Active workspace per monitor
+        let currentMonitorIds = Set(currentMonitors.map(\.id))
         for (monitorId, wsId) in snapshot.activeWorkspaceByMonitor {
             guard currentMonitorIds.contains(monitorId) else { continue }
             _ = wm.setActiveWorkspace(wsId, on: monitorId)
         }
 
-        // Restore viewport states
+        // Step 4: Viewport states
         for (wsId, viewportState) in snapshot.viewportStates {
             wm.updateNiriViewportState(viewportState, for: wsId)
         }
 
-        // Restore focus
-        if let focusedToken = snapshot.focusedToken,
-           let wsId = wm.workspace(for: focusedToken),
-           let monitorId = wm.monitorId(for: wsId)
-        {
-            _ = wm.setManagedFocus(focusedToken, in: wsId, onMonitor: monitorId)
-        }
-
+        // Step 5: Validate dead windows
         validateRestoredWindows(from: snapshot)
 
+        // Step 6: Relayout
         if !affectedWorkspaceIds.isEmpty {
             controller.layoutRefreshController.requestImmediateRelayout(
                 reason: .workspaceTransition,
@@ -653,8 +643,35 @@ final class ServiceLifecycleManager {
         }
 
         WMLog.ax.info(
-            "wakeRestore: finalized reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public)"
+            "wakeRestore: finalized reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public) remapped=\(tokenRemap.count, privacy: .public)"
         )
+
+        // Step 7: Focus — deferred so relayout settles first
+        let focusSnapshot = snapshot
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            guard let self, let controller = self.controller else { return }
+            guard let focusedToken = focusSnapshot.focusedToken else { return }
+            let wm = controller.workspaceManager
+
+            let resolvedFocusToken: WindowToken?
+            if wm.entry(for: focusedToken) != nil {
+                resolvedFocusToken = focusedToken
+            } else if let focusRecord = focusSnapshot.windowRecords.first(where: { $0.token == focusedToken }) {
+                self.matchedTokens.removeAll()
+                resolvedFocusToken = self.resolveTrackedToken(for: focusRecord, in: wm)
+            } else {
+                resolvedFocusToken = nil
+            }
+
+            if let token = resolvedFocusToken,
+               let wsId = wm.workspace(for: token),
+               let monitorId = wm.monitorId(for: wsId)
+            {
+                _ = wm.setManagedFocus(token, in: wsId, onMonitor: monitorId)
+                WMLog.ax.info("wakeRestore: focus restored to pid=\(token.pid, privacy: .public) wid=\(token.windowId, privacy: .public)")
+            }
+        }
 
         wakePhase = .idle
         sleepSnapshot = nil
