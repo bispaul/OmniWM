@@ -37,8 +37,7 @@ final class ServiceLifecycleManager {
 
     enum WakePhase {
         case idle
-        case awaitingMonitors(expectedCount: Int, snapshot: SleepStateSnapshot)
-        case settled
+        case awaitingRestore(SleepStateSnapshot)
     }
 
     weak var controller: WMController?
@@ -58,8 +57,8 @@ final class ServiceLifecycleManager {
 
     private(set) var wakePhase: WakePhase = .idle
     private(set) var sleepSnapshot: SleepStateSnapshot?
-    private var settleDebounceTask: Task<Void, Never>?
-    private var fallbackTimeoutTask: Task<Void, Never>?
+    private var restoreTimerTask: Task<Void, Never>?
+    private var darkWakeTimeoutTask: Task<Void, Never>?
     var accessibilityPermissionStreamProviderForTests: ((Bool) -> AsyncStream<Bool>)?
     var accessibilityPermissionStateProviderForTests: (() -> Bool)?
     var accessibilityPermissionRequestHandlerForTests: (() -> Bool)?
@@ -213,20 +212,11 @@ final class ServiceLifecycleManager {
             break
         }
 
-        if case let .awaitingMonitors(expectedCount, snapshot) = wakePhase {
-            applyMonitorConfigurationChanged(
-                currentMonitors: Monitor.current(),
-                performPostUpdateActions: false
-            )
-            settleDebounceTask?.cancel()
-            let currentCount = Monitor.current().count
-            WMLog.ax.info("wakeDisplay: monitors=\(currentCount, privacy: .public)/\(expectedCount, privacy: .public)")
-            if currentCount >= expectedCount {
-                startSettleDebounce(snapshot: snapshot)
-            }
-        } else {
-            handleMonitorConfigurationChanged()
+        if case .awaitingRestore = wakePhase {
+            darkWakeTimeoutTask?.cancel()
         }
+
+        handleMonitorConfigurationChanged()
     }
 
     private func handleMonitorDisconnect(monitorId: Monitor.ID, outputId: OutputId) {
@@ -395,48 +385,26 @@ final class ServiceLifecycleManager {
             return
         }
 
-        let expectedCount = snapshot.expectedMonitorCount
-        let currentCount = Monitor.current().count
+        wakePhase = .awaitingRestore(snapshot)
+        WMLog.ax.info("wakeReconciliation: restoring in 15s, windows=\(snapshot.windowRecords.count, privacy: .public) monitors=\(snapshot.expectedMonitorCount, privacy: .public)")
 
-        if expectedCount <= 1 {
-            WMLog.ax.info("wakeReconciliation: single monitor, restoring immediately")
-            restoreFromSnapshot(snapshot)
-            return
-        }
-
-        wakePhase = .awaitingMonitors(expectedCount: expectedCount, snapshot: snapshot)
-        WMLog.ax.info("wakeReconciliation: awaiting monitors current=\(currentCount, privacy: .public) expected=\(expectedCount, privacy: .public)")
-
-        if currentCount >= expectedCount {
-            startSettleDebounce(snapshot: snapshot)
-        }
-
-        fallbackTimeoutTask?.cancel()
-        fallbackTimeoutTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 30_000_000_000)
-            guard !Task.isCancelled else { return }
-            guard case let .awaitingMonitors(_, snap) = self?.wakePhase else { return }
-            let monitors = Monitor.current().count
-            if monitors == 0 {
-                WMLog.ax.info("wakeTimeout: 30s, no monitors — DarkWake, resetting")
-                self?.wakePhase = .idle
-                self?.sleepSnapshot = nil
-            } else {
-                WMLog.ax.info("wakeTimeout: 30s fallback, restoring with \(monitors, privacy: .public) monitors")
-                self?.restoreFromSnapshot(snap)
-            }
-        }
-    }
-
-    private func startSettleDebounce(snapshot: SleepStateSnapshot) {
-        settleDebounceTask?.cancel()
-        settleDebounceTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 5_000_000_000)
+        restoreTimerTask?.cancel()
+        restoreTimerTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 15_000_000_000)
             guard !Task.isCancelled,
-                  case .awaitingMonitors = self?.wakePhase else { return }
-            WMLog.ax.info("wakeSettle: 5s debounce complete, restoring")
-            self?.fallbackTimeoutTask?.cancel()
-            self?.restoreFromSnapshot(snapshot)
+                  case let .awaitingRestore(snap) = self?.wakePhase else { return }
+            self?.restoreFromSnapshot(snap)
+        }
+
+        darkWakeTimeoutTask?.cancel()
+        darkWakeTimeoutTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 30_000_000_000)
+            guard !Task.isCancelled,
+                  case .awaitingRestore = self?.wakePhase else { return }
+            WMLog.ax.info("wakeTimeout: 30s, no display events — DarkWake, resetting")
+            self?.restoreTimerTask?.cancel()
+            self?.wakePhase = .idle
+            self?.sleepSnapshot = nil
         }
     }
 
@@ -447,7 +415,6 @@ final class ServiceLifecycleManager {
             return
         }
 
-        wakePhase = .settled
         let wm = controller.workspaceManager
         let currentMonitors = Monitor.current()
 
@@ -503,7 +470,12 @@ final class ServiceLifecycleManager {
 
         validateRestoredWindows(from: snapshot)
 
-        applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
+        if !affectedWorkspaceIds.isEmpty {
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .workspaceTransition,
+                affectedWorkspaceIds: affectedWorkspaceIds
+            )
+        }
 
         WMLog.ax.info(
             "wakeRestore: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public)"
@@ -511,8 +483,8 @@ final class ServiceLifecycleManager {
 
         wakePhase = .idle
         sleepSnapshot = nil
-        settleDebounceTask?.cancel()
-        fallbackTimeoutTask?.cancel()
+        restoreTimerTask?.cancel()
+        darkWakeTimeoutTask?.cancel()
     }
 
     private func validateRestoredWindows(from snapshot: SleepStateSnapshot) {
@@ -542,8 +514,8 @@ final class ServiceLifecycleManager {
     }
 
     func simulateSleepForTests() {
-        settleDebounceTask?.cancel()
-        fallbackTimeoutTask?.cancel()
+        restoreTimerTask?.cancel()
+        darkWakeTimeoutTask?.cancel()
         if sleepSnapshot == nil {
             sleepSnapshot = captureStateSnapshot()
         }
@@ -657,8 +629,8 @@ final class ServiceLifecycleManager {
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self else { return }
-                self.settleDebounceTask?.cancel()
-                self.fallbackTimeoutTask?.cancel()
+                self.restoreTimerTask?.cancel()
+                self.darkWakeTimeoutTask?.cancel()
                 if case .idle = self.wakePhase {
                     if self.sleepSnapshot == nil {
                         self.sleepSnapshot = self.captureStateSnapshot()

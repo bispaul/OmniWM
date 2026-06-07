@@ -106,7 +106,7 @@ private func makeWakeTestMonitor(
 
         let snapshot = slm.captureStateSnapshot()!
         slm.setSleepSnapshotForTests(snapshot)
-        slm.setWakePhaseForTests(.awaitingMonitors(expectedCount: 2, snapshot: snapshot))
+        slm.setWakePhaseForTests(.awaitingRestore(snapshot))
 
         controller.layoutRefreshController.requestFullRescan(reason: .activeSpaceChanged)
 
@@ -124,7 +124,7 @@ private func makeWakeTestMonitor(
 
         let snapshot = slm.captureStateSnapshot()!
         slm.setSleepSnapshotForTests(snapshot)
-        slm.setWakePhaseForTests(.awaitingMonitors(expectedCount: 2, snapshot: snapshot))
+        slm.setWakePhaseForTests(.awaitingRestore(snapshot))
 
         slm.simulateSleepForTests()
 
