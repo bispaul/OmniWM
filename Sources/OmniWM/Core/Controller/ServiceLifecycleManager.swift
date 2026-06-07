@@ -15,13 +15,25 @@ enum ActivationEventSource: String, Sendable {
 final class ServiceLifecycleManager {
     // MARK: - Wake Restore Types
 
+    enum LayoutEngineType: String {
+        case niri
+        case dwindle
+        case unmanaged
+    }
+
     struct SleepWindowRecord {
         let token: WindowToken
+        let pid: pid_t
         let bundleId: String?
         let workspaceId: WorkspaceDescriptor.ID
         let monitorId: Monitor.ID
         let frame: CGRect
         let mode: TrackedWindowMode
+        let isVisible: Bool
+        let hiddenReason: WindowModel.HiddenReason?
+        let isNativeFullscreen: Bool
+        let floatingFrame: CGRect?
+        let layoutEngine: LayoutEngineType
     }
 
     struct SleepStateSnapshot {
@@ -274,13 +286,27 @@ final class ServiceLifecycleManager {
         for entry in wm.allEntries() {
             let monitorId = wm.monitorId(for: entry.workspaceId) ?? wm.monitors.first?.id ?? Monitor.ID(displayId: 0)
             let bundleId = NSRunningApplication(processIdentifier: entry.token.pid)?.bundleIdentifier
+            let layoutEngine: LayoutEngineType
+            if controller.niriEngine?.findNode(for: entry.token) != nil {
+                layoutEngine = .niri
+            } else if controller.dwindleEngine?.findNode(for: entry.token) != nil {
+                layoutEngine = .dwindle
+            } else {
+                layoutEngine = .unmanaged
+            }
             windowRecords.append(SleepWindowRecord(
                 token: entry.token,
+                pid: entry.token.pid,
                 bundleId: bundleId,
                 workspaceId: entry.workspaceId,
                 monitorId: monitorId,
                 frame: entry.observedState.frame ?? .zero,
-                mode: entry.mode
+                mode: entry.mode,
+                isVisible: entry.observedState.isVisible,
+                hiddenReason: entry.hiddenReason,
+                isNativeFullscreen: entry.observedState.isNativeFullscreen,
+                floatingFrame: entry.floatingState?.lastFrame,
+                layoutEngine: layoutEngine
             ))
         }
 
@@ -386,14 +412,18 @@ final class ServiceLifecycleManager {
         }
 
         wakePhase = .awaitingRestore(snapshot)
-        WMLog.ax.info("wakeReconciliation: restoring in 15s, windows=\(snapshot.windowRecords.count, privacy: .public) monitors=\(snapshot.expectedMonitorCount, privacy: .public)")
+        WMLog.ax.info("wakeReconciliation: progressive restore starting, windows=\(snapshot.windowRecords.count, privacy: .public) monitors=\(snapshot.expectedMonitorCount, privacy: .public)")
 
         restoreTimerTask?.cancel()
         restoreTimerTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 15_000_000_000)
-            guard !Task.isCancelled,
-                  case let .awaitingRestore(snap) = self?.wakePhase else { return }
-            self?.restoreFromSnapshot(snap)
+            for tick in 1...5 {
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                guard !Task.isCancelled,
+                      case let .awaitingRestore(snap) = self?.wakePhase else { return }
+                self?.tryRestoreWorkspaces(from: snap, tick: tick)
+            }
+            guard case let .awaitingRestore(snap) = self?.wakePhase else { return }
+            self?.finalizeWakeRestore(from: snap)
         }
 
         darkWakeTimeoutTask?.cancel()
@@ -408,7 +438,46 @@ final class ServiceLifecycleManager {
         }
     }
 
-    private func restoreFromSnapshot(_ snapshot: SleepStateSnapshot) {
+    private func tryRestoreWorkspaces(from snapshot: SleepStateSnapshot, tick: Int) {
+        guard let controller else { return }
+        let wm = controller.workspaceManager
+        let currentMonitors = Monitor.current()
+
+        var reassignedCount = 0
+        var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
+
+        for record in snapshot.windowRecords {
+            if record.isNativeFullscreen { continue }
+            if record.hiddenReason == .scratchpad { continue }
+            guard wm.entry(for: record.token) != nil else { continue }
+
+            let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
+            let monitorPresent: Bool
+            if let originalOutputId {
+                monitorPresent = originalOutputId.resolveMonitor(in: currentMonitors) != nil
+            } else {
+                monitorPresent = currentMonitors.contains { $0.id == record.monitorId }
+            }
+            guard monitorPresent else { continue }
+
+            if wm.workspace(for: record.token) != record.workspaceId {
+                wm.setWorkspace(for: record.token, to: record.workspaceId)
+                reassignedCount += 1
+                affectedWorkspaceIds.insert(record.workspaceId)
+            }
+        }
+
+        if reassignedCount > 0, !affectedWorkspaceIds.isEmpty {
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .workspaceTransition,
+                affectedWorkspaceIds: affectedWorkspaceIds
+            )
+        }
+
+        WMLog.ax.info("wakeRestore: tick=\(tick, privacy: .public) reassigned=\(reassignedCount, privacy: .public)")
+    }
+
+    private func finalizeWakeRestore(from snapshot: SleepStateSnapshot) {
         guard let controller else {
             wakePhase = .idle
             sleepSnapshot = nil
@@ -417,23 +486,25 @@ final class ServiceLifecycleManager {
 
         let wm = controller.workspaceManager
         let currentMonitors = Monitor.current()
-
-        var reassignedCount = 0
         var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
 
+        // Final workspace restore (with fallback for missing monitors)
+        var reassignedCount = 0
         for record in snapshot.windowRecords {
+            if record.isNativeFullscreen { continue }
+            if record.hiddenReason == .scratchpad { continue }
             guard wm.entry(for: record.token) != nil else { continue }
 
             let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
-            let originalMonitorPresent: Bool
+            let monitorPresent: Bool
             if let originalOutputId {
-                originalMonitorPresent = originalOutputId.resolveMonitor(in: currentMonitors) != nil
+                monitorPresent = originalOutputId.resolveMonitor(in: currentMonitors) != nil
             } else {
-                originalMonitorPresent = currentMonitors.contains { $0.id == record.monitorId }
+                monitorPresent = currentMonitors.contains { $0.id == record.monitorId }
             }
 
             let targetWsId: WorkspaceDescriptor.ID
-            if originalMonitorPresent {
+            if monitorPresent {
                 targetWsId = record.workspaceId
             } else if let currentWsId = wm.workspace(for: record.token) {
                 targetWsId = currentWsId
@@ -448,6 +519,7 @@ final class ServiceLifecycleManager {
             affectedWorkspaceIds.insert(targetWsId)
         }
 
+        // Restore Niri placements (column widths, indices) — once
         if let engine = controller.niriEngine {
             for (wsId, placements) in snapshot.niriPlacements {
                 let tokens = Array(placements.keys)
@@ -457,10 +529,12 @@ final class ServiceLifecycleManager {
             }
         }
 
+        // Restore viewport states
         for (wsId, viewportState) in snapshot.viewportStates {
             wm.updateNiriViewportState(viewportState, for: wsId)
         }
 
+        // Restore focus
         if let focusedToken = snapshot.focusedToken,
            let wsId = wm.workspace(for: focusedToken),
            let monitorId = wm.monitorId(for: wsId)
@@ -478,12 +552,11 @@ final class ServiceLifecycleManager {
         }
 
         WMLog.ax.info(
-            "wakeRestore: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public)"
+            "wakeRestore: finalized reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public)"
         )
 
         wakePhase = .idle
         sleepSnapshot = nil
-        restoreTimerTask?.cancel()
         darkWakeTimeoutTask?.cancel()
     }
 
