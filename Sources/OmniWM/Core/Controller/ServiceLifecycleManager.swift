@@ -679,8 +679,9 @@ final class ServiceLifecycleManager {
                     self.sleepSnapshot = self.captureStateSnapshot()
                     WMLog.ax.info("systemSleep: re-entrant from non-idle phase, captured fresh snapshot")
                 }
+                self.controller?.workspaceManager.isReconciling = true
                 WMLog.ax.info(
-                    "systemSleep: snapshot monitors=\(self.sleepSnapshot?.outputIds.count ?? 0, privacy: .public)"
+                    "systemSleep: snapshot monitors=\(self.sleepSnapshot?.outputIds.count ?? 0, privacy: .public), isReconciling=true"
                 )
                 _ = self.controller?.workspaceManager.recordReconcileEvent(.systemSleep(source: .service))
             }
