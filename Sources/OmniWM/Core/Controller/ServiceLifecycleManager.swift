@@ -15,28 +15,30 @@ enum ActivationEventSource: String, Sendable {
 final class ServiceLifecycleManager {
     // MARK: - Wake Restore Types
 
+    struct SleepWindowRecord {
+        let token: WindowToken
+        let bundleId: String?
+        let workspaceId: WorkspaceDescriptor.ID
+        let monitorId: Monitor.ID
+        let frame: CGRect
+        let mode: TrackedWindowMode
+    }
+
     struct SleepStateSnapshot {
         let outputIds: [OutputId]
-        let windowWorkspaces: [WindowToken: WorkspaceDescriptor.ID]
+        let windowRecords: [SleepWindowRecord]
         let niriPlacements: [WorkspaceDescriptor.ID: [WindowToken: PersistedNiriPlacement]]
         let viewportStates: [WorkspaceDescriptor.ID: ViewportState]
         let focusedToken: WindowToken?
         let timestamp: Date
-    }
 
-    struct WakeRestorationContext {
-        let snapshot: SleepStateSnapshot
-        var restoredOutputIds: Set<OutputId>
-        var deferredRescanReasons: [RefreshReason]
-        var userModifiedWorkspaceIds: Set<WorkspaceDescriptor.ID>
-        let deadline: Date
+        var expectedMonitorCount: Int { outputIds.count }
     }
 
     enum WakePhase {
         case idle
-        case deferredAwaitingDisplay
-        case restoring(WakeRestorationContext)
-        case draining
+        case awaitingMonitors(expectedCount: Int, snapshot: SleepStateSnapshot)
+        case settled
     }
 
     weak var controller: WMController?
@@ -56,7 +58,8 @@ final class ServiceLifecycleManager {
 
     private(set) var wakePhase: WakePhase = .idle
     private(set) var sleepSnapshot: SleepStateSnapshot?
-    private var wakeTimeoutTask: Task<Void, Never>?
+    private var settleDebounceTask: Task<Void, Never>?
+    private var fallbackTimeoutTask: Task<Void, Never>?
     var accessibilityPermissionStreamProviderForTests: ((Bool) -> AsyncStream<Bool>)?
     var accessibilityPermissionStateProviderForTests: (() -> Bool)?
     var accessibilityPermissionRequestHandlerForTests: (() -> Bool)?
@@ -198,29 +201,25 @@ final class ServiceLifecycleManager {
     }
 
     private func handleDisplayEvent(_ event: DisplayConfigurationObserver.DisplayEvent) {
-        switch wakePhase {
-        case .deferredAwaitingDisplay:
-            wakeTimeoutTask?.cancel()
-            startRestoringPhase()
-            handleWakeDisplayEvent(event)
-
-        case .restoring:
-            handleWakeDisplayEvent(event)
-
-        case .idle, .draining:
-            switch event {
-            case let .disconnected(monitorId, outputId):
-                if sleepSnapshot == nil {
-                    sleepSnapshot = captureStateSnapshot()
-                    let monCount = sleepSnapshot?.outputIds.count ?? 0
-                    WMLog.ax.info("displayDisconnect: rolling snapshot captured monitors=\(monCount, privacy: .public)")
-                }
-                handleMonitorDisconnect(monitorId: monitorId, outputId: outputId)
-            case .connected, .reconfigured:
-                break
+        switch event {
+        case let .disconnected(monitorId, outputId):
+            if sleepSnapshot == nil, case .idle = wakePhase {
+                sleepSnapshot = captureStateSnapshot()
+                let monCount = sleepSnapshot?.outputIds.count ?? 0
+                WMLog.ax.info("displayDisconnect: rolling snapshot captured monitors=\(monCount, privacy: .public)")
             }
-            if !isWakeGateActive {
-                handleMonitorConfigurationChanged()
+            handleMonitorDisconnect(monitorId: monitorId, outputId: outputId)
+        case .connected, .reconfigured:
+            break
+        }
+
+        handleMonitorConfigurationChanged()
+
+        if case let .awaitingMonitors(expectedCount, snapshot) = wakePhase {
+            let currentCount = Monitor.current().count
+            WMLog.ax.info("wakeDisplay: monitors=\(currentCount, privacy: .public)/\(expectedCount, privacy: .public)")
+            if currentCount >= expectedCount {
+                startSettleDebounce(snapshot: snapshot)
             }
         }
     }
@@ -267,7 +266,7 @@ final class ServiceLifecycleManager {
             .flatMap { controller.workspaceManager.workspace(for: $0) }
         controller.workspaceManager.garbageCollectUnusedWorkspaces(focusedWorkspaceId: focusedWsId)
 
-        gatedRequestFullRescan(reason: .monitorConfigurationChanged)
+        controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
         controller.workspaceManager.isReconciling = false
     }
 
@@ -276,9 +275,18 @@ final class ServiceLifecycleManager {
         let wm = controller.workspaceManager
         let outputIds = wm.monitors.map { OutputId(from: $0) }
 
-        var windowWorkspaces: [WindowToken: WorkspaceDescriptor.ID] = [:]
+        var windowRecords: [SleepWindowRecord] = []
         for entry in wm.allEntries() {
-            windowWorkspaces[entry.token] = entry.workspaceId
+            let monitorId = wm.monitorId(for: entry.workspaceId) ?? wm.monitors.first?.id ?? Monitor.ID(displayId: 0)
+            let bundleId = NSRunningApplication(processIdentifier: entry.token.pid)?.bundleIdentifier
+            windowRecords.append(SleepWindowRecord(
+                token: entry.token,
+                bundleId: bundleId,
+                workspaceId: entry.workspaceId,
+                monitorId: monitorId,
+                frame: entry.observedState.frame ?? .zero,
+                mode: entry.mode
+            ))
         }
 
         var niriPlacements: [WorkspaceDescriptor.ID: [WindowToken: PersistedNiriPlacement]] = [:]
@@ -296,7 +304,7 @@ final class ServiceLifecycleManager {
 
         return SleepStateSnapshot(
             outputIds: outputIds,
-            windowWorkspaces: windowWorkspaces,
+            windowRecords: windowRecords,
             niriPlacements: niriPlacements,
             viewportStates: viewportStates,
             focusedToken: wm.focusedToken,
@@ -326,7 +334,7 @@ final class ServiceLifecycleManager {
         }
         _ = controller.focusBorderController.refresh(forceOrdering: true)
         controller.appInfoCache.evict(pid: pid)
-        gatedRequestFullRescan(reason: .appTerminated)
+        controller.layoutRefreshController.requestFullRescan(reason: .appTerminated)
     }
 
     func handleGapsChanged() {
@@ -334,7 +342,7 @@ final class ServiceLifecycleManager {
     }
 
     func handleAppLaunched() {
-        gatedRequestFullRescan(reason: .appLaunched)
+        controller?.layoutRefreshController.requestFullRescan(reason: .appLaunched)
     }
 
     private func handleFrameAcceptedAtDifferentSize(windowId: Int, observedFrame: CGRect) {
@@ -377,92 +385,110 @@ final class ServiceLifecycleManager {
     }
 
     private func startWakeReconciliation() {
-        wakePhase = .deferredAwaitingDisplay
-        controller?.workspaceManager.isReconciling = true
-        WMLog.ax.info("wakeReconciliation: deferred, waiting for display event")
-
-        wakeTimeoutTask?.cancel()
-        wakeTimeoutTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 30_000_000_000)
-            guard !Task.isCancelled,
-                  case .deferredAwaitingDisplay = self?.wakePhase else { return }
-            WMLog.ax.info("wakeTimeout: 30s, no display event — DarkWake, resetting")
-            self?.wakePhase = .idle
-            self?.sleepSnapshot = nil
-            self?.controller?.workspaceManager.isReconciling = false
-        }
-    }
-
-    private func startRestoringPhase() {
         guard let snapshot = sleepSnapshot else {
-            wakePhase = .idle
-            controller?.workspaceManager.isReconciling = false
+            WMLog.ax.info("wakeReconciliation: no snapshot, skipping")
             return
         }
 
-        let context = WakeRestorationContext(
-            snapshot: snapshot,
-            restoredOutputIds: [],
-            deferredRescanReasons: [],
-            userModifiedWorkspaceIds: [],
-            deadline: Date().addingTimeInterval(15)
-        )
-        wakePhase = .restoring(context)
+        let expectedCount = snapshot.expectedMonitorCount
+        let currentCount = Monitor.current().count
 
-        let monitorCount = snapshot.outputIds.count
-        WMLog.ax.info("wakeSettle: entering settling phase, snapshotMonitors=\(monitorCount, privacy: .public)")
-        scheduleSettleCorrection()
-    }
-
-    private func scheduleSettleCorrection() {
-        wakeTimeoutTask?.cancel()
-        wakeTimeoutTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 3_000_000_000)
-            guard !Task.isCancelled,
-                  case .restoring = self?.wakePhase else { return }
-            self?.applySnapshotCorrection()
-        }
-    }
-
-    private func applySnapshotCorrection() {
-        guard let controller, let snapshot = sleepSnapshot else {
-            wakePhase = .idle
-            controller?.workspaceManager.isReconciling = false
+        if expectedCount <= 1 {
+            WMLog.ax.info("wakeReconciliation: single monitor, restoring immediately")
+            restoreFromSnapshot(snapshot)
             return
         }
 
-        // Extract deferred rescan count from context for logging
-        var deferredCount = 0
-        if case .restoring(let context) = wakePhase {
-            deferredCount = context.deferredRescanReasons.count
+        wakePhase = .awaitingMonitors(expectedCount: expectedCount, snapshot: snapshot)
+        WMLog.ax.info("wakeReconciliation: awaiting monitors current=\(currentCount, privacy: .public) expected=\(expectedCount, privacy: .public)")
+
+        if currentCount >= expectedCount {
+            startSettleDebounce(snapshot: snapshot)
         }
 
-        let wm = controller.workspaceManager
-
-        // Step 1: Reassign windows to pre-sleep workspaces
-        var reassignedCount = 0
-        for (token, snapshotWsId) in snapshot.windowWorkspaces {
-            if wm.workspace(for: token) != snapshotWsId {
-                wm.setWorkspace(for: token, to: snapshotWsId)
-                reassignedCount += 1
+        fallbackTimeoutTask?.cancel()
+        fallbackTimeoutTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 30_000_000_000)
+            guard !Task.isCancelled else { return }
+            guard case let .awaitingMonitors(_, snap) = self?.wakePhase else { return }
+            let monitors = Monitor.current().count
+            if monitors == 0 {
+                WMLog.ax.info("wakeTimeout: 30s, no monitors — DarkWake, resetting")
+                self?.wakePhase = .idle
+                self?.sleepSnapshot = nil
+            } else {
+                WMLog.ax.info("wakeTimeout: 30s fallback, restoring with \(monitors, privacy: .public) monitors")
+                self?.restoreFromSnapshot(snap)
             }
         }
+    }
 
-        // Step 2: Restore Niri placements (column widths, indices)
+    private func startSettleDebounce(snapshot: SleepStateSnapshot) {
+        settleDebounceTask?.cancel()
+        settleDebounceTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            guard !Task.isCancelled,
+                  case .awaitingMonitors = self?.wakePhase else { return }
+            WMLog.ax.info("wakeSettle: 2s debounce complete, restoring")
+            self?.fallbackTimeoutTask?.cancel()
+            self?.restoreFromSnapshot(snapshot)
+        }
+    }
+
+    private func restoreFromSnapshot(_ snapshot: SleepStateSnapshot) {
+        guard let controller else {
+            wakePhase = .idle
+            sleepSnapshot = nil
+            return
+        }
+
+        wakePhase = .settled
+        let wm = controller.workspaceManager
+        let currentMonitors = Monitor.current()
+
+        var reassignedCount = 0
+        var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
+
+        for record in snapshot.windowRecords {
+            guard wm.entry(for: record.token) != nil else { continue }
+
+            let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
+            let originalMonitorPresent: Bool
+            if let originalOutputId {
+                originalMonitorPresent = originalOutputId.resolveMonitor(in: currentMonitors) != nil
+            } else {
+                originalMonitorPresent = currentMonitors.contains { $0.id == record.monitorId }
+            }
+
+            let targetWsId: WorkspaceDescriptor.ID
+            if originalMonitorPresent {
+                targetWsId = record.workspaceId
+            } else if let currentWsId = wm.workspace(for: record.token) {
+                targetWsId = currentWsId
+            } else {
+                targetWsId = record.workspaceId
+            }
+
+            if wm.workspace(for: record.token) != targetWsId {
+                wm.setWorkspace(for: record.token, to: targetWsId)
+                reassignedCount += 1
+            }
+            affectedWorkspaceIds.insert(targetWsId)
+        }
+
         if let engine = controller.niriEngine {
             for (wsId, placements) in snapshot.niriPlacements {
                 let tokens = Array(placements.keys)
                 for token in tokens { engine.removeWindow(token: token) }
                 engine.restoreInitialPlacements(placements, matching: tokens, in: wsId)
+                affectedWorkspaceIds.insert(wsId)
             }
         }
 
-        // Step 3: Restore viewport states
         for (wsId, viewportState) in snapshot.viewportStates {
             wm.updateNiriViewportState(viewportState, for: wsId)
         }
 
-        // Step 4: Restore focus
         if let focusedToken = snapshot.focusedToken,
            let wsId = wm.workspace(for: focusedToken),
            let monitorId = wm.monitorId(for: wsId)
@@ -470,47 +496,23 @@ final class ServiceLifecycleManager {
             _ = wm.setManagedFocus(focusedToken, in: wsId, onMonitor: monitorId)
         }
 
-        // Step 5: Validate dead windows
         validateRestoredWindows(from: snapshot)
 
-        // Step 6: Scoped relayout
-        let allWorkspaceIds = Set(wm.workspaces.map(\.id))
-        controller.layoutRefreshController.requestImmediateRelayout(
-            reason: .workspaceTransition,
-            affectedWorkspaceIds: allWorkspaceIds
-        )
-
-        WMLog.ax.info(
-            "wakeCorrection: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowWorkspaces.count, privacy: .public) deferredRescans=\(deferredCount, privacy: .public)"
-        )
-
-        // Step 7: Drain deferred windows (isReconciling deferred them during wake)
-        Task { @MainActor [weak self] in
-            await self?.controller?.axEventHandler.drainDeferredCreatedWindows()
-        }
-
-        // Step 8: Clear state
-        wakePhase = .idle
-        sleepSnapshot = nil
-        wakeTimeoutTask?.cancel()
-        controller.workspaceManager.isReconciling = false
-    }
-
-    private func handleWakeDisplayEvent(_ event: DisplayConfigurationObserver.DisplayEvent) {
-        // Update topology for all event types, but don't trigger rescans
-        switch event {
-        case let .disconnected(monitorId, outputId):
-            handleMonitorDisconnect(monitorId: monitorId, outputId: outputId)
-        case .connected, .reconfigured:
-            applyMonitorConfigurationChanged(
-                currentMonitors: Monitor.current(),
-                performPostUpdateActions: false
+        if !affectedWorkspaceIds.isEmpty {
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .workspaceTransition,
+                affectedWorkspaceIds: affectedWorkspaceIds
             )
         }
 
-        // Reset settle timer — wait for display events to stop
-        scheduleSettleCorrection()
-        WMLog.ax.info("wakeSettle: display event, resetting settle timer")
+        WMLog.ax.info(
+            "wakeRestore: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public)"
+        )
+
+        wakePhase = .idle
+        sleepSnapshot = nil
+        settleDebounceTask?.cancel()
+        fallbackTimeoutTask?.cancel()
     }
 
     private func validateRestoredWindows(from snapshot: SleepStateSnapshot) {
@@ -529,25 +531,7 @@ final class ServiceLifecycleManager {
         }
     }
 
-    // MARK: - Wake Gate
-
-    private var isWakeGateActive: Bool {
-        if case .idle = wakePhase { return false }
-        return true
-    }
-
-    func gatedRequestFullRescan(reason: RefreshReason) {
-        guard let controller else { return }
-        if isWakeGateActive {
-            if case .restoring(var context) = wakePhase {
-                context.deferredRescanReasons.append(reason)
-                wakePhase = .restoring(context)
-            }
-            WMLog.ax.info("wakeGate: deferred rescan reason=\(reason.rawValue, privacy: .public)")
-            return
-        }
-        controller.layoutRefreshController.requestFullRescan(reason: reason)
-    }
+    // MARK: - Test Helpers
 
     func setWakePhaseForTests(_ phase: WakePhase) {
         wakePhase = phase
@@ -558,15 +542,20 @@ final class ServiceLifecycleManager {
     }
 
     func simulateSleepForTests() {
-        wakeTimeoutTask?.cancel()
+        settleDebounceTask?.cancel()
+        fallbackTimeoutTask?.cancel()
         if sleepSnapshot == nil {
             sleepSnapshot = captureStateSnapshot()
         }
         _ = controller?.workspaceManager.recordReconcileEvent(.systemSleep(source: .service))
     }
 
+    func simulateWakeForTests() {
+        startWakeReconciliation()
+    }
+
     func handleUnlockDetected() {
-        gatedRequestFullRescan(reason: .unlock)
+        controller?.layoutRefreshController.requestFullRescan(reason: .unlock)
     }
 
     func performStartupRefresh() {
@@ -578,7 +567,7 @@ final class ServiceLifecycleManager {
         guard let controller else { return }
         controller.focusBorderController.hide()
         controller.workspaceManager.recordReconcileEvent(.activeSpaceChanged(source: .service))
-        gatedRequestFullRescan(reason: .activeSpaceChanged)
+        controller.layoutRefreshController.requestFullRescan(reason: .activeSpaceChanged)
     }
 
     private func setupWorkspaceObservation() {
@@ -668,20 +657,19 @@ final class ServiceLifecycleManager {
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self else { return }
-                self.wakeTimeoutTask?.cancel()
+                self.settleDebounceTask?.cancel()
+                self.fallbackTimeoutTask?.cancel()
                 if case .idle = self.wakePhase {
                     if self.sleepSnapshot == nil {
                         self.sleepSnapshot = self.captureStateSnapshot()
                     }
                 } else {
                     self.wakePhase = .idle
-                    self.controller?.workspaceManager.isReconciling = false
                     self.sleepSnapshot = self.captureStateSnapshot()
                     WMLog.ax.info("systemSleep: re-entrant from non-idle phase, captured fresh snapshot")
                 }
-                self.controller?.workspaceManager.isReconciling = true
                 WMLog.ax.info(
-                    "systemSleep: snapshot monitors=\(self.sleepSnapshot?.outputIds.count ?? 0, privacy: .public), isReconciling=true"
+                    "systemSleep: snapshot monitors=\(self.sleepSnapshot?.outputIds.count ?? 0, privacy: .public) windows=\(self.sleepSnapshot?.windowRecords.count ?? 0, privacy: .public)"
                 )
                 _ = self.controller?.workspaceManager.recordReconcileEvent(.systemSleep(source: .service))
             }

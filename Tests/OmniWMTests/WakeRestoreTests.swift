@@ -40,30 +40,6 @@ private func makeWakeTestMonitor(
         }
     }
 
-    @Test @MainActor func wakeGateDefersRescanDuringDeferredPhase() {
-        let defaults = makeWakeTestDefaults()
-        let settings = SettingsStore(defaults: defaults)
-        let controller = WMController(settings: settings)
-        let slm = ServiceLifecycleManager(controller: controller)
-
-        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
-
-        slm.gatedRequestFullRescan(reason: .activeSpaceChanged)
-
-        #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.activeSpaceChanged] == nil)
-    }
-
-    @Test @MainActor func wakeGateForwardsRescanWhenIdle() {
-        let defaults = makeWakeTestDefaults()
-        let settings = SettingsStore(defaults: defaults)
-        let controller = WMController(settings: settings)
-        let slm = ServiceLifecycleManager(controller: controller)
-
-        slm.gatedRequestFullRescan(reason: .activeSpaceChanged)
-
-        #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.activeSpaceChanged] == 1)
-    }
-
     @Test @MainActor func rollingSnapshotCapturedOnFirstDisconnect() {
         let defaults = makeWakeTestDefaults()
         let settings = SettingsStore(defaults: defaults)
@@ -105,36 +81,21 @@ private func makeWakeTestMonitor(
         #expect(slm.sleepSnapshot?.outputIds.count == 3)
     }
 
-    @Test @MainActor func wakeDisplayEventStaysInRestoringPhase() {
+    @Test @MainActor func snapshotCapturesWindowRecords() {
         let defaults = makeWakeTestDefaults()
         let settings = SettingsStore(defaults: defaults)
-        settings.workspaceConfigurations = [
-            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
-            WorkspaceConfiguration(name: "8", monitorAssignment: .specificDisplay(OutputId(displayId: 3, name: "U32J59x")))
-        ]
         let controller = WMController(settings: settings)
         let slm = ServiceLifecycleManager(controller: controller)
 
         let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
-        let ext32 = makeWakeTestMonitor(displayId: 3, name: "U32J59x", x: 0, y: -1440, width: 2560, height: 1440)
-        controller.workspaceManager.applyMonitorConfigurationChange([retina, ext32])
+        controller.workspaceManager.applyMonitorConfigurationChange([retina])
 
-        let snapshot = slm.captureStateSnapshot()!
-        slm.setSleepSnapshotForTests(snapshot)
-        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
-
-        slm.handleDisplayEventForTests(.connected(ext32))
-
-        // Settle-then-correct: stays in restoring until 3s settle timer fires
-        guard case .restoring = slm.wakePhase else {
-            Issue.record("Expected .restoring (settling), got \(slm.wakePhase)")
-            return
-        }
-        // Snapshot preserved until correction runs
-        #expect(slm.sleepSnapshot != nil)
+        let snapshot = slm.captureStateSnapshot()
+        #expect(snapshot != nil)
+        #expect(snapshot?.expectedMonitorCount == 1)
     }
 
-    @Test @MainActor func settlePhaseKeepsSnapshotUntilCorrection() {
+    @Test @MainActor func rescansNotBlockedDuringWake() {
         let defaults = makeWakeTestDefaults()
         let settings = SettingsStore(defaults: defaults)
         let controller = WMController(settings: settings)
@@ -145,19 +106,14 @@ private func makeWakeTestMonitor(
 
         let snapshot = slm.captureStateSnapshot()!
         slm.setSleepSnapshotForTests(snapshot)
-        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
+        slm.setWakePhaseForTests(.awaitingMonitors(expectedCount: 2, snapshot: snapshot))
 
-        // Connect triggers settle, not immediate correction
-        slm.handleDisplayEventForTests(.connected(retina))
+        controller.layoutRefreshController.requestFullRescan(reason: .activeSpaceChanged)
 
-        guard case .restoring = slm.wakePhase else {
-            Issue.record("Expected .restoring (settling), got \(slm.wakePhase)")
-            return
-        }
-        #expect(slm.sleepSnapshot != nil)
+        #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.activeSpaceChanged] == 1)
     }
 
-    @Test @MainActor func wakeGateStillActiveInSettlePhase() {
+    @Test @MainActor func reEntrantSleepDuringAwaitingResetsCleanly() {
         let defaults = makeWakeTestDefaults()
         let settings = SettingsStore(defaults: defaults)
         let controller = WMController(settings: settings)
@@ -168,28 +124,8 @@ private func makeWakeTestMonitor(
 
         let snapshot = slm.captureStateSnapshot()!
         slm.setSleepSnapshotForTests(snapshot)
-        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
-        slm.handleDisplayEventForTests(.connected(retina))
+        slm.setWakePhaseForTests(.awaitingMonitors(expectedCount: 2, snapshot: snapshot))
 
-        // Gate should still be active in settling phase
-        slm.gatedRequestFullRescan(reason: .activeSpaceChanged)
-        #expect(controller.layoutRefreshController.debugCounters.requestedByReason[.activeSpaceChanged] == nil)
-    }
-
-    @Test @MainActor func reEntrantSleepDuringRestoringResetsCleanly() {
-        let defaults = makeWakeTestDefaults()
-        let settings = SettingsStore(defaults: defaults)
-        let controller = WMController(settings: settings)
-        let slm = ServiceLifecycleManager(controller: controller)
-
-        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
-        controller.workspaceManager.applyMonitorConfigurationChange([retina])
-
-        let snapshot = slm.captureStateSnapshot()!
-        slm.setSleepSnapshotForTests(snapshot)
-        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
-
-        // Simulate sleep while in deferred phase
         slm.simulateSleepForTests()
 
         #expect(slm.sleepSnapshot != nil)
@@ -212,50 +148,10 @@ private func makeWakeTestMonitor(
         let snapshot = slm.captureStateSnapshot()!
         #expect(snapshot.outputIds.contains(where: { $0.name == "U32J59x" }))
 
-        // Monitor reconnects with DIFFERENT displayId but same name
+        let outputId = snapshot.outputIds.first { $0.name == "U32J59x" }!
         let ext32Renamed = makeWakeTestMonitor(displayId: 99, name: "U32J59x", x: 0, y: -1440, width: 2560, height: 1440)
-        slm.setSleepSnapshotForTests(snapshot)
-        slm.setWakePhaseForTests(.deferredAwaitingDisplay)
-
-        // Display event should transition to restoring (settling) phase
-        slm.handleDisplayEventForTests(.connected(ext32Renamed))
-
-        // Settle-then-correct: stays in restoring, snapshot preserved for correction
-        guard case .restoring = slm.wakePhase else {
-            Issue.record("Expected .restoring (settling), got \(slm.wakePhase)")
-            return
-        }
-        #expect(slm.sleepSnapshot != nil)
-    }
-
-    @Test @MainActor func wakeGateQueuesReasonsDuringRestoringPhase() {
-        let defaults = makeWakeTestDefaults()
-        let settings = SettingsStore(defaults: defaults)
-        let controller = WMController(settings: settings)
-        let slm = ServiceLifecycleManager(controller: controller)
-
-        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
-        controller.workspaceManager.applyMonitorConfigurationChange([retina])
-
-        let snapshot = slm.captureStateSnapshot()!
-        let context = ServiceLifecycleManager.WakeRestorationContext(
-            snapshot: snapshot,
-            restoredOutputIds: [],
-            deferredRescanReasons: [],
-            userModifiedWorkspaceIds: [],
-            deadline: Date().addingTimeInterval(15)
-        )
-        slm.setWakePhaseForTests(.restoring(context))
-
-        slm.gatedRequestFullRescan(reason: .activeSpaceChanged)
-        slm.gatedRequestFullRescan(reason: .unlock)
-
-        guard case let .restoring(updatedContext) = slm.wakePhase else {
-            Issue.record("Expected restoring phase")
-            return
-        }
-        #expect(updatedContext.deferredRescanReasons.count == 2)
-        #expect(updatedContext.deferredRescanReasons[0] == .activeSpaceChanged)
-        #expect(updatedContext.deferredRescanReasons[1] == .unlock)
+        let resolved = outputId.resolveMonitor(in: [retina, ext32Renamed])
+        #expect(resolved != nil)
+        #expect(resolved?.displayId == 99)
     }
 }

@@ -31,7 +31,7 @@ import Testing
         #expect(snapshot!.outputIds.contains(where: { $0.displayId == monitor.displayId }))
         #expect(snapshot!.focusedToken == token)
         #expect(!snapshot!.niriPlacements.isEmpty)
-        #expect(snapshot!.windowWorkspaces[token] == ws1)
+        #expect(snapshot!.windowRecords.contains(where: { $0.token == token && $0.workspaceId == ws1 }))
     }
 
     @Test func wakePhaseDefaultsToIdle() {
