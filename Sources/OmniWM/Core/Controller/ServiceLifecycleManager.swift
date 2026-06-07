@@ -401,14 +401,20 @@ final class ServiceLifecycleManager {
         }
 
         let deadline = Date().addingTimeInterval(15)
+
+        // Pre-seed with already-present monitors (e.g., built-in Retina never fires .connected)
+        let currentOutputIds = Set(Monitor.current().map { OutputId(from: $0) })
+
         let context = WakeRestorationContext(
             snapshot: snapshot,
-            restoredOutputIds: [],
+            restoredOutputIds: currentOutputIds,
             deferredRescanReasons: [],
             userModifiedWorkspaceIds: [],
             deadline: deadline
         )
         wakePhase = .restoring(context)
+
+        WMLog.ax.info("wakeRestore: startRestoringPhase preSeeded=\(currentOutputIds.count, privacy: .public) snapshotMonitors=\(snapshot.outputIds.count, privacy: .public)")
 
         wakeTimeoutTask?.cancel()
         wakeTimeoutTask = Task { @MainActor [weak self] in
@@ -509,10 +515,16 @@ final class ServiceLifecycleManager {
         for ws in workspacesOnMonitor {
             guard !context.userModifiedWorkspaceIds.contains(ws.id) else { continue }
 
+            var reassignedCount = 0
             for (token, snapshotWsId) in context.snapshot.windowWorkspaces {
                 if snapshotWsId == ws.id, wm.workspace(for: token) != ws.id {
                     wm.setWorkspace(for: token, to: ws.id)
+                    reassignedCount += 1
                 }
+            }
+
+            if reassignedCount > 0 {
+                WMLog.ax.info("wakeRestore: ws=\(ws.id.uuidString.prefix(8), privacy: .public) reassigned=\(reassignedCount, privacy: .public)")
             }
 
             if let viewportState = context.snapshot.viewportStates[ws.id] {
@@ -537,8 +549,9 @@ final class ServiceLifecycleManager {
             )
         }
 
+        let snapshotWindowCount = context.snapshot.windowWorkspaces.count
         WMLog.ax.info(
-            "wakeRestore: monitor=\(monitor.name, privacy: .public) workspaces=\(affectedWorkspaceIds.count, privacy: .public)"
+            "wakeRestore: monitor=\(monitor.name, privacy: .public) workspaces=\(affectedWorkspaceIds.count, privacy: .public) snapshotWindows=\(snapshotWindowCount, privacy: .public)"
         )
     }
 
@@ -698,8 +711,15 @@ final class ServiceLifecycleManager {
             MainActor.assumeIsolated {
                 guard let self else { return }
                 self.wakeTimeoutTask?.cancel()
-                if self.sleepSnapshot == nil {
+                if case .idle = self.wakePhase {
+                    if self.sleepSnapshot == nil {
+                        self.sleepSnapshot = self.captureStateSnapshot()
+                    }
+                } else {
+                    self.wakePhase = .idle
+                    self.controller?.workspaceManager.isReconciling = false
                     self.sleepSnapshot = self.captureStateSnapshot()
+                    WMLog.ax.info("systemSleep: re-entrant from non-idle phase, captured fresh snapshot")
                 }
                 WMLog.ax.info(
                     "systemSleep: snapshot monitors=\(self.sleepSnapshot?.outputIds.count ?? 0, privacy: .public)"
