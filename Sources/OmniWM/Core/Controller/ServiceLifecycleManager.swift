@@ -25,6 +25,7 @@ final class ServiceLifecycleManager {
         let token: WindowToken
         let pid: pid_t
         let bundleId: String?
+        let title: String?
         let workspaceId: WorkspaceDescriptor.ID
         let monitorId: Monitor.ID
         let frame: CGRect
@@ -286,6 +287,7 @@ final class ServiceLifecycleManager {
         for entry in wm.allEntries() {
             let monitorId = wm.monitorId(for: entry.workspaceId) ?? wm.monitors.first?.id ?? Monitor.ID(displayId: 0)
             let bundleId = NSRunningApplication(processIdentifier: entry.token.pid)?.bundleIdentifier
+            let title = AXWindowService.titlePreferFast(windowId: UInt32(entry.token.windowId))
             let layoutEngine: LayoutEngineType
             if controller.niriEngine?.findNode(for: entry.token) != nil {
                 layoutEngine = .niri
@@ -298,6 +300,7 @@ final class ServiceLifecycleManager {
                 token: entry.token,
                 pid: entry.token.pid,
                 bundleId: bundleId,
+                title: title,
                 workspaceId: entry.workspaceId,
                 monitorId: monitorId,
                 frame: entry.observedState.frame ?? .zero,
@@ -438,14 +441,53 @@ final class ServiceLifecycleManager {
         }
     }
 
+    private var matchedTokens: Set<WindowToken> = []
+
     private func resolveTrackedToken(for record: SleepWindowRecord, in wm: WorkspaceManager) -> WindowToken? {
-        if wm.entry(for: record.token) != nil { return record.token }
-        let candidates = wm.entries(forPid: record.pid)
-        if candidates.count == 1 { return candidates[0].token }
-        if let bundleId = record.bundleId, let match = candidates.first(where: {
-            NSRunningApplication(processIdentifier: $0.token.pid)?.bundleIdentifier == bundleId
-        }) { return match.token }
-        return nil
+        if wm.entry(for: record.token) != nil, !matchedTokens.contains(record.token) {
+            matchedTokens.insert(record.token)
+            return record.token
+        }
+        let candidates = wm.entries(forPid: record.pid).filter { !matchedTokens.contains($0.token) }
+        guard !candidates.isEmpty else { return nil }
+        if candidates.count == 1 {
+            matchedTokens.insert(candidates[0].token)
+            return candidates[0].token
+        }
+        if let snapshotTitle = record.title, !snapshotTitle.isEmpty {
+            let liveTitle: (WindowModel.Entry) -> String? = {
+                AXWindowService.titlePreferFast(windowId: UInt32($0.token.windowId))
+            }
+            if let match = candidates.first(where: { liveTitle($0) == snapshotTitle }) {
+                matchedTokens.insert(match.token)
+                return match.token
+            }
+        }
+        let snapshotSize = record.frame.size
+        if let match = candidates.first(where: {
+            guard let frame = $0.observedState.frame else { return false }
+            return abs(frame.width - snapshotSize.width) < 50 && abs(frame.height - snapshotSize.height) < 50
+        }) {
+            matchedTokens.insert(match.token)
+            return match.token
+        }
+        if let match = candidates.first(where: { wm.workspace(for: $0.token) == record.workspaceId }) {
+            matchedTokens.insert(match.token)
+            return match.token
+        }
+        matchedTokens.insert(candidates[0].token)
+        return candidates[0].token
+    }
+
+    private func buildTokenRemap(from snapshot: SleepStateSnapshot, wm: WorkspaceManager) -> [WindowToken: WindowToken] {
+        matchedTokens.removeAll()
+        var remap: [WindowToken: WindowToken] = [:]
+        for record in snapshot.windowRecords {
+            if let resolved = resolveTrackedToken(for: record, in: wm), resolved != record.token {
+                remap[record.token] = resolved
+            }
+        }
+        return remap
     }
 
     private func isMonitorPresent(for record: SleepWindowRecord, snapshot: SleepStateSnapshot, currentMonitors: [Monitor]) -> Bool {
@@ -458,6 +500,7 @@ final class ServiceLifecycleManager {
 
     private func tryRestoreWorkspaces(from snapshot: SleepStateSnapshot, tick: Int) {
         guard let controller else { return }
+        matchedTokens.removeAll()
         let wm = controller.workspaceManager
         let currentMonitors = Monitor.current()
 
@@ -498,6 +541,7 @@ final class ServiceLifecycleManager {
         let currentMonitors = Monitor.current()
         var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
 
+        matchedTokens.removeAll()
         var reassignedCount = 0
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
@@ -519,15 +563,24 @@ final class ServiceLifecycleManager {
                 wm.setWorkspace(for: resolvedToken, to: targetWsId)
                 reassignedCount += 1
             }
+            if record.mode == .floating, let floatingFrame = record.floatingFrame {
+                wm.updateFloatingGeometry(frame: floatingFrame, for: resolvedToken)
+            }
             affectedWorkspaceIds.insert(targetWsId)
         }
 
-        // Restore Niri placements (column widths, indices) — once
+        // Restore Niri placements with token remapping for recycled IDs
         if let engine = controller.niriEngine {
-            for (wsId, placements) in snapshot.niriPlacements {
-                let tokens = Array(placements.keys)
+            let tokenMap = buildTokenRemap(from: snapshot, wm: wm)
+            for (wsId, originalPlacements) in snapshot.niriPlacements {
+                var remapped: [WindowToken: PersistedNiriPlacement] = [:]
+                for (oldToken, placement) in originalPlacements {
+                    let newToken = tokenMap[oldToken] ?? oldToken
+                    remapped[newToken] = placement
+                }
+                let tokens = Array(remapped.keys)
                 for token in tokens { engine.removeWindow(token: token) }
-                engine.restoreInitialPlacements(placements, matching: tokens, in: wsId)
+                engine.restoreInitialPlacements(remapped, matching: tokens, in: wsId)
                 affectedWorkspaceIds.insert(wsId)
             }
         }
