@@ -213,14 +213,19 @@ final class ServiceLifecycleManager {
             break
         }
 
-        handleMonitorConfigurationChanged()
-
         if case let .awaitingMonitors(expectedCount, snapshot) = wakePhase {
+            applyMonitorConfigurationChanged(
+                currentMonitors: Monitor.current(),
+                performPostUpdateActions: false
+            )
+            settleDebounceTask?.cancel()
             let currentCount = Monitor.current().count
             WMLog.ax.info("wakeDisplay: monitors=\(currentCount, privacy: .public)/\(expectedCount, privacy: .public)")
             if currentCount >= expectedCount {
                 startSettleDebounce(snapshot: snapshot)
             }
+        } else {
+            handleMonitorConfigurationChanged()
         }
     }
 
@@ -426,10 +431,10 @@ final class ServiceLifecycleManager {
     private func startSettleDebounce(snapshot: SleepStateSnapshot) {
         settleDebounceTask?.cancel()
         settleDebounceTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            try? await Task.sleep(nanoseconds: 5_000_000_000)
             guard !Task.isCancelled,
                   case .awaitingMonitors = self?.wakePhase else { return }
-            WMLog.ax.info("wakeSettle: 2s debounce complete, restoring")
+            WMLog.ax.info("wakeSettle: 5s debounce complete, restoring")
             self?.fallbackTimeoutTask?.cancel()
             self?.restoreFromSnapshot(snapshot)
         }
@@ -498,12 +503,7 @@ final class ServiceLifecycleManager {
 
         validateRestoredWindows(from: snapshot)
 
-        if !affectedWorkspaceIds.isEmpty {
-            controller.layoutRefreshController.requestImmediateRelayout(
-                reason: .workspaceTransition,
-                affectedWorkspaceIds: affectedWorkspaceIds
-            )
-        }
+        applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
 
         WMLog.ax.info(
             "wakeRestore: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public)"
