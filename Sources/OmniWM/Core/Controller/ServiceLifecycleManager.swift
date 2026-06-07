@@ -378,6 +378,7 @@ final class ServiceLifecycleManager {
 
     private func startWakeReconciliation() {
         wakePhase = .deferredAwaitingDisplay
+        controller?.workspaceManager.isReconciling = true
         WMLog.ax.info("wakeReconciliation: deferred, waiting for display event")
 
         wakeTimeoutTask?.cancel()
@@ -388,12 +389,14 @@ final class ServiceLifecycleManager {
             WMLog.ax.info("wakeTimeout: 30s, no display event — DarkWake, resetting")
             self?.wakePhase = .idle
             self?.sleepSnapshot = nil
+            self?.controller?.workspaceManager.isReconciling = false
         }
     }
 
     private func startRestoringPhase() {
         guard let snapshot = sleepSnapshot else {
             wakePhase = .idle
+            controller?.workspaceManager.isReconciling = false
             return
         }
 
@@ -424,6 +427,7 @@ final class ServiceLifecycleManager {
     private func applySnapshotCorrection() {
         guard let controller, let snapshot = sleepSnapshot else {
             wakePhase = .idle
+            controller?.workspaceManager.isReconciling = false
             return
         }
 
@@ -480,10 +484,16 @@ final class ServiceLifecycleManager {
             "wakeCorrection: reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowWorkspaces.count, privacy: .public) deferredRescans=\(deferredCount, privacy: .public)"
         )
 
-        // Step 7: Clear state
+        // Step 7: Drain deferred windows (isReconciling deferred them during wake)
+        Task { @MainActor [weak self] in
+            await self?.controller?.axEventHandler.drainDeferredCreatedWindows()
+        }
+
+        // Step 8: Clear state
         wakePhase = .idle
         sleepSnapshot = nil
         wakeTimeoutTask?.cancel()
+        controller.workspaceManager.isReconciling = false
     }
 
     private func handleWakeDisplayEvent(_ event: DisplayConfigurationObserver.DisplayEvent) {
@@ -665,6 +675,7 @@ final class ServiceLifecycleManager {
                     }
                 } else {
                     self.wakePhase = .idle
+                    self.controller?.workspaceManager.isReconciling = false
                     self.sleepSnapshot = self.captureStateSnapshot()
                     WMLog.ax.info("systemSleep: re-entrant from non-idle phase, captured fresh snapshot")
                 }
