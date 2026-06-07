@@ -1,3 +1,4 @@
+import ApplicationServices
 import CoreGraphics
 import Foundation
 @testable import OmniWM
@@ -160,5 +161,85 @@ private func makeWakeTestMonitor(
         #expect(RefreshReason.wakeRestore.requestRoute == .immediateRelayout)
         #expect(RefreshReason.wakeRescan.relayoutSchedulingPolicy == .plain)
         #expect(RefreshReason.wakeRestore.relayoutSchedulingPolicy == .plain)
+    }
+
+    @Test @MainActor func executeFinalRestoreFixesStaleSelectedNodeId() {
+        let defaults = makeWakeTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        let controller = WMController(settings: settings)
+        let slm = ServiceLifecycleManager(controller: controller)
+
+        let retina = makeWakeTestMonitor(displayId: 1, name: "Built-in Retina Display")
+        controller.workspaceManager.applyMonitorConfigurationChange([retina])
+
+        // Enable Niri engine
+        controller.enableNiriLayout()
+
+        // Create workspace
+        guard let wsId = controller.workspaceManager.workspaceId(for: "1", createIfMissing: true)
+        else {
+            Issue.record("Failed to create workspace")
+            return
+        }
+        _ = controller.workspaceManager.setActiveWorkspace(wsId, on: retina.id)
+
+        // Add 3 windows — creates 3 Niri columns
+        // Use current process PID so validateRestoredWindows doesn't remove them as "dead"
+        let livePid = ProcessInfo.processInfo.processIdentifier
+        let pid1: pid_t = livePid
+        let pid2: pid_t = livePid
+        let pid3: pid_t = livePid
+        let ax1 = AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 1)
+        let ax2 = AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 2)
+        let ax3 = AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 3)
+
+        let token1 = controller.workspaceManager.addWindow(ax1, pid: pid1, windowId: 1, to: wsId)
+        let token2 = controller.workspaceManager.addWindow(ax2, pid: pid2, windowId: 2, to: wsId)
+        let token3 = controller.workspaceManager.addWindow(ax3, pid: pid3, windowId: 3, to: wsId)
+
+        guard let engine = controller.niriEngine else {
+            Issue.record("Niri engine not available")
+            return
+        }
+        _ = engine.addWindow(token: token1, to: wsId, afterSelection: nil, focusedToken: nil)
+        _ = engine.addWindow(token: token2, to: wsId, afterSelection: nil, focusedToken: nil)
+        _ = engine.addWindow(token: token3, to: wsId, afterSelection: nil, focusedToken: nil)
+
+        // Verify 3 columns exist
+        let columns = engine.columns(in: wsId)
+        #expect(columns.count == 3)
+
+        // Set viewport to column 2 (third column)
+        let originalNodeId = columns[2].activeWindow?.id
+        #expect(originalNodeId != nil)
+
+        controller.workspaceManager.withNiriViewportState(for: wsId) { state in
+            state.activeColumnIndex = 2
+            state.selectedNodeId = originalNodeId
+        }
+
+        // Capture snapshot
+        guard let snapshot = slm.captureStateSnapshot() else {
+            Issue.record("Failed to capture snapshot")
+            return
+        }
+
+        // Verify snapshot has Niri placements
+        #expect(snapshot.niriPlacements[wsId] != nil)
+        #expect(snapshot.niriPlacements[wsId]?.count == 3)
+
+        // Call executeFinalRestore directly (synchronous)
+        slm.executeFinalRestoreForTests(from: snapshot)
+
+        // After restore: selectedNodeId should reference a VALID node
+        let restoredViewport = controller.workspaceManager.niriViewportState(for: wsId)
+        #expect(restoredViewport.activeColumnIndex == 2)
+
+        if let selectedId = restoredViewport.selectedNodeId {
+            let foundNode = engine.findNode(by: selectedId)
+            #expect(foundNode != nil, "selectedNodeId must reference a valid node in the rebuilt tree")
+        } else {
+            Issue.record("selectedNodeId should not be nil after restore")
+        }
     }
 }

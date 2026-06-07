@@ -633,10 +633,24 @@ final class ServiceLifecycleManager {
             wm.updateNiriViewportState(viewportState, for: wsId)
         }
 
-        // Step 5: Validate dead windows
+        // Step 5: Fix stale selectedNodeId after Niri tree rebuild
+        if let engine = controller.niriEngine {
+            for wsId in snapshot.niriPlacements.keys {
+                var viewportState = wm.niriViewportState(for: wsId)
+                let columns = engine.columns(in: wsId)
+                guard !columns.isEmpty else { continue }
+                let clampedIndex = min(viewportState.activeColumnIndex, columns.count - 1)
+                if let activeWindow = columns[clampedIndex].activeWindow {
+                    viewportState.selectedNodeId = activeWindow.id
+                    wm.updateNiriViewportState(viewportState, for: wsId)
+                }
+            }
+        }
+
+        // Step 6: Validate dead windows
         validateRestoredWindows(from: snapshot)
 
-        // Step 6: Relayout
+        // Step 7: Relayout
         if !affectedWorkspaceIds.isEmpty {
             controller.layoutRefreshController.requestImmediateRelayout(
                 reason: .wakeRestore,
@@ -648,7 +662,7 @@ final class ServiceLifecycleManager {
             "wakeRestore: finalized reassigned=\(reassignedCount, privacy: .public) total=\(snapshot.windowRecords.count, privacy: .public) remapped=\(tokenRemap.count, privacy: .public)"
         )
 
-        // Step 7: Focus — deferred so relayout settles first
+        // Step 8: Focus — deferred so relayout settles first
         let focusSnapshot = snapshot
         Task { @MainActor [weak self] in
             try? await Task.sleep(nanoseconds: 500_000_000)
@@ -717,6 +731,10 @@ final class ServiceLifecycleManager {
 
     func simulateWakeForTests() {
         startWakeReconciliation()
+    }
+
+    func executeFinalRestoreForTests(from snapshot: SleepStateSnapshot) {
+        executeFinalRestore(from: snapshot)
     }
 
     func handleUnlockDetected() {
