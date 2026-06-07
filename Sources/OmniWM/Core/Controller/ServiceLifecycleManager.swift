@@ -640,10 +640,11 @@ final class ServiceLifecycleManager {
                 let columns = engine.columns(in: wsId)
                 guard !columns.isEmpty else { continue }
                 let clampedIndex = min(viewportState.activeColumnIndex, columns.count - 1)
+                viewportState.activeColumnIndex = clampedIndex
                 if let activeWindow = columns[clampedIndex].activeWindow {
                     viewportState.selectedNodeId = activeWindow.id
-                    wm.updateNiriViewportState(viewportState, for: wsId)
                 }
+                wm.updateNiriViewportState(viewportState, for: wsId)
             }
         }
 
