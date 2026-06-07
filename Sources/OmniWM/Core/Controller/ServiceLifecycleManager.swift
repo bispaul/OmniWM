@@ -537,6 +537,35 @@ final class ServiceLifecycleManager {
             return
         }
 
+        let missingCount = snapshot.windowRecords.filter { record in
+            !record.isNativeFullscreen &&
+            record.hiddenReason != .scratchpad &&
+            NSRunningApplication(processIdentifier: record.pid) != nil &&
+            resolveTrackedToken(for: record, in: controller.workspaceManager) == nil
+        }.count
+
+        if missingCount > 0 {
+            WMLog.ax.info("wakeRestore: \(missingCount, privacy: .public) windows missing from tracking, triggering rescan before final restore")
+            controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+            restoreTimerTask = Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                guard !Task.isCancelled,
+                      case .awaitingRestore = self?.wakePhase else { return }
+                self?.executeFinalRestore(from: snapshot)
+            }
+            return
+        }
+
+        executeFinalRestore(from: snapshot)
+    }
+
+    private func executeFinalRestore(from snapshot: SleepStateSnapshot) {
+        guard let controller else {
+            wakePhase = .idle
+            sleepSnapshot = nil
+            return
+        }
+
         let wm = controller.workspaceManager
         let currentMonitors = Monitor.current()
         var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
