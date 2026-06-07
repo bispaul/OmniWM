@@ -40,6 +40,7 @@ final class ServiceLifecycleManager {
     struct SleepStateSnapshot {
         let outputIds: [OutputId]
         let windowRecords: [SleepWindowRecord]
+        let activeWorkspaceByMonitor: [Monitor.ID: WorkspaceDescriptor.ID]
         let niriPlacements: [WorkspaceDescriptor.ID: [WindowToken: PersistedNiriPlacement]]
         let viewportStates: [WorkspaceDescriptor.ID: ViewportState]
         let focusedToken: WindowToken?
@@ -326,9 +327,17 @@ final class ServiceLifecycleManager {
             }
         }
 
+        var activeWorkspaceByMonitor: [Monitor.ID: WorkspaceDescriptor.ID] = [:]
+        for monitor in wm.monitors {
+            if let ws = wm.activeWorkspace(on: monitor.id) {
+                activeWorkspaceByMonitor[monitor.id] = ws.id
+            }
+        }
+
         return SleepStateSnapshot(
             outputIds: outputIds,
             windowRecords: windowRecords,
+            activeWorkspaceByMonitor: activeWorkspaceByMonitor,
             niriPlacements: niriPlacements,
             viewportStates: viewportStates,
             focusedToken: wm.focusedToken,
@@ -612,6 +621,13 @@ final class ServiceLifecycleManager {
                 engine.restoreInitialPlacements(remapped, matching: tokens, in: wsId)
                 affectedWorkspaceIds.insert(wsId)
             }
+        }
+
+        // Restore active workspace per monitor
+        let currentMonitorIds = Set(Monitor.current().map(\.id))
+        for (monitorId, wsId) in snapshot.activeWorkspaceByMonitor {
+            guard currentMonitorIds.contains(monitorId) else { continue }
+            _ = wm.setActiveWorkspace(wsId, on: monitorId)
         }
 
         // Restore viewport states
