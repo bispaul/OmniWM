@@ -450,9 +450,7 @@ final class ServiceLifecycleManager {
         }
     }
 
-    private var matchedTokens: Set<WindowToken> = []
-
-    private func resolveTrackedToken(for record: SleepWindowRecord, in wm: WorkspaceManager) -> WindowToken? {
+    private func resolveTrackedToken(for record: SleepWindowRecord, in wm: WorkspaceManager, matchedTokens: inout Set<WindowToken>) -> WindowToken? {
         if wm.entry(for: record.token) != nil, !matchedTokens.contains(record.token) {
             matchedTokens.insert(record.token)
             return record.token
@@ -500,7 +498,7 @@ final class ServiceLifecycleManager {
 
     private func tryRestoreWorkspaces(from snapshot: SleepStateSnapshot, tick: Int) {
         guard let controller else { return }
-        matchedTokens.removeAll()
+        var matchedTokens: Set<WindowToken> = []
         let wm = controller.workspaceManager
         let currentMonitors = Monitor.current()
 
@@ -510,7 +508,7 @@ final class ServiceLifecycleManager {
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
             if record.hiddenReason == .scratchpad { continue }
-            guard let resolvedToken = resolveTrackedToken(for: record, in: wm) else { continue }
+            guard let resolvedToken = resolveTrackedToken(for: record, in: wm, matchedTokens: &matchedTokens) else { continue }
             guard isMonitorPresent(for: record, snapshot: snapshot, currentMonitors: currentMonitors) else { continue }
 
             if wm.workspace(for: resolvedToken) != record.workspaceId {
@@ -537,13 +535,16 @@ final class ServiceLifecycleManager {
             return
         }
 
-        matchedTokens.removeAll()
-        let missingCount = snapshot.windowRecords.filter { record in
-            !record.isNativeFullscreen &&
-            record.hiddenReason != .scratchpad &&
-            NSRunningApplication(processIdentifier: record.pid) != nil &&
-            resolveTrackedToken(for: record, in: controller.workspaceManager) == nil
-        }.count
+        var matchedTokens: Set<WindowToken> = []
+        var missingCount = 0
+        for record in snapshot.windowRecords {
+            guard !record.isNativeFullscreen,
+                  record.hiddenReason != .scratchpad,
+                  NSRunningApplication(processIdentifier: record.pid) != nil else { continue }
+            if resolveTrackedToken(for: record, in: controller.workspaceManager, matchedTokens: &matchedTokens) == nil {
+                missingCount += 1
+            }
+        }
 
         if missingCount > 0 {
             WMLog.ax.info("wakeRestore: \(missingCount, privacy: .public) windows missing from tracking, triggering rescan before final restore")
@@ -572,13 +573,13 @@ final class ServiceLifecycleManager {
         var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
 
         // Step 1: Workspace assignments — build token remap as side effect
-        matchedTokens.removeAll()
+        var matchedTokens: Set<WindowToken> = []
         var tokenRemap: [WindowToken: WindowToken] = [:]
         var reassignedCount = 0
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
             if record.hiddenReason == .scratchpad { continue }
-            guard let resolvedToken = resolveTrackedToken(for: record, in: wm) else { continue }
+            guard let resolvedToken = resolveTrackedToken(for: record, in: wm, matchedTokens: &matchedTokens) else { continue }
 
             if resolvedToken != record.token {
                 tokenRemap[record.token] = resolvedToken
@@ -659,8 +660,8 @@ final class ServiceLifecycleManager {
             if wm.entry(for: focusedToken) != nil {
                 resolvedFocusToken = focusedToken
             } else if let focusRecord = focusSnapshot.windowRecords.first(where: { $0.token == focusedToken }) {
-                self.matchedTokens.removeAll()
-                resolvedFocusToken = self.resolveTrackedToken(for: focusRecord, in: wm)
+                var focusMatchedTokens: Set<WindowToken> = []
+                resolvedFocusToken = self.resolveTrackedToken(for: focusRecord, in: wm, matchedTokens: &focusMatchedTokens)
             } else {
                 resolvedFocusToken = nil
             }
