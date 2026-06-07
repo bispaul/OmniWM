@@ -537,6 +537,7 @@ final class ServiceLifecycleManager {
             return
         }
 
+        matchedTokens.removeAll()
         let missingCount = snapshot.windowRecords.filter { record in
             !record.isNativeFullscreen &&
             record.hiddenReason != .scratchpad &&
