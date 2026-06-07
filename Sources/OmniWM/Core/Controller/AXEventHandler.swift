@@ -322,6 +322,7 @@ final class AXEventHandler: CGSEventDelegate {
     var spaceDisplayResolver: ((UInt64, [Monitor]) -> CGDirectDisplayID?)?
     var managedReplacementTimeSourceForTests: (() -> TimeInterval)?
     var axContextWarmupHandlerForTests: ((pid_t) -> Void)?
+    var windowExistsInWindowServerForTests: ((UInt32) -> Bool)?
     private(set) var debugCounters = DebugCounters()
 
     init(
@@ -789,8 +790,19 @@ final class AXEventHandler: CGSEventDelegate {
             ?? (try? AXWindowService.frame(axRef))
     }
 
+    private func windowExistsInWindowServer(_ windowId: UInt32) -> Bool {
+        if let override = windowExistsInWindowServerForTests {
+            return override(windowId)
+        }
+        return SkyLight.shared.queryWindowInfo(windowId) != nil
+    }
+
     private func handleCGSWindowDestroyed(windowId: UInt32) {
         WMLog.ax.info("Window destroyed: windowId=\(windowId, privacy: .public)")
+        if windowExistsInWindowServer(windowId) {
+            WMLog.ax.info("Window destroyed suppressed (still in window server): windowId=\(windowId, privacy: .public)")
+            return
+        }
         AXWindowService.invalidateCachedTitle(windowId: windowId)
         cancelCreatedWindowRetry(windowId: windowId)
         discardCreatePlacementContext(windowId: windowId)
@@ -2511,6 +2523,13 @@ final class AXEventHandler: CGSEventDelegate {
             case let .create(create):
                 trackPreparedCreate(create.candidate)
             case let .destroy(destroy):
+                let windowId = UInt32(destroy.candidate.token.windowId)
+                if windowExistsInWindowServer(windowId) {
+                    WMLog.ax.info(
+                        "Deferred destroy suppressed (still in window server): windowId=\(windowId, privacy: .public)"
+                    )
+                    continue
+                }
                 processPreparedDestroy(destroy.candidate)
             }
         }
