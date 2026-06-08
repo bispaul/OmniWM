@@ -2514,6 +2514,12 @@ final class WorkspaceManager {
         guard oldMode != mode else { return false }
 
         windows.setMode(mode, for: token)
+        if mode == .tiling, var floatingState = windows.floatingState(for: token),
+           floatingState.restoreToFloating
+        {
+            floatingState.restoreToFloating = false
+            windows.setFloatingState(floatingState, for: token)
+        }
         let workspaceId = entry.workspaceId
         let focusChanged = updateFocusSession(notify: false) { focus in
             self.reconcileRememberedFocusAfterModeChange(
