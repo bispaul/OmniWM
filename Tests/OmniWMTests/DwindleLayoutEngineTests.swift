@@ -113,6 +113,95 @@ private func configureWorkspacesAsDwindle(
     controller.settings.workspaceConfigurations = configurations
 }
 
+
+extension DwindleLayoutEngineTests {
+    @Test @MainActor func perMonitorSplitOrientationUsesHighSplitWidthMultiplierForVerticalSplits() async throws {
+        let portraitMonitor = makeLayoutPlanTestMonitor(
+            displayId: 200,
+            name: "Portrait",
+            width: 1080,
+            height: 1920
+        )
+        let controller = makeLayoutPlanTestController(monitors: [portraitMonitor])
+        guard let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: portraitMonitor.id)?.id
+        else {
+            Issue.record("Missing active workspace for per-monitor split orientation test")
+            return
+        }
+
+        configureWorkspaceAsDwindle(on: controller, workspaceId: workspaceId)
+        controller.enableDwindleLayout()
+
+        controller.settings.updateDwindleSettings(
+            MonitorDwindleSettings(
+                monitorName: portraitMonitor.name,
+                monitorDisplayId: portraitMonitor.displayId,
+                splitWidthMultiplier: 10.0
+            )
+        )
+        controller.updateMonitorDwindleSettings()
+
+        let firstToken = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 1001)
+        let secondToken = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 1002)
+
+        let plans = try await controller.dwindleLayoutHandler.layoutWithDwindleEngine(
+            activeWorkspaces: [workspaceId]
+        )
+        guard let plan = plans.first,
+              let firstFrame = frameChange(plan.diff.frameChanges, token: firstToken),
+              let secondFrame = frameChange(plan.diff.frameChanges, token: secondToken)
+        else {
+            Issue.record("Expected Dwindle frames for per-monitor split orientation test")
+            return
+        }
+
+        // With splitWidthMultiplier=10.0 on portrait (1080x1920), the split should be vertical
+        // (top/bottom), NOT horizontal (left/right). Verify: same width, stacked vertically.
+        #expect(abs(firstFrame.width - secondFrame.width) < 1.0,
+                "Both windows should have same width (vertical split)")
+        #expect(firstFrame.minY < secondFrame.minY,
+                "First window should be above second (vertical split)")
+    }
+
+    @Test @MainActor func defaultSplitWithoutMonitorOverrideUsesGlobalSettings() async throws {
+        let landscapeMonitor = makeLayoutPlanTestMonitor(
+            displayId: 100,
+            name: "Landscape",
+            width: 1920,
+            height: 1080
+        )
+        let controller = makeLayoutPlanTestController(monitors: [landscapeMonitor])
+        guard let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: landscapeMonitor.id)?.id
+        else {
+            Issue.record("Missing active workspace")
+            return
+        }
+
+        configureWorkspaceAsDwindle(on: controller, workspaceId: workspaceId)
+        controller.enableDwindleLayout()
+
+        let firstToken = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 2001)
+        let secondToken = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 2002)
+
+        let plans = try await controller.dwindleLayoutHandler.layoutWithDwindleEngine(
+            activeWorkspaces: [workspaceId]
+        )
+        guard let plan = plans.first,
+              let firstFrame = frameChange(plan.diff.frameChanges, token: firstToken),
+              let secondFrame = frameChange(plan.diff.frameChanges, token: secondToken)
+        else {
+            Issue.record("Expected Dwindle frames")
+            return
+        }
+
+        // Landscape 1920x1080 with default splitWidthMultiplier (1.0) → horizontal split
+        #expect(abs(firstFrame.height - secondFrame.height) < 1.0,
+                "Both windows should have same height (horizontal split)")
+        #expect(firstFrame.minX < secondFrame.minX,
+                "First window should be left of second (horizontal split)")
+    }
+}
+
 @Suite struct DwindleLayoutEngineTests {
     @Test func syncWindowsKeepsStableNodeForReobservedToken() {
         let engine = DwindleLayoutEngine()
