@@ -1,7 +1,7 @@
 import CoreGraphics
 import Foundation
-import QuartzCore
 import os
+import QuartzCore
 
 final class DwindleLayoutEngine {
     private var roots: [WorkspaceDescriptor.ID: DwindleNode] = [:]
@@ -278,11 +278,21 @@ final class DwindleLayoutEngine {
         case .horizontal:
             let splitWidth = frame.width * fraction
             firstFrame = CGRect(x: frame.minX, y: frame.minY, width: splitWidth, height: frame.height)
-            secondFrame = CGRect(x: frame.minX + splitWidth, y: frame.minY, width: frame.width - splitWidth, height: frame.height)
+            secondFrame = CGRect(
+                x: frame.minX + splitWidth,
+                y: frame.minY,
+                width: frame.width - splitWidth,
+                height: frame.height
+            )
         case .vertical:
             let splitHeight = frame.height * fraction
             firstFrame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: splitHeight)
-            secondFrame = CGRect(x: frame.minX, y: frame.minY + splitHeight, width: frame.width, height: frame.height - splitHeight)
+            secondFrame = CGRect(
+                x: frame.minX,
+                y: frame.minY + splitHeight,
+                width: frame.width,
+                height: frame.height - splitHeight
+            )
         }
 
         if let first = node.firstChild() {

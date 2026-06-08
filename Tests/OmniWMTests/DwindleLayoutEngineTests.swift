@@ -63,7 +63,12 @@ private func warmReferenceDwindleImportForEngineTests(
 
     var activeFrame: CGRect?
     for token in tokens {
-        _ = engine.addWindow(token: token, to: workspaceId, activeWindowFrame: activeFrame, monitorId: Monitor.ID(displayId: 1))
+        _ = engine.addWindow(
+            token: token,
+            to: workspaceId,
+            activeWindowFrame: activeFrame,
+            monitorId: Monitor.ID(displayId: 1)
+        )
         let frames = engine.calculateLayout(for: workspaceId, screen: screen)
         activeFrame = frames[token]
     }
@@ -113,7 +118,6 @@ private func configureWorkspacesAsDwindle(
     controller.settings.workspaceConfigurations = configurations
 }
 
-
 extension DwindleLayoutEngineTests {
     @Test @MainActor func perMonitorSplitOrientationUsesHighSplitWidthMultiplierForVerticalSplits() async throws {
         let portraitMonitor = makeLayoutPlanTestMonitor(
@@ -157,10 +161,14 @@ extension DwindleLayoutEngineTests {
 
         // With splitWidthMultiplier=10.0 on portrait (1080x1920), the split should be vertical
         // (top/bottom), NOT horizontal (left/right). Verify: same width, stacked vertically.
-        #expect(abs(firstFrame.width - secondFrame.width) < 1.0,
-                "Both windows should have same width (vertical split)")
-        #expect(firstFrame.minY < secondFrame.minY,
-                "First window should be above second (vertical split)")
+        #expect(
+            abs(firstFrame.width - secondFrame.width) < 1.0,
+            "Both windows should have same width (vertical split)"
+        )
+        #expect(
+            firstFrame.minY < secondFrame.minY,
+            "First window should be above second (vertical split)"
+        )
     }
 
     @Test @MainActor func defaultSplitWithoutMonitorOverrideUsesGlobalSettings() async throws {
@@ -195,10 +203,14 @@ extension DwindleLayoutEngineTests {
         }
 
         // Landscape 1920x1080 with default splitWidthMultiplier (1.0) → horizontal split
-        #expect(abs(firstFrame.height - secondFrame.height) < 1.0,
-                "Both windows should have same height (horizontal split)")
-        #expect(firstFrame.minX < secondFrame.minX,
-                "First window should be left of second (horizontal split)")
+        #expect(
+            abs(firstFrame.height - secondFrame.height) < 1.0,
+            "Both windows should have same height (horizontal split)"
+        )
+        #expect(
+            firstFrame.minX < secondFrame.minX,
+            "First window should be left of second (horizontal split)"
+        )
     }
 
     @Test func verticalSplitNavigationFindsAdjacentWindow() {
@@ -223,22 +235,30 @@ extension DwindleLayoutEngineTests {
             return
         }
 
-        #expect(firstFrame.minY < secondFrame.minY,
-                "First window should have smaller y (vertical split)")
-        #expect(abs(firstFrame.width - secondFrame.width) < 1.0,
-                "Both windows should have same width (vertical split)")
+        #expect(
+            firstFrame.minY < secondFrame.minY,
+            "First window should have smaller y (vertical split)"
+        )
+        #expect(
+            abs(firstFrame.width - secondFrame.width) < 1.0,
+            "Both windows should have same width (vertical split)"
+        )
 
         let upFromFirst = engine.findGeometricNeighbor(
             from: firstToken, direction: .up, in: wsId
         )
-        #expect(upFromFirst == secondToken,
-                "UP from first (smaller y) should find second (larger y, adjacent edge)")
+        #expect(
+            upFromFirst == secondToken,
+            "UP from first (smaller y) should find second (larger y, adjacent edge)"
+        )
 
         let downFromSecond = engine.findGeometricNeighbor(
             from: secondToken, direction: .down, in: wsId
         )
-        #expect(downFromSecond == firstToken,
-                "DOWN from second (larger y) should find first (smaller y, adjacent edge)")
+        #expect(
+            downFromSecond == firstToken,
+            "DOWN from second (larger y) should find first (smaller y, adjacent edge)"
+        )
     }
 }
 
@@ -276,7 +296,12 @@ extension DwindleLayoutEngineTests {
 
         #expect(engine.rekeyWindow(from: handle2.id, to: replacementToken, in: wsId))
 
-        let removed = engine.syncWindows([handle1.id, replacementToken], in: wsId, focusedToken: handle1.id, monitorId: Monitor.ID(displayId: 1))
+        let removed = engine.syncWindows(
+            [handle1.id, replacementToken],
+            in: wsId,
+            focusedToken: handle1.id,
+            monitorId: Monitor.ID(displayId: 1)
+        )
 
         #expect(removed.isEmpty)
         #expect(engine.windowCount(in: wsId) == 2)
@@ -1337,7 +1362,12 @@ extension DwindleLayoutEngineTests {
             screen: CGRect(x: 0, y: 0, width: 1600, height: 1000)
         )
 
-        let moved = engine.summonWindowRight(summoned.id, beside: anchor.id, in: wsId, monitorId: Monitor.ID(displayId: 1))
+        let moved = engine.summonWindowRight(
+            summoned.id,
+            beside: anchor.id,
+            in: wsId,
+            monitorId: Monitor.ID(displayId: 1)
+        )
         let frames = engine.calculateLayout(
             for: wsId,
             screen: CGRect(x: 0, y: 0, width: 1600, height: 1000)
