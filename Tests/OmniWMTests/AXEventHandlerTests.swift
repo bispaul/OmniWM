@@ -5699,7 +5699,12 @@ private func waitUntilAXEventTest(
             return
         }
 
-        let leftNode = engine.addWindow(token: leftToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
+        let leftNode = engine.addWindow(
+            token: leftToken,
+            to: workspaceId,
+            activeWindowFrame: nil,
+            monitorId: monitor.id
+        )
         engine.setSelectedNode(leftNode, in: workspaceId)
         engine.setPreselection(.right, in: workspaceId)
         _ = engine.addWindow(token: oldToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
@@ -6031,7 +6036,12 @@ private func waitUntilAXEventTest(
             return
         }
 
-        let leftNode = engine.addWindow(token: leftToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
+        let leftNode = engine.addWindow(
+            token: leftToken,
+            to: workspaceId,
+            activeWindowFrame: nil,
+            monitorId: monitor.id
+        )
         engine.setSelectedNode(leftNode, in: workspaceId)
         engine.setPreselection(.right, in: workspaceId)
         _ = engine.addWindow(token: oldToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
@@ -10969,5 +10979,58 @@ private func waitUntilAXEventTest(
         )
 
         #expect(controller.workspaceManager.entry(for: token) == nil)
+    }
+}
+
+// MARK: - Bug #19 Regression: Untracked window destroy reevaluation guard
+
+@Suite @MainActor struct UntrackedDestroyReevaluationTests {
+    @Test func untrackedWindowDestroyDoesNotTriggerPidReevaluation() async {
+        let chromeBundleId = "com.google.Chrome"
+        let controller = makeAXEventTestController(
+            trackedBundleId: chromeBundleId
+        )
+        let workspaceId = controller.workspaceManager.workspaceId(for: "1", createIfMissing: false)!
+        let pid = getpid()
+
+        controller.windowRuleEngine.rebuild(rules: [
+            AppRule(bundleId: chromeBundleId)
+        ])
+
+        let trackedToken = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 900),
+            pid: pid,
+            windowId: 900,
+            to: workspaceId
+        )
+        #expect(controller.workspaceManager.entry(for: trackedToken) != nil)
+
+        let untrackedWindowId: UInt32 = 950
+        controller.axEventHandler.windowExistsInWindowServerForTests = { _ in false }
+        controller.axEventHandler.windowInfoProvider = { windowId in
+            guard windowId == untrackedWindowId else { return nil }
+            return WindowServerInfo(id: windowId, pid: pid, level: 0, frame: .zero)
+        }
+
+        let reevalCountBefore = controller.layoutRefreshController.debugCounters.requestedByReason[
+            .windowRuleReevaluation,
+            default: 0
+        ]
+
+        controller.axEventHandler.cgsEventObserver(
+            CGSEventObserver.shared,
+            didReceive: .destroyed(windowId: untrackedWindowId, spaceId: 0)
+        )
+
+        try? await Task.sleep(for: .milliseconds(50))
+
+        let reevalCountAfter = controller.layoutRefreshController.debugCounters.requestedByReason[
+            .windowRuleReevaluation,
+            default: 0
+        ]
+        #expect(
+            reevalCountAfter == reevalCountBefore,
+            "Untracked window destroy should not trigger relayout via .pid reevaluation"
+        )
     }
 }

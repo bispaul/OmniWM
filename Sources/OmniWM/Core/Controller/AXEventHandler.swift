@@ -804,7 +804,10 @@ final class AXEventHandler: CGSEventDelegate {
         let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
             controller?.serviceLifecycleManager.isAwaitingRestore == true
         if isInProtectedWindow, windowExistsInWindowServer(windowId) {
-            WMLog.ax.info("Window destroyed suppressed (wake/reconfig, still in window server): windowId=\(windowId, privacy: .public)")
+            WMLog.ax
+                .info(
+                    "Window destroyed suppressed (wake/reconfig, still in window server): windowId=\(windowId, privacy: .public)"
+                )
             return
         }
         AXWindowService.invalidateCachedTitle(windowId: windowId)
@@ -2366,9 +2369,6 @@ final class AXEventHandler: CGSEventDelegate {
                     pid: resolvedToken.pid,
                     windowId: resolvedToken.windowId
                 )
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(resolvedToken.pid)], trigger: .destruction)
-            } else if let pid = pidHint ?? resolveWindowInfo(windowId)?.pid {
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(pid_t(pid))], trigger: .destruction)
             }
             return
         }
@@ -3028,7 +3028,10 @@ final class AXEventHandler: CGSEventDelegate {
 
         let count = (stabilizationRetryCount[token] ?? 0) + 1
         guard count <= Self.maxStabilizationRetries else {
-            WMLog.ax.debug("stabilizationRetry: exhausted token=\(String(describing: token), privacy: .public) attempts=\(count - 1, privacy: .public)")
+            WMLog.ax
+                .debug(
+                    "stabilizationRetry: exhausted token=\(String(describing: token), privacy: .public) attempts=\(count - 1, privacy: .public)"
+                )
             stabilizationRetryCount.removeValue(forKey: token)
             return
         }
