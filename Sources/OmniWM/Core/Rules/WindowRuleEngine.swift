@@ -567,6 +567,14 @@ final class WindowRuleEngine {
         return compiledUserRules.contains { $0.rule.bundleId.lowercased() == lowered }
     }
 
+    func hasAdvancedUserRule(forBundleId bundleId: String?) -> Bool {
+        guard let bundleId else { return false }
+        let lowered = bundleId.lowercased()
+        return compiledUserRules.contains {
+            $0.rule.bundleId.lowercased() == lowered && $0.rule.hasAdvancedMatchers
+        }
+    }
+
     private static func titleBundleIds(from rules: [CompiledRule]) -> Set<String> {
         Set(
             rules.compactMap { compiled in

@@ -703,4 +703,42 @@ private func makeWindowRuleFacts(
         #expect(decision.disposition == .managed)
         #expect(decision.source == .heuristic)
     }
+
+    @Test func bundleOnlyRuleIsNotAdvanced() {
+        let engine = WindowRuleEngine()
+        engine.rebuild(rules: [
+            AppRule(bundleId: "com.google.Chrome", layout: .tile)
+        ])
+
+        #expect(engine.hasExplicitUserRule(forBundleId: "com.google.Chrome"))
+        #expect(!engine.hasAdvancedUserRule(forBundleId: "com.google.Chrome"))
+    }
+
+    @Test func titleMatcherRuleIsAdvanced() {
+        let engine = WindowRuleEngine()
+        engine.rebuild(rules: [
+            AppRule(bundleId: "com.google.Chrome", titleSubstring: "Gmail", layout: .tile)
+        ])
+
+        #expect(engine.hasExplicitUserRule(forBundleId: "com.google.Chrome"))
+        #expect(engine.hasAdvancedUserRule(forBundleId: "com.google.Chrome"))
+    }
+
+    @Test func subroleMatcherRuleIsAdvanced() {
+        let engine = WindowRuleEngine()
+        engine.rebuild(rules: [
+            AppRule(bundleId: "com.google.Chrome", axSubrole: "AXStandardWindow", layout: .tile)
+        ])
+
+        #expect(engine.hasAdvancedUserRule(forBundleId: "com.google.Chrome"))
+    }
+
+    @Test func noRuleForBundleReturnsNotAdvanced() {
+        let engine = WindowRuleEngine()
+        engine.rebuild(rules: [
+            AppRule(bundleId: "com.apple.Safari", layout: .tile)
+        ])
+
+        #expect(!engine.hasAdvancedUserRule(forBundleId: "com.google.Chrome"))
+    }
 }
