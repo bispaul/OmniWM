@@ -466,7 +466,6 @@ final class AXEventHandler: CGSEventDelegate {
                     windowId: windowId,
                     pid: pid_t(windowInfo.pid)
                 )
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(pid_t(windowInfo.pid))])
             } else {
                 _ = scheduleCreatedWindowInfoRetryIfNeeded(windowId: windowId)
             }
@@ -1466,7 +1465,6 @@ final class AXEventHandler: CGSEventDelegate {
                     windowId: windowId,
                     pid: pid_t(windowInfo.pid)
                 )
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(pid_t(windowInfo.pid))])
             } else {
                 _ = scheduleCreatedWindowInfoRetryIfNeeded(windowId: windowId)
             }
