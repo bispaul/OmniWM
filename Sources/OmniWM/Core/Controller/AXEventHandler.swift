@@ -2141,7 +2141,7 @@ final class AXEventHandler: CGSEventDelegate {
             bundleId: earlyBundleId
         )
         if case let .reject(reason) = preFilter,
-           !controller.windowRuleEngine.hasAdvancedUserRule(forBundleId: earlyBundleId)
+           !controller.windowRuleEngine.hasExplicitUserRule(forBundleId: earlyBundleId)
         {
             WMLog.ax.debug(
                 "prepareCreateCandidate: rejected by classifier windowId=\(windowId, privacy: .public) reason=\(reason, privacy: .public)"

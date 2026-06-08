@@ -2104,8 +2104,15 @@ final class WMController {
                 if !windows.isEmpty {
                     resolvedAnyTarget = true
                 }
+                let isChromium = app.bundleIdentifier.map { WindowClassifier.chromiumBundleIds.contains($0) } ?? false
                 for (axRef, _, windowId) in windows {
                     let token = WindowToken(pid: pid, windowId: windowId)
+                    if isChromium, workspaceManager.entry(for: token) == nil {
+                        let title = SkyLight.shared.getWindowTitle(UInt32(windowId))
+                        if title == nil || title?.isEmpty == true {
+                            continue
+                        }
+                    }
                     tokensToReevaluate.insert(token)
                     liveWindowsByToken[token] = axRef
                 }

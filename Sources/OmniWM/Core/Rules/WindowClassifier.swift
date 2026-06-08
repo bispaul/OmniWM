@@ -22,7 +22,7 @@ enum WindowClassifier {
         return .admit
     }
 
-    private static let chromiumBundleIds: Set<String> = [
+    static let chromiumBundleIds: Set<String> = [
         "com.google.Chrome",
         "com.google.Chrome.canary",
         "com.brave.Browser",
