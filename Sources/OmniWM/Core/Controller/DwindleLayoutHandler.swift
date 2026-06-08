@@ -316,7 +316,8 @@ import QuartzCore
             windowTokens,
             in: snapshot.workspaceId,
             focusedToken: snapshot.preferredFocusToken,
-            bootstrapScreen: snapshot.monitor.workingFrame
+            bootstrapScreen: snapshot.monitor.workingFrame,
+            monitorId: snapshot.monitor.monitorId
         )
 
         for window in snapshot.windows {

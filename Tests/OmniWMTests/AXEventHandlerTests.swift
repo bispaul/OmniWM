@@ -5699,17 +5699,17 @@ private func waitUntilAXEventTest(
             return
         }
 
-        let leftNode = engine.addWindow(token: leftToken, to: workspaceId, activeWindowFrame: nil)
+        let leftNode = engine.addWindow(token: leftToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
         engine.setSelectedNode(leftNode, in: workspaceId)
         engine.setPreselection(.right, in: workspaceId)
-        _ = engine.addWindow(token: oldToken, to: workspaceId, activeWindowFrame: nil)
+        _ = engine.addWindow(token: oldToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
         guard let oldLeaf = engine.findNode(for: oldToken) else {
             Issue.record("Missing original Dwindle Ghostty leaf")
             return
         }
         engine.setSelectedNode(oldLeaf, in: workspaceId)
         engine.setPreselection(.right, in: workspaceId)
-        _ = engine.addWindow(token: rightToken, to: workspaceId, activeWindowFrame: nil)
+        _ = engine.addWindow(token: rightToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
 
         let initialFrames = engine.calculateLayout(for: workspaceId, screen: monitor.frame)
         guard let originalGhosttyFrame = initialFrames[oldToken],
@@ -6031,17 +6031,17 @@ private func waitUntilAXEventTest(
             return
         }
 
-        let leftNode = engine.addWindow(token: leftToken, to: workspaceId, activeWindowFrame: nil)
+        let leftNode = engine.addWindow(token: leftToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
         engine.setSelectedNode(leftNode, in: workspaceId)
         engine.setPreselection(.right, in: workspaceId)
-        _ = engine.addWindow(token: oldToken, to: workspaceId, activeWindowFrame: nil)
+        _ = engine.addWindow(token: oldToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
         guard let oldLeaf = engine.findNode(for: oldToken) else {
             Issue.record("Missing original Dwindle Ghostty leaf")
             return
         }
         engine.setSelectedNode(oldLeaf, in: workspaceId)
         engine.setPreselection(.right, in: workspaceId)
-        _ = engine.addWindow(token: rightToken, to: workspaceId, activeWindowFrame: nil)
+        _ = engine.addWindow(token: rightToken, to: workspaceId, activeWindowFrame: nil, monitorId: monitor.id)
 
         let initialFrames = engine.calculateLayout(for: workspaceId, screen: monitor.frame)
         guard let originalGhosttyFrame = initialFrames[oldToken],

@@ -63,7 +63,7 @@ private func warmReferenceDwindleImportForEngineTests(
 
     var activeFrame: CGRect?
     for token in tokens {
-        _ = engine.addWindow(token: token, to: workspaceId, activeWindowFrame: activeFrame)
+        _ = engine.addWindow(token: token, to: workspaceId, activeWindowFrame: activeFrame, monitorId: Monitor.ID(displayId: 1))
         let frames = engine.calculateLayout(for: workspaceId, screen: screen)
         activeFrame = frames[token]
     }
@@ -147,7 +147,7 @@ private func configureWorkspacesAsDwindle(
 
         #expect(engine.rekeyWindow(from: handle2.id, to: replacementToken, in: wsId))
 
-        let removed = engine.syncWindows([handle1.id, replacementToken], in: wsId, focusedToken: handle1.id)
+        let removed = engine.syncWindows([handle1.id, replacementToken], in: wsId, focusedToken: handle1.id, monitorId: Monitor.ID(displayId: 1))
 
         #expect(removed.isEmpty)
         #expect(engine.windowCount(in: wsId) == 2)
@@ -241,7 +241,8 @@ private func configureWorkspacesAsDwindle(
             tokens,
             in: wsId,
             focusedToken: tokens.first,
-            bootstrapScreen: screen
+            bootstrapScreen: screen,
+            monitorId: Monitor.ID(displayId: 1)
         )
         let coldFrames = engine.calculateLayout(for: wsId, screen: screen)
         let warmReference = warmReferenceDwindleImportForEngineTests(
@@ -1207,7 +1208,7 @@ private func configureWorkspacesAsDwindle(
             screen: CGRect(x: 0, y: 0, width: 1600, height: 1000)
         )
 
-        let moved = engine.summonWindowRight(summoned.id, beside: anchor.id, in: wsId)
+        let moved = engine.summonWindowRight(summoned.id, beside: anchor.id, in: wsId, monitorId: Monitor.ID(displayId: 1))
         let frames = engine.calculateLayout(
             for: wsId,
             screen: CGRect(x: 0, y: 0, width: 1600, height: 1000)
@@ -1255,7 +1256,8 @@ private func configureWorkspacesAsDwindle(
         _ = engine.syncWindows(
             [anchor.id, summoned.id],
             in: targetWorkspaceId,
-            focusedToken: anchor.id
+            focusedToken: anchor.id,
+            monitorId: Monitor.ID(displayId: 1)
         )
 
         let targetFrames = engine.calculateLayout(

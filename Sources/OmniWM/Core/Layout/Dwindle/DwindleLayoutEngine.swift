@@ -125,7 +125,8 @@ final class DwindleLayoutEngine {
     func addWindow(
         token: WindowToken,
         to workspaceId: WorkspaceDescriptor.ID,
-        activeWindowFrame: CGRect?
+        activeWindowFrame: CGRect?,
+        monitorId: Monitor.ID
     ) -> DwindleNode {
         WMLog.layout.debug("Dwindle: add window to workspace")
         let root = ensureRoot(for: workspaceId)
@@ -150,7 +151,8 @@ final class DwindleLayoutEngine {
             newWindow: token,
             workspaceId: workspaceId,
             activeWindowFrame: activeWindowFrame,
-            preselectedDirection: preselectedDir
+            preselectedDirection: preselectedDir,
+            monitorId: monitorId
         )
         preselection.removeValue(forKey: workspaceId)
 
@@ -164,7 +166,8 @@ final class DwindleLayoutEngine {
         newWindow: WindowToken,
         workspaceId: WorkspaceDescriptor.ID,
         activeWindowFrame: CGRect?,
-        preselectedDirection: Direction? = nil
+        preselectedDirection: Direction? = nil,
+        monitorId: Monitor.ID
     ) -> DwindleNode {
         guard case let .leaf(existingHandle, fullscreen) = leaf.kind else {
             let newLeaf = DwindleNode(kind: .leaf(handle: newWindow, fullscreen: false))
@@ -180,7 +183,8 @@ final class DwindleLayoutEngine {
         } else {
             (orientation, newFirst) = planSplit(
                 targetRect: targetRect,
-                activeWindowFrame: activeWindowFrame
+                activeWindowFrame: activeWindowFrame,
+                monitorId: monitorId
             )
         }
         WMLog.layout.debug("Dwindle: split created")
@@ -188,7 +192,7 @@ final class DwindleLayoutEngine {
         let existingLeaf = DwindleNode(kind: .leaf(handle: existingHandle, fullscreen: fullscreen))
         let newLeaf = DwindleNode(kind: .leaf(handle: newWindow, fullscreen: false))
 
-        leaf.kind = .split(orientation: orientation, ratio: settings.defaultSplitRatio)
+        leaf.kind = .split(orientation: orientation, ratio: effectiveSettings(for: monitorId).defaultSplitRatio)
 
         if newFirst {
             leaf.replaceChildren(first: newLeaf, second: existingLeaf)
@@ -205,13 +209,14 @@ final class DwindleLayoutEngine {
 
     private func planSplit(
         targetRect: CGRect?,
-        activeWindowFrame: CGRect?
+        activeWindowFrame: CGRect?,
+        monitorId: Monitor.ID
     ) -> (orientation: DwindleOrientation, newFirst: Bool) {
-        guard settings.smartSplit,
+        guard effectiveSettings(for: monitorId).smartSplit,
               let targetRect,
               let activeFrame = activeWindowFrame
         else {
-            return (aspectOrientation(for: targetRect), false)
+            return (aspectOrientation(for: targetRect, monitorId: monitorId), false)
         }
 
         let targetCenter = targetRect.center
@@ -241,12 +246,51 @@ final class DwindleLayoutEngine {
         }
     }
 
-    private func aspectOrientation(for rect: CGRect?) -> DwindleOrientation {
+    private func aspectOrientation(for rect: CGRect?, monitorId: Monitor.ID) -> DwindleOrientation {
         guard let rect else { return .horizontal }
-        if rect.height * settings.splitWidthMultiplier > rect.width {
+        if rect.height * effectiveSettings(for: monitorId).splitWidthMultiplier > rect.width {
             return .vertical
         }
         return .horizontal
+    }
+
+    func reorientSplits(for workspaceId: WorkspaceDescriptor.ID, monitorId: Monitor.ID) {
+        guard let root = roots[workspaceId] else { return }
+        reorientRecursive(node: root, monitorId: monitorId)
+    }
+
+    private func reorientRecursive(node: DwindleNode, monitorId: Monitor.ID, parentFrame: CGRect? = nil) {
+        let frame = parentFrame ?? node.cachedFrame
+        guard case let .split(_, ratio) = node.kind else { return }
+        guard let frame else {
+            for child in node.children {
+                reorientRecursive(node: child, monitorId: monitorId)
+            }
+            return
+        }
+        let newOrientation = aspectOrientation(for: frame, monitorId: monitorId)
+        node.kind = .split(orientation: newOrientation, ratio: ratio)
+        node.cachedFrame = frame
+
+        let fraction: CGFloat = 0.5
+        let (firstFrame, secondFrame): (CGRect, CGRect)
+        switch newOrientation {
+        case .horizontal:
+            let splitWidth = frame.width * fraction
+            firstFrame = CGRect(x: frame.minX, y: frame.minY, width: splitWidth, height: frame.height)
+            secondFrame = CGRect(x: frame.minX + splitWidth, y: frame.minY, width: frame.width - splitWidth, height: frame.height)
+        case .vertical:
+            let splitHeight = frame.height * fraction
+            firstFrame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: splitHeight)
+            secondFrame = CGRect(x: frame.minX, y: frame.minY + splitHeight, width: frame.width, height: frame.height - splitHeight)
+        }
+
+        if let first = node.firstChild() {
+            reorientRecursive(node: first, monitorId: monitorId, parentFrame: firstFrame)
+        }
+        if let second = node.secondChild() {
+            reorientRecursive(node: second, monitorId: monitorId, parentFrame: secondFrame)
+        }
     }
 
     func removeWindow(token: WindowToken, from workspaceId: WorkspaceDescriptor.ID) {
@@ -339,7 +383,8 @@ final class DwindleLayoutEngine {
         _ tokens: [WindowToken],
         in workspaceId: WorkspaceDescriptor.ID,
         focusedToken: WindowToken?,
-        bootstrapScreen: CGRect? = nil
+        bootstrapScreen: CGRect? = nil,
+        monitorId: Monitor.ID
     ) -> Set<WindowToken> {
         let existingWindows = Set(roots[workspaceId]?.collectAllWindows() ?? [])
         let newWindows = Set(tokens)
@@ -377,7 +422,7 @@ final class DwindleLayoutEngine {
         }
 
         for token in toAdd {
-            addWindow(token: token, to: workspaceId, activeWindowFrame: activeFrame)
+            addWindow(token: token, to: workspaceId, activeWindowFrame: activeFrame, monitorId: monitorId)
             if shouldBootstrapIncrementally, let bootstrapScreen {
                 let frames = calculateLayout(for: workspaceId, screen: bootstrapScreen)
                 activeFrame = frames[token]
@@ -932,7 +977,8 @@ final class DwindleLayoutEngine {
     func summonWindowRight(
         _ token: WindowToken,
         beside anchorToken: WindowToken,
-        in workspaceId: WorkspaceDescriptor.ID
+        in workspaceId: WorkspaceDescriptor.ID,
+        monitorId: Monitor.ID
     ) -> Bool {
         guard token != anchorToken,
               let sourceNode = findNode(for: token),
@@ -961,7 +1007,8 @@ final class DwindleLayoutEngine {
         let reinsertedLeaf = addWindow(
             token: token,
             to: workspaceId,
-            activeWindowFrame: updatedAnchorNode.cachedFrame
+            activeWindowFrame: updatedAnchorNode.cachedFrame,
+            monitorId: monitorId
         )
 
         if let preservedConstraints {

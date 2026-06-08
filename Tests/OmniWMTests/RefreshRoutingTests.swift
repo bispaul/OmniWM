@@ -236,7 +236,7 @@ private func warmReferenceDwindleFramesForRefreshTests(
 
     var activeFrame: CGRect?
     for token in tokens {
-        _ = engine.addWindow(token: token, to: workspaceId, activeWindowFrame: activeFrame)
+        _ = engine.addWindow(token: token, to: workspaceId, activeWindowFrame: activeFrame, monitorId: Monitor.ID(displayId: 1))
         let frames = engine.calculateLayout(for: workspaceId, screen: screen)
         activeFrame = frames[token]
     }
@@ -1020,8 +1020,8 @@ private func syncNiriWorkspaceStatesForRefreshTests(
             to: workspaceId,
             mode: .tiling
         )
-        _ = engine.addWindow(token: parentToken, to: workspaceId, activeWindowFrame: nil)
-        _ = engine.addWindow(token: siblingToken, to: workspaceId, activeWindowFrame: nil)
+        _ = engine.addWindow(token: parentToken, to: workspaceId, activeWindowFrame: nil, monitorId: Monitor.ID(displayId: 1))
+        _ = engine.addWindow(token: siblingToken, to: workspaceId, activeWindowFrame: nil, monitorId: Monitor.ID(displayId: 1))
         guard let parentNode = engine.findNode(for: parentToken),
               let siblingNode = engine.findNode(for: siblingToken),
               let originalRoot = engine.root(for: workspaceId)
