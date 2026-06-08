@@ -377,13 +377,14 @@ final class AXEventHandler: CGSEventDelegate {
             controller.requestWorkspaceBarRefresh()
             if let token = resolveWindowToken(windowId) ?? resolveTrackedToken(windowId) {
                 updateManagedReplacementTitle(windowId: windowId, token: token)
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.window(token)])
+                scheduleWindowRuleReevaluationIfNeeded(targets: [.window(token)], trigger: .titleChange)
             }
         }
     }
 
     private func scheduleWindowRuleReevaluationIfNeeded(
-        targets: Set<WindowRuleReevaluationTarget>
+        targets: Set<WindowRuleReevaluationTarget>,
+        trigger: ReevaluationTrigger
     ) {
         guard let controller,
               controller.windowRuleEngine.needsWindowReevaluation,
@@ -982,7 +983,7 @@ final class AXEventHandler: CGSEventDelegate {
             reason: .axWindowCreated,
             affectedWorkspaceIds: [trackedEntry.workspaceId]
         )
-        scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(trackedEntry.pid)])
+        scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(trackedEntry.pid)], trigger: .creation)
     }
 
     private func shouldApplyFloatingCreateFrameImmediately(
@@ -1201,7 +1202,7 @@ final class AXEventHandler: CGSEventDelegate {
                 shouldRecoverFocus: shouldRecoverFocus
             )
         }
-        scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(token.pid)])
+        scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(token.pid)], trigger: .removal)
     }
 
     func handleAppActivation(
@@ -2365,9 +2366,9 @@ final class AXEventHandler: CGSEventDelegate {
                     pid: resolvedToken.pid,
                     windowId: resolvedToken.windowId
                 )
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(resolvedToken.pid)])
+                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(resolvedToken.pid)], trigger: .destruction)
             } else if let pid = pidHint ?? resolveWindowInfo(windowId)?.pid {
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(pid_t(pid))])
+                scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(pid_t(pid))], trigger: .destruction)
             }
             return
         }

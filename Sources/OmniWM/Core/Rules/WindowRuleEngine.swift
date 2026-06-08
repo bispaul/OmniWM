@@ -108,6 +108,13 @@ struct WindowRuleFacts: Equatable, Sendable {
     }
 }
 
+enum ReevaluationTrigger: String, Hashable, Sendable {
+    case creation
+    case removal
+    case destruction
+    case titleChange
+}
+
 enum WindowRuleReevaluationTarget: Hashable, Sendable {
     case window(WindowToken)
     case pid(pid_t)
