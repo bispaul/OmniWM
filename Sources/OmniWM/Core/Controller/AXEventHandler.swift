@@ -801,8 +801,10 @@ final class AXEventHandler: CGSEventDelegate {
 
     private func handleCGSWindowDestroyed(windowId: UInt32) {
         WMLog.ax.info("Window destroyed: windowId=\(windowId, privacy: .public)")
-        if windowExistsInWindowServer(windowId) {
-            WMLog.ax.info("Window destroyed suppressed (still in window server): windowId=\(windowId, privacy: .public)")
+        let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
+            controller?.serviceLifecycleManager.isAwaitingRestore == true
+        if isInProtectedWindow, windowExistsInWindowServer(windowId) {
+            WMLog.ax.info("Window destroyed suppressed (wake/reconfig, still in window server): windowId=\(windowId, privacy: .public)")
             return
         }
         AXWindowService.invalidateCachedTitle(windowId: windowId)
@@ -2527,9 +2529,11 @@ final class AXEventHandler: CGSEventDelegate {
                 trackPreparedCreate(create.candidate)
             case let .destroy(destroy):
                 let windowId = UInt32(destroy.candidate.token.windowId)
-                if windowExistsInWindowServer(windowId) {
+                let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
+                    controller?.serviceLifecycleManager.isAwaitingRestore == true
+                if isInProtectedWindow, windowExistsInWindowServer(windowId) {
                     WMLog.ax.info(
-                        "Deferred destroy suppressed (still in window server): windowId=\(windowId, privacy: .public)"
+                        "Deferred destroy suppressed (wake/reconfig, still in window server): windowId=\(windowId, privacy: .public)"
                     )
                     continue
                 }

@@ -10928,12 +10928,17 @@ private func waitUntilAXEventTest(
             windowId == 920
         }
 
+        // Guard only suppresses during wake/reconfig — set wake state
+        let snapshot = controller.serviceLifecycleManager.captureStateSnapshot()!
+        controller.serviceLifecycleManager.setWakePhaseForTests(.awaitingRestore(snapshot))
+
         controller.axEventHandler.cgsEventObserver(
             CGSEventObserver.shared,
             didReceive: .destroyed(windowId: 920, spaceId: 0)
         )
 
         #expect(controller.workspaceManager.entry(for: token) != nil)
+        controller.serviceLifecycleManager.setWakePhaseForTests(.idle)
     }
 
     @Test @MainActor func realCGSDestroyRemovesWindowWhenGoneFromWindowServer() {

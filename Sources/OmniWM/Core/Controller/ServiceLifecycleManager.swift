@@ -70,6 +70,10 @@ final class ServiceLifecycleManager {
     // MARK: - Wake Restore State
 
     private(set) var wakePhase: WakePhase = .idle
+    var isAwaitingRestore: Bool {
+        if case .awaitingRestore = wakePhase { return true }
+        return false
+    }
     private(set) var sleepSnapshot: SleepStateSnapshot?
     private var restoreTimerTask: Task<Void, Never>?
     private var darkWakeTimeoutTask: Task<Void, Never>?
@@ -851,6 +855,9 @@ final class ServiceLifecycleManager {
                     self.wakePhase = .idle
                     self.sleepSnapshot = self.captureStateSnapshot()
                     WMLog.ax.info("systemSleep: re-entrant from non-idle phase, captured fresh snapshot")
+                }
+                if let snapshot = self.sleepSnapshot {
+                    self.wakePhase = .awaitingRestore(snapshot)
                 }
                 WMLog.ax.info(
                     "systemSleep: snapshot monitors=\(self.sleepSnapshot?.outputIds.count ?? 0, privacy: .public) windows=\(self.sleepSnapshot?.windowRecords.count ?? 0, privacy: .public)"
