@@ -122,7 +122,9 @@ private func makeClipboardCapture(
     )
 }
 
-private func makePasteboardCaptureConfiguration(maxItemBytes: Int = 8_388_608) -> ClipboardPasteboardCaptureConfiguration {
+private func makePasteboardCaptureConfiguration(maxItemBytes: Int = 8_388_608)
+    -> ClipboardPasteboardCaptureConfiguration
+{
     ClipboardPasteboardCaptureConfiguration(
         maxItemBytes: maxItemBytes,
         sourceBundleIdentifier: "com.example.frontmost",
@@ -216,7 +218,8 @@ private func waitForClipboardTitles(
 
         _ = await service.handleCaptureForTests(makeClipboardCapture(contents: [makeClipboardTextContent("Alpha")]))
         _ = await service.handleCaptureForTests(makeClipboardCapture(contents: [makeClipboardTextContent("Beta")]))
-        let deduped = await service.handleCaptureForTests(makeClipboardCapture(contents: [makeClipboardTextContent("Alpha")]))
+        let deduped = await service
+            .handleCaptureForTests(makeClipboardCapture(contents: [makeClipboardTextContent("Alpha")]))
 
         #expect(deduped.map(\.title) == ["Alpha", "Beta"])
         #expect(deduped.first?.numberOfCopies == 2)
@@ -252,7 +255,8 @@ private func waitForClipboardTitles(
         #expect(rejected.isEmpty)
 
         _ = await service.handleCaptureForTests(makeClipboardCapture(contents: [makeClipboardTextContent("12345")]))
-        let pruned = await service.handleCaptureForTests(makeClipboardCapture(contents: [makeClipboardTextContent("67890")]))
+        let pruned = await service
+            .handleCaptureForTests(makeClipboardCapture(contents: [makeClipboardTextContent("67890")]))
 
         #expect(pruned.map(\.title) == ["67890"])
     }

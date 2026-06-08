@@ -3,7 +3,6 @@ import Foundation
 import Testing
 
 @Suite @MainActor struct AtomicWindowTransferTests {
-
     // MARK: - Task 1: Engine column index insertion
 
     @Test func moveColumnToWorkspaceAtIndex() async {

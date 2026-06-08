@@ -3,7 +3,6 @@ import Foundation
 import Testing
 
 @Suite @MainActor struct SleepWakeSnapshotTests {
-
     @Test func captureSnapshotStoresOutputIdsAndPlacements() async {
         let controller = makeLayoutPlanTestController()
         controller.enableNiriLayout()

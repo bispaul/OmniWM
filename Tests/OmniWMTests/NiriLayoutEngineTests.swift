@@ -5173,7 +5173,8 @@ private func makeCenteredCrossMonitorFixture(
         var capturedAffectedIds: Set<WorkspaceDescriptor.ID>?
         fixture.controller.layoutRefreshController.resetDebugState()
         fixture.controller.layoutRefreshController.debugHooks.onRelayout = { _, _ in
-            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?.affectedWorkspaceIds
+            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?
+                .affectedWorkspaceIds
             return true
         }
 
@@ -5189,7 +5190,8 @@ private func makeCenteredCrossMonitorFixture(
         var capturedAffectedIds: Set<WorkspaceDescriptor.ID>?
         fixture.controller.layoutRefreshController.resetDebugState()
         fixture.controller.layoutRefreshController.debugHooks.onRelayout = { _, _ in
-            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?.affectedWorkspaceIds
+            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?
+                .affectedWorkspaceIds
             return true
         }
 
@@ -7860,8 +7862,10 @@ private func makeCenteredCrossMonitorFixture(
         #expect(updatedState.selectedNodeId == targetWindow.id)
         #expect(updatedState.activeColumnIndex == targetIndex)
         #expect(updatedState.selectionProgress == 0)
-        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - expectedViewStart) < 0.1)
-        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - centeredViewStart) > 1)
+        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - expectedViewStart) <
+            0.1)
+        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - centeredViewStart) >
+            1)
     }
 
     @Test @MainActor func navigateToWindowInternalStillCentersWhenCenteringIsAlways() async throws {
@@ -7906,7 +7910,8 @@ private func makeCenteredCrossMonitorFixture(
 
         #expect(updatedState.selectedNodeId == targetWindow.id)
         #expect(updatedState.activeColumnIndex == targetIndex)
-        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - expectedViewStart) < 0.1)
+        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - expectedViewStart) <
+            0.1)
     }
 
     @Test @MainActor func navigateToWindowInternalCentersSingleColumnWhenConfigured() async throws {
@@ -7951,7 +7956,8 @@ private func makeCenteredCrossMonitorFixture(
 
         #expect(updatedState.selectedNodeId == targetWindow.id)
         #expect(updatedState.activeColumnIndex == targetIndex)
-        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - expectedViewStart) < 0.1)
+        #expect(abs(viewportStart(for: updatedState, columns: fixture.columns, gap: fixture.gap) - expectedViewStart) <
+            0.1)
     }
 
     @Test @MainActor func focusNeighborRoundTripUsesPaddedViewportOffsets() async throws {

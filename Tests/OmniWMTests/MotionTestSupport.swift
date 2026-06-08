@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
-import QuartzCore
 @testable import OmniWM
+import QuartzCore
 
 @MainActor
 private enum SponsorsWindowControllerTestSharedState {

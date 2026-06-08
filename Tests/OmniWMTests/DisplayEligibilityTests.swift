@@ -3,7 +3,6 @@ import Foundation
 import Testing
 
 @Suite @MainActor struct DisplayEligibilityTests {
-
     @Test func windowIsOnFullscreenSpaceReturnsFalseForNormalWindow() async {
         let controller = makeLayoutPlanTestController()
         controller.enableNiriLayout()

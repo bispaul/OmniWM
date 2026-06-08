@@ -449,7 +449,8 @@ final class WorkspaceNavigationHandler {
         }
 
         guard controller.workspaceManager.windowMode(for: token) == .tiling else {
-            WMLog.workspace.info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=floating")
+            WMLog.workspace
+                .info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=floating")
             return false
         }
 
@@ -466,12 +467,16 @@ final class WorkspaceNavigationHandler {
         guard let windowNode = engine.findNode(for: token),
               let column = engine.findColumn(containing: windowNode, in: sourceWorkspaceId)
         else {
-            WMLog.workspace.info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=notInEngine")
+            WMLog.workspace
+                .info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=notInEngine")
             return false
         }
 
         guard column.windowNodes.count == 1 else {
-            WMLog.workspace.info("atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=multiWindowColumn(\(column.windowNodes.count, privacy: .public))")
+            WMLog.workspace
+                .info(
+                    "atomicTransfer: rejected windowId=\(token.windowId, privacy: .public) reason=multiWindowColumn(\(column.windowNodes.count, privacy: .public))"
+                )
             return false
         }
 
@@ -491,7 +496,10 @@ final class WorkspaceNavigationHandler {
 
         let sourceName = controller.workspaceManager.descriptor(for: sourceWorkspaceId)?.name ?? "?"
         let targetName = controller.workspaceManager.descriptor(for: targetWorkspaceId)?.name ?? "?"
-        WMLog.workspace.info("atomicTransfer: success windowId=\(token.windowId, privacy: .public) from=ws\(sourceName, privacy: .public) to=ws\(targetName, privacy: .public) width=\(column.cachedWidth, privacy: .public)")
+        WMLog.workspace
+            .info(
+                "atomicTransfer: success windowId=\(token.windowId, privacy: .public) from=ws\(sourceName, privacy: .public) to=ws\(targetName, privacy: .public) width=\(column.cachedWidth, privacy: .public)"
+            )
 
         controller.reassignManagedWindow(token, to: targetWorkspaceId)
 
@@ -636,11 +644,16 @@ final class WorkspaceNavigationHandler {
             succeeded = true
         }
 
-        return WindowTransferResult(succeeded: succeeded, newSourceFocusToken: newSourceFocusToken, usedAtomicPath: usedAtomic)
+        return WindowTransferResult(
+            succeeded: succeeded,
+            newSourceFocusToken: newSourceFocusToken,
+            usedAtomicPath: usedAtomic
+        )
     }
 
     func moveWindowToAdjacentWorkspace(direction: Direction) {
-        WMLog.workspace.info("moveWindowToAdjacentWorkspace: direction=\(String(describing: direction), privacy: .public)")
+        WMLog.workspace
+            .info("moveWindowToAdjacentWorkspace: direction=\(String(describing: direction), privacy: .public)")
         guard let controller else {
             WMLog.workspace.info("moveWindowToAdjacentWorkspace: bail reason=nilController")
             return

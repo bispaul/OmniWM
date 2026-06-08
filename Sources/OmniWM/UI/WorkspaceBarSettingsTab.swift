@@ -181,7 +181,8 @@ private struct GlobalBarSettingsSection: View {
         Binding(
             get: { settings.workspaceBarAccentColor != nil },
             set: { enabled in
-                settings.workspaceBarAccentColor = enabled ? settings.workspaceBarAccentColor ?? defaultAccentColor : nil
+                settings.workspaceBarAccentColor = enabled ? settings
+                    .workspaceBarAccentColor ?? defaultAccentColor : nil
                 debouncedAppearanceSync()
             }
         )

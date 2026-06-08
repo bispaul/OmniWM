@@ -46,7 +46,9 @@ final class ServiceLifecycleManager {
         let focusedToken: WindowToken?
         let timestamp: Date
 
-        var expectedMonitorCount: Int { outputIds.count }
+        var expectedMonitorCount: Int {
+            outputIds.count
+        }
     }
 
     enum WakePhase {
@@ -74,6 +76,7 @@ final class ServiceLifecycleManager {
         if case .awaitingRestore = wakePhase { return true }
         return false
     }
+
     private(set) var sleepSnapshot: SleepStateSnapshot?
     private var restoreTimerTask: Task<Void, Never>?
     private var darkWakeTimeoutTask: Task<Void, Never>?
@@ -226,7 +229,8 @@ final class ServiceLifecycleManager {
                 WMLog.ax.info("displayDisconnect: rolling snapshot captured monitors=\(monCount, privacy: .public)")
             }
             handleMonitorDisconnect(monitorId: monitorId, outputId: outputId)
-        case .connected, .reconfigured:
+        case .connected,
+             .reconfigured:
             break
         }
 
@@ -428,11 +432,14 @@ final class ServiceLifecycleManager {
         }
 
         wakePhase = .awaitingRestore(snapshot)
-        WMLog.ax.info("wakeReconciliation: progressive restore starting, windows=\(snapshot.windowRecords.count, privacy: .public) monitors=\(snapshot.expectedMonitorCount, privacy: .public)")
+        WMLog.ax
+            .info(
+                "wakeReconciliation: progressive restore starting, windows=\(snapshot.windowRecords.count, privacy: .public) monitors=\(snapshot.expectedMonitorCount, privacy: .public)"
+            )
 
         restoreTimerTask?.cancel()
         restoreTimerTask = Task { @MainActor [weak self] in
-            for tick in 1...5 {
+            for tick in 1 ... 5 {
                 try? await Task.sleep(nanoseconds: 3_000_000_000)
                 guard !Task.isCancelled,
                       case let .awaitingRestore(snap) = self?.wakePhase else { return }
@@ -454,7 +461,11 @@ final class ServiceLifecycleManager {
         }
     }
 
-    private func resolveTrackedToken(for record: SleepWindowRecord, in wm: WorkspaceManager, matchedTokens: inout Set<WindowToken>) -> WindowToken? {
+    private func resolveTrackedToken(
+        for record: SleepWindowRecord,
+        in wm: WorkspaceManager,
+        matchedTokens: inout Set<WindowToken>
+    ) -> WindowToken? {
         if wm.entry(for: record.token) != nil, !matchedTokens.contains(record.token) {
             matchedTokens.insert(record.token)
             return record.token
@@ -490,9 +501,11 @@ final class ServiceLifecycleManager {
         return candidates[0].token
     }
 
-
-
-    private func isMonitorPresent(for record: SleepWindowRecord, snapshot: SleepStateSnapshot, currentMonitors: [Monitor]) -> Bool {
+    private func isMonitorPresent(
+        for record: SleepWindowRecord,
+        snapshot: SleepStateSnapshot,
+        currentMonitors: [Monitor]
+    ) -> Bool {
         let originalOutputId = snapshot.outputIds.first { $0.displayId == record.monitorId.displayId }
         if let originalOutputId {
             return originalOutputId.resolveMonitor(in: currentMonitors) != nil
@@ -512,7 +525,8 @@ final class ServiceLifecycleManager {
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
             if record.hiddenReason == .scratchpad { continue }
-            guard let resolvedToken = resolveTrackedToken(for: record, in: wm, matchedTokens: &matchedTokens) else { continue }
+            guard let resolvedToken = resolveTrackedToken(for: record, in: wm, matchedTokens: &matchedTokens)
+            else { continue }
             guard isMonitorPresent(for: record, snapshot: snapshot, currentMonitors: currentMonitors) else { continue }
 
             if wm.workspace(for: resolvedToken) != record.workspaceId {
@@ -551,7 +565,10 @@ final class ServiceLifecycleManager {
         }
 
         if missingCount > 0 {
-            WMLog.ax.info("wakeRestore: \(missingCount, privacy: .public) windows missing from tracking, triggering rescan before final restore")
+            WMLog.ax
+                .info(
+                    "wakeRestore: \(missingCount, privacy: .public) windows missing from tracking, triggering rescan before final restore"
+                )
             controller.layoutRefreshController.requestFullRescan(reason: .wakeRescan)
             restoreTimerTask = Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: 3_000_000_000)
@@ -583,7 +600,8 @@ final class ServiceLifecycleManager {
         for record in snapshot.windowRecords {
             if record.isNativeFullscreen { continue }
             if record.hiddenReason == .scratchpad { continue }
-            guard let resolvedToken = resolveTrackedToken(for: record, in: wm, matchedTokens: &matchedTokens) else { continue }
+            guard let resolvedToken = resolveTrackedToken(for: record, in: wm, matchedTokens: &matchedTokens)
+            else { continue }
 
             if resolvedToken != record.token {
                 tokenRemap[record.token] = resolvedToken
@@ -680,7 +698,11 @@ final class ServiceLifecycleManager {
                 resolvedFocusToken = focusedToken
             } else if let focusRecord = focusSnapshot.windowRecords.first(where: { $0.token == focusedToken }) {
                 var focusMatchedTokens: Set<WindowToken> = []
-                resolvedFocusToken = self.resolveTrackedToken(for: focusRecord, in: wm, matchedTokens: &focusMatchedTokens)
+                resolvedFocusToken = self.resolveTrackedToken(
+                    for: focusRecord,
+                    in: wm,
+                    matchedTokens: &focusMatchedTokens
+                )
             } else {
                 resolvedFocusToken = nil
             }
@@ -690,7 +712,10 @@ final class ServiceLifecycleManager {
                let monitorId = wm.monitorId(for: wsId)
             {
                 _ = wm.setManagedFocus(token, in: wsId, onMonitor: monitorId)
-                WMLog.ax.info("wakeRestore: focus restored to pid=\(token.pid, privacy: .public) wid=\(token.windowId, privacy: .public)")
+                WMLog.ax
+                    .info(
+                        "wakeRestore: focus restored to pid=\(token.pid, privacy: .public) wid=\(token.windowId, privacy: .public)"
+                    )
             }
         }
 

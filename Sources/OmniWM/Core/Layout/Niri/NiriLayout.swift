@@ -254,7 +254,11 @@ extension NiriLayoutEngine {
             // Promote the first fully-off-viewport hidden container on the minimum side.
             for idx in stride(from: firstVis - 1, through: 0, by: -1) {
                 if case let .hidden(edge) = visibilityStates[idx],
-                   !containerIntersectsViewport(visibilityRects[idx], viewportFrame: workingFrame, orientation: orientation)
+                   !containerIntersectsViewport(
+                       visibilityRects[idx],
+                       viewportFrame: workingFrame,
+                       orientation: orientation
+                   )
                 {
                     visibilityStates[idx] = .adjacent(edge)
                     break
@@ -265,7 +269,11 @@ extension NiriLayoutEngine {
             // Promote the first fully-off-viewport hidden container on the maximum side.
             for idx in (lastVis + 1) ..< containers.count {
                 if case let .hidden(edge) = visibilityStates[idx],
-                   !containerIntersectsViewport(visibilityRects[idx], viewportFrame: workingFrame, orientation: orientation)
+                   !containerIntersectsViewport(
+                       visibilityRects[idx],
+                       viewportFrame: workingFrame,
+                       orientation: orientation
+                   )
                 {
                     visibilityStates[idx] = .adjacent(edge)
                     break

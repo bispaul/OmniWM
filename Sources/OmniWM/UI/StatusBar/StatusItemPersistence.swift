@@ -120,9 +120,11 @@ enum StatusItemPersistence {
 
     static func storedVisibilityPreferenceCanBeKept(_ storedValue: Any?) -> Bool {
         switch visibilityPreferenceState(from: storedValue) {
-        case .absent, .visible:
+        case .absent,
+             .visible:
             true
-        case .hidden, .malformed:
+        case .hidden,
+             .malformed:
             false
         }
     }

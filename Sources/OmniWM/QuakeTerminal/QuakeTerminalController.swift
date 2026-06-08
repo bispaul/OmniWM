@@ -211,7 +211,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
     private func startGhosttyAppearanceSync() {
         appearanceObserver = NSApplication.shared.observe(
             \.effectiveAppearance,
-             options: [.new, .initial]
+            options: [.new, .initial]
         ) { [weak self] _, _ in
             Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -774,7 +774,8 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
 
     private func customFrameForShow(on screen: NSScreen) -> NSRect? {
         guard settings.quakeTerminalUseCustomFrame else { return nil }
-        guard let customFrame = QuakeTerminalGeometryPolicy.normalizedCustomFrame(settings.quakeTerminalCustomFrame) else {
+        guard let customFrame = QuakeTerminalGeometryPolicy.normalizedCustomFrame(settings.quakeTerminalCustomFrame)
+        else {
             settings.resetQuakeTerminalCustomFrame()
             return nil
         }

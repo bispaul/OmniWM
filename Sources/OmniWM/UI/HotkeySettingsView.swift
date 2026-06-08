@@ -344,9 +344,12 @@ struct HotkeySettingsView: View {
                                         .frame(minWidth: 112, alignment: .center)
                                 }
                                 .buttonStyle(.bordered)
-                                .help("Change leader key. Current leader: \(HotkeySettingsDisplayModel.humanReadableString(for: settings.effectiveLeaderKey))")
+                                .help(
+                                    "Change leader key. Current leader: \(HotkeySettingsDisplayModel.humanReadableString(for: settings.effectiveLeaderKey))"
+                                )
                                 .accessibilityLabel("Change leader key")
-                                .accessibilityValue(HotkeySettingsDisplayModel.humanReadableString(for: settings.effectiveLeaderKey))
+                                .accessibilityValue(HotkeySettingsDisplayModel
+                                    .humanReadableString(for: settings.effectiveLeaderKey))
                             }
                         }
                     }
@@ -381,7 +384,9 @@ struct HotkeySettingsView: View {
                                     .frame(minWidth: 112, alignment: .center)
                             }
                             .buttonStyle(.bordered)
-                            .help("Change OmniWM modifier. Current OmniWM modifier: \(settings.hyperTrigger.humanReadableString)")
+                            .help(
+                                "Change OmniWM modifier. Current OmniWM modifier: \(settings.hyperTrigger.humanReadableString)"
+                            )
                             .accessibilityLabel("Change OmniWM modifier")
                             .accessibilityValue(settings.hyperTrigger.humanReadableString)
                         }
@@ -621,7 +626,10 @@ struct HotkeySettingsView: View {
     }
 
     private func handleChordCaptured(actionId: String, newBinding: KeyBinding) {
-        handleTriggerCaptured(actionId: actionId, newTrigger: newBinding.isUnassigned ? .unassigned : .chord(newBinding))
+        handleTriggerCaptured(
+            actionId: actionId,
+            newTrigger: newBinding.isUnassigned ? .unassigned : .chord(newBinding)
+        )
     }
 
     private func handleSequenceStepCaptured(actionId: String, newBinding: KeyBinding) {

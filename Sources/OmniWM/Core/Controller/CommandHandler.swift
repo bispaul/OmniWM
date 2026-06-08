@@ -34,11 +34,17 @@ final class CommandHandler {
     func performCommand(_ command: HotkeyCommand) -> ExternalCommandResult {
         guard let controller else { return .notFound }
         guard controller.isEnabled else {
-            WMLog.input.info("performCommand: ignored command=\(String(describing: command), privacy: .public) reason=disabled")
+            WMLog.input
+                .info(
+                    "performCommand: ignored command=\(String(describing: command), privacy: .public) reason=disabled"
+                )
             return .ignoredDisabled
         }
         guard !Self.shouldIgnoreCommand(command, isOverviewOpen: controller.isOverviewOpen()) else {
-            WMLog.input.info("performCommand: ignored command=\(String(describing: command), privacy: .public) reason=overview")
+            WMLog.input
+                .info(
+                    "performCommand: ignored command=\(String(describing: command), privacy: .public) reason=overview"
+                )
             return .ignoredOverview
         }
 
@@ -48,7 +54,10 @@ final class CommandHandler {
         case (.niri, .dwindle),
              (.dwindle, .niri),
              (.dwindle, .defaultLayout):
-            WMLog.input.info("performCommand: ignored command=\(String(describing: command), privacy: .public) reason=layoutMismatch(\(String(describing: layoutType), privacy: .public))")
+            WMLog.input
+                .info(
+                    "performCommand: ignored command=\(String(describing: command), privacy: .public) reason=layoutMismatch(\(String(describing: layoutType), privacy: .public))"
+                )
             return .ignoredLayoutMismatch
         default:
             break
@@ -635,7 +644,10 @@ final class CommandHandler {
         guard let controller else { return }
         controller.niriLayoutHandler.withNiriWorkspaceContext { engine, wsId, motion, state, _, _, _ in
             if engine.toggleColumnTabbed(in: wsId, state: state, motion: motion) {
-                controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+                controller.layoutRefreshController.requestImmediateRelayout(
+                    reason: .layoutCommand,
+                    affectedWorkspaceIds: [wsId]
+                )
                 if engine.hasAnyWindowAnimationsRunning(in: wsId) {
                     controller.layoutRefreshController.startScrollAnimation(for: wsId)
                 }
@@ -654,7 +666,10 @@ final class CommandHandler {
         controller.dwindleLayoutHandler.withDwindleContext { engine, wsId in
             let stable = controller.settings.dwindleMoveToRootStable
             engine.moveSelectionToRoot(stable: stable, in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
         }
     }
 
@@ -662,7 +677,10 @@ final class CommandHandler {
         guard let controller else { return }
         controller.dwindleLayoutHandler.withDwindleContext { engine, wsId in
             engine.toggleOrientation(in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
         }
     }
 
@@ -670,7 +688,10 @@ final class CommandHandler {
         guard let controller else { return }
         controller.dwindleLayoutHandler.withDwindleContext { engine, wsId in
             engine.swapSplit(in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
         }
     }
 
@@ -679,7 +700,10 @@ final class CommandHandler {
         controller.dwindleLayoutHandler.withDwindleContext { engine, wsId in
             let delta = grow ? engine.settings.resizeStep : -engine.settings.resizeStep
             engine.resizeSelected(by: delta, direction: direction, in: wsId)
-            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
+            controller.layoutRefreshController.requestImmediateRelayout(
+                reason: .layoutCommand,
+                affectedWorkspaceIds: [wsId]
+            )
         }
     }
 

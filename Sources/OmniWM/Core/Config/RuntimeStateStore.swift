@@ -165,7 +165,8 @@ final class RuntimeStateStore {
 
     var commandPaletteLastMode: CommandPaletteMode {
         get {
-            state.commandPaletteLastMode.flatMap(CommandPaletteMode.init(rawValue:)) ?? Self.defaultCommandPaletteLastMode
+            state.commandPaletteLastMode.flatMap(CommandPaletteMode.init(rawValue:)) ?? Self
+                .defaultCommandPaletteLastMode
         }
         set {
             guard commandPaletteLastMode != newValue else { return }

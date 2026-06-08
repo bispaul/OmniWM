@@ -333,13 +333,17 @@ class KeyRecorderNSView: NSView {
 
     private func modifierFlagIsActive(for keyCode: UInt32, event: NSEvent) -> Bool? {
         switch Int(keyCode) {
-        case kVK_Shift, kVK_RightShift:
+        case kVK_Shift,
+             kVK_RightShift:
             return event.modifierFlags.contains(.shift)
-        case kVK_Control, kVK_RightControl:
+        case kVK_Control,
+             kVK_RightControl:
             return event.modifierFlags.contains(.control)
-        case kVK_Option, kVK_RightOption:
+        case kVK_Option,
+             kVK_RightOption:
             return event.modifierFlags.contains(.option)
-        case kVK_Command, kVK_RightCommand:
+        case kVK_Command,
+             kVK_RightCommand:
             return event.modifierFlags.contains(.command)
         default:
             return nil

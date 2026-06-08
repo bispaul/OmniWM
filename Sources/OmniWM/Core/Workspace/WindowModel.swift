@@ -753,7 +753,10 @@ final class WindowModel {
         entries[token]?.resizePlaceholderState = state
     }
 
-    func resizePlaceholderStates(in workspaceId: WorkspaceDescriptor.ID) -> [(token: WindowToken, state: ResizePlaceholderState)] {
+    func resizePlaceholderStates(in workspaceId: WorkspaceDescriptor.ID) -> [(
+        token: WindowToken,
+        state: ResizePlaceholderState
+    )] {
         guard let tokens = tokensByWorkspace[workspaceId] else { return [] }
         return tokens.compactMap { token in
             guard let state = entries[token]?.resizePlaceholderState else { return nil }

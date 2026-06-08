@@ -243,13 +243,17 @@ struct VirtualHyperEventState: Equatable {
 
     private static func modifierFlagIsActive(for keyCode: UInt32, flags: CGEventFlags) -> Bool? {
         switch Int(keyCode) {
-        case kVK_Shift, kVK_RightShift:
+        case kVK_Shift,
+             kVK_RightShift:
             return flags.contains(.maskShift)
-        case kVK_Control, kVK_RightControl:
+        case kVK_Control,
+             kVK_RightControl:
             return flags.contains(.maskControl)
-        case kVK_Option, kVK_RightOption:
+        case kVK_Option,
+             kVK_RightOption:
             return flags.contains(.maskAlternate)
-        case kVK_Command, kVK_RightCommand:
+        case kVK_Command,
+             kVK_RightCommand:
             return flags.contains(.maskCommand)
         default:
             return nil
@@ -391,7 +395,9 @@ final class HotkeyCenter {
                 return true
             }
         }
-        if !virtualHyperRegistrations.isEmpty, configuration.hyperTrigger.requiresEventTap, !setupVirtualHyperTapIfNeeded() {
+        if !virtualHyperRegistrations.isEmpty, configuration.hyperTrigger.requiresEventTap,
+           !setupVirtualHyperTapIfNeeded()
+        {
             virtualHyperUnavailableActions = Array(virtualHyperRegistrations.values)
             virtualHyperRegistrations.removeAll()
         }
@@ -426,7 +432,9 @@ final class HotkeyCenter {
         }
     }
 
-    private func registrationFailuresForAction(_ action: HotkeyRegistrationAction) -> [HotkeyRegistrationFailureReason] {
+    private func registrationFailuresForAction(_ action: HotkeyRegistrationAction)
+        -> [HotkeyRegistrationFailureReason]
+    {
         switch action {
         case let .command(command):
             return registrationFailures[command].map { [$0] } ?? []
@@ -797,7 +805,11 @@ final class HotkeyCenter {
 
     private func handleVirtualHyperFlagsChanged(_ event: CGEvent) -> Unmanaged<CGEvent>? {
         let keyCode = UInt32(event.getIntegerValueField(.keyboardEventKeycode))
-        guard virtualHyperState.handleTriggerFlagsChanged(keyCode: keyCode, flags: event.flags, trigger: configuration.hyperTrigger) else {
+        guard virtualHyperState.handleTriggerFlagsChanged(
+            keyCode: keyCode,
+            flags: event.flags,
+            trigger: configuration.hyperTrigger
+        ) else {
             return Unmanaged.passUnretained(event)
         }
         return nil
@@ -827,33 +839,33 @@ final class HotkeyCenter {
 }
 
 #if DEBUG
-extension HotkeyCenter {
-    func prepareVirtualHyperForTesting(
-        hyperTrigger: HyperKeyTrigger,
-        registrations: [KeyBinding: HotkeyRegistrationAction],
-        isActive: Bool = false,
-        sequenceIsActive: Bool = false
-    ) {
-        configuration = HotkeyRuntimeConfiguration(
-            bindings: configuration.bindings,
-            hyperTrigger: hyperTrigger,
-            leaderKey: configuration.leaderKey,
-            sequenceTimeoutMilliseconds: configuration.sequenceTimeoutMilliseconds
-        )
-        virtualHyperRegistrations = registrations
-        virtualHyperState.reset()
-        virtualHyperState.isActive = isActive
-        activeSequenceNode = sequenceIsActive ? 0 : nil
-    }
+    extension HotkeyCenter {
+        func prepareVirtualHyperForTesting(
+            hyperTrigger: HyperKeyTrigger,
+            registrations: [KeyBinding: HotkeyRegistrationAction],
+            isActive: Bool = false,
+            sequenceIsActive: Bool = false
+        ) {
+            configuration = HotkeyRuntimeConfiguration(
+                bindings: configuration.bindings,
+                hyperTrigger: hyperTrigger,
+                leaderKey: configuration.leaderKey,
+                sequenceTimeoutMilliseconds: configuration.sequenceTimeoutMilliseconds
+            )
+            virtualHyperRegistrations = registrations
+            virtualHyperState.reset()
+            virtualHyperState.isActive = isActive
+            activeSequenceNode = sequenceIsActive ? 0 : nil
+        }
 
-    func handleVirtualHyperEventForTesting(type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
-        handleVirtualHyperEvent(type: type, event: event)
-    }
+        func handleVirtualHyperEventForTesting(type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
+            handleVirtualHyperEvent(type: type, event: event)
+        }
 
-    func drainPendingSequenceCommandsForTesting() {
-        drainPendingSequenceCommands()
+        func drainPendingSequenceCommandsForTesting() {
+            drainPendingSequenceCommands()
+        }
     }
-}
 #endif
 
 extension HotkeyCenter {
@@ -974,7 +986,10 @@ extension HotkeyCenter {
                 mark(candidate.command, .hyperLeaderConflict)
             }
             guard let root = candidate.resolved.first else { continue }
-            for directCandidate in directCandidates where directCandidate.binding.conflicts(with: root, hyperTrigger: hyperTrigger) {
+            for directCandidate in directCandidates where directCandidate.binding.conflicts(
+                with: root,
+                hyperTrigger: hyperTrigger
+            ) {
                 mark(candidate.command, .sequenceRootConflict)
                 mark(directCandidate.command, .sequenceRootConflict)
             }

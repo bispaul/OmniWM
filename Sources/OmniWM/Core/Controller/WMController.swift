@@ -103,6 +103,7 @@ final class WMController {
         }
         return manager
     }()
+
     @ObservationIgnored
     lazy var resizePlaceholderManager: ResizePlaceholderManager = {
         let manager = ResizePlaceholderManager()
@@ -111,6 +112,7 @@ final class WMController {
         }
         return manager
     }()
+
     @ObservationIgnored
     private(set) lazy var focusBorderController = FocusBorderController(
         controller: self,
@@ -1199,15 +1201,17 @@ final class WMController {
         preferManagedFocusPlacement: Bool
     ) -> WorkspacePlacementTarget {
         if preferManagedFocusPlacement {
-            if let target = managedFocusPlacementTarget(createPlacementContext?.pendingFocusedWorkspaceId,
-                                                        createPlacementContext?.pendingFocusedMonitorId)
-            {
+            if let target = managedFocusPlacementTarget(
+                createPlacementContext?.pendingFocusedWorkspaceId,
+                createPlacementContext?.pendingFocusedMonitorId
+            ) {
                 return target
             }
 
-            if let target = managedFocusPlacementTarget(createPlacementContext?.focusedWorkspaceId,
-                                                        createPlacementContext?.focusedMonitorId)
-            {
+            if let target = managedFocusPlacementTarget(
+                createPlacementContext?.focusedWorkspaceId,
+                createPlacementContext?.focusedMonitorId
+            ) {
                 return target
             }
         }
@@ -1244,15 +1248,17 @@ final class WMController {
         }
 
         if !preferManagedFocusPlacement {
-            if let target = managedFocusPlacementTarget(createPlacementContext?.pendingFocusedWorkspaceId,
-                                                        createPlacementContext?.pendingFocusedMonitorId)
-            {
+            if let target = managedFocusPlacementTarget(
+                createPlacementContext?.pendingFocusedWorkspaceId,
+                createPlacementContext?.pendingFocusedMonitorId
+            ) {
                 return target
             }
 
-            if let target = managedFocusPlacementTarget(createPlacementContext?.focusedWorkspaceId,
-                                                        createPlacementContext?.focusedMonitorId)
-            {
+            if let target = managedFocusPlacementTarget(
+                createPlacementContext?.focusedWorkspaceId,
+                createPlacementContext?.focusedMonitorId
+            ) {
                 return target
             }
         }
@@ -1618,7 +1624,9 @@ final class WMController {
         return true
     }
 
-    private func scratchpadTarget(on monitorId: Monitor.ID? = nil) -> (workspaceId: WorkspaceDescriptor.ID, monitor: Monitor)? {
+    private func scratchpadTarget(on monitorId: Monitor
+        .ID? = nil) -> (workspaceId: WorkspaceDescriptor.ID, monitor: Monitor)?
+    {
         guard let monitor = monitorId.flatMap({ workspaceManager.monitor(byId: $0) }) ?? monitorForInteraction(),
               let workspaceId = workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id
         else {
@@ -2578,7 +2586,8 @@ final class WMController {
 
         for operation in rescuePlan.operations {
             guard let entry = workspaceManager.entry(for: operation.token) else { continue }
-            let wasWorkspaceInactiveHidden = workspaceManager.hiddenState(for: operation.token)?.workspaceInactive == true
+            let wasWorkspaceInactiveHidden = workspaceManager.hiddenState(for: operation.token)?
+                .workspaceInactive == true
             if !wasWorkspaceInactiveHidden {
                 workspaceManager.updateFloatingGeometry(
                     frame: operation.targetFrame,

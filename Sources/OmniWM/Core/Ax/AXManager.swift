@@ -66,8 +66,6 @@ final class AXManager {
     /// Window IDs belonging to inactive workspaces — checked LIVE in applyFramesParallel.
     private(set) var inactiveWorkspaceWindowIds: Set<Int> = []
 
-    
-
     var acceptAndAdaptEnabled: Bool = true
     var onFrameAcceptedAtDifferentSize: ((Int, CGRect) -> Void)?
     private var appBusyBackoffDelay: [Int: TimeInterval] = [:]
@@ -402,7 +400,10 @@ final class AXManager {
                             )
                         }
                     } catch {
-                        WMLog.ax.error("fullRescanEnumeration: failed pid=\(app.processIdentifier, privacy: .public) error=\(String(describing: error), privacy: .public)")
+                        WMLog.ax
+                            .error(
+                                "fullRescanEnumeration: failed pid=\(app.processIdentifier, privacy: .public) error=\(String(describing: error), privacy: .public)"
+                            )
                     }
                     return (app.processIdentifier, [], true)
                 }
@@ -416,7 +417,10 @@ final class AXManager {
                     failedPIDs.insert(result.pid)
                 }
             }
-            WMLog.ax.info("fullRescanEnumeration: windowCount=\(results.count, privacy: .public) failedPidCount=\(failedPIDs.count, privacy: .public)")
+            WMLog.ax
+                .info(
+                    "fullRescanEnumeration: windowCount=\(results.count, privacy: .public) failedPidCount=\(failedPIDs.count, privacy: .public)"
+                )
             return .init(windows: results, failedPIDs: failedPIDs)
         }
     }
@@ -433,7 +437,10 @@ final class AXManager {
         isRetry: Bool,
         terminalObserver: FrameApplicationTerminalObserver? = nil
     ) {
-        WMLog.ax.debug("applyFramesParallel: \(frames.count, privacy: .public) requests, isRetry=\(isRetry, privacy: .public)")
+        WMLog.ax
+            .debug(
+                "applyFramesParallel: \(frames.count, privacy: .public) requests, isRetry=\(isRetry, privacy: .public)"
+            )
         for key in framesByPidBuffer.keys {
             framesByPidBuffer[key]?.removeAll(keepingCapacity: true)
         }
@@ -519,7 +526,10 @@ final class AXManager {
             }
             if !isRetry {
                 retryBudgetByWindowId[windowId] = 1
-                WMLog.ax.debug("enqueueFrameApplications: queued windowId=\(windowId, privacy: .public) retryBudget=1 force=\(shouldForceApply, privacy: .public)")
+                WMLog.ax
+                    .debug(
+                        "enqueueFrameApplications: queued windowId=\(windowId, privacy: .public) retryBudget=1 force=\(shouldForceApply, privacy: .public)"
+                    )
             }
             if framesByPidBuffer[pid] == nil {
                 framesByPidBuffer[pid] = []
@@ -701,7 +711,10 @@ final class AXManager {
             }
 
             if let failureReason = resolvedResult.writeResult.failureReason {
-                WMLog.ax.error("Frame write failed windowId=\(resolvedWindowId, privacy: .public) reason=\(String(describing: failureReason), privacy: .public)")
+                WMLog.ax
+                    .error(
+                        "Frame write failed windowId=\(resolvedWindowId, privacy: .public) reason=\(String(describing: failureReason), privacy: .public)"
+                    )
 
                 if failureReason == .verificationMismatch,
                    acceptAndAdaptEnabled,
@@ -712,7 +725,10 @@ final class AXManager {
                     recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
                     retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                     appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
-                    WMLog.ax.info("Frame accepted at different size windowId=\(resolvedWindowId, privacy: .public) target=\(resolvedResult.targetFrame.debugDescription, privacy: .public) observed=\(observedFrame.debugDescription, privacy: .public)")
+                    WMLog.ax
+                        .info(
+                            "Frame accepted at different size windowId=\(resolvedWindowId, privacy: .public) target=\(resolvedResult.targetFrame.debugDescription, privacy: .public) observed=\(observedFrame.debugDescription, privacy: .public)"
+                        )
                     onFrameAcceptedAtDifferentSize?(resolvedWindowId, observedFrame)
                     notifyPendingFrameObserver(with: resolvedResult)
                     clearSettledRekeyMappings(to: resolvedWindowId)
@@ -733,7 +749,10 @@ final class AXManager {
             guard remainingRetries > 0,
                   shouldRetryFrameWrite(after: resolvedResult)
             else {
-                WMLog.ax.debug("handleFrameApplyResults: retryExhausted windowId=\(resolvedWindowId, privacy: .public) remainingRetries=\(remainingRetries, privacy: .public)")
+                WMLog.ax
+                    .debug(
+                        "handleFrameApplyResults: retryExhausted windowId=\(resolvedWindowId, privacy: .public) remainingRetries=\(remainingRetries, privacy: .public)"
+                    )
                 retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                 appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
                 notifyPendingFrameObserver(with: resolvedResult)
@@ -743,7 +762,10 @@ final class AXManager {
 
             retryBudgetByWindowId[resolvedWindowId] = remainingRetries - 1
             forceApplyWindowIds.insert(resolvedWindowId)
-            WMLog.ax.debug("handleFrameApplyResults: retrying windowId=\(resolvedWindowId, privacy: .public) remainingRetries=\(remainingRetries - 1, privacy: .public)")
+            WMLog.ax
+                .debug(
+                    "handleFrameApplyResults: retrying windowId=\(resolvedWindowId, privacy: .public) remainingRetries=\(remainingRetries - 1, privacy: .public)"
+                )
 
             let pid = resolvedResult.pid
             let frame = resolvedResult.targetFrame
@@ -781,15 +803,15 @@ final class AXManager {
         case .cancelled,
              .suppressed,
              .verificationMismatch:
-            WMLog.ax.debug("shouldRetryFrameWrite: noRetry reason=\(String(describing: failureReason), privacy: .public)")
+            WMLog.ax
+                .debug("shouldRetryFrameWrite: noRetry reason=\(String(describing: failureReason), privacy: .public)")
             return false
         default:
-            WMLog.ax.debug("shouldRetryFrameWrite: willRetry reason=\(String(describing: failureReason), privacy: .public)")
+            WMLog.ax
+                .debug("shouldRetryFrameWrite: willRetry reason=\(String(describing: failureReason), privacy: .public)")
             return true
         }
     }
-
-    
 
     private func makeNextFrameApplicationRequestId() -> AXFrameRequestId {
         defer { nextFrameApplicationRequestId += 1 }

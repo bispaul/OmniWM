@@ -28,7 +28,10 @@ struct HotkeySettingsViewTests {
 
     @MainActor
     @Test func presetConfirmationSelectionDoesNotMutateSettingsBeforeApply() {
-        let settings = SettingsStore(defaults: UserDefaults(suiteName: "com.omniwm.hotkey-settings-view.test.\(UUID().uuidString)")!)
+        let settings =
+            SettingsStore(
+                defaults: UserDefaults(suiteName: "com.omniwm.hotkey-settings-view.test.\(UUID().uuidString)")!
+            )
         let originalBindings = settings.hotkeyBindings
         let proposedBindings = settings.hotkeyBindings(applyingPreset: HotkeyPreset.vimNavigation())
         let preview = HotkeyPresetConfirmation.vimNavigation.preview(settings: settings)
@@ -66,7 +69,10 @@ struct HotkeySettingsViewTests {
 
     @MainActor
     @Test func vimPresetPreviewReportsAffectedCommandsAndUnassignedConflicts() {
-        let settings = SettingsStore(defaults: UserDefaults(suiteName: "com.omniwm.hotkey-settings-view.test.\(UUID().uuidString)")!)
+        let settings =
+            SettingsStore(
+                defaults: UserDefaults(suiteName: "com.omniwm.hotkey-settings-view.test.\(UUID().uuidString)")!
+            )
         settings.updateBinding(
             for: "toggleFullscreen",
             newBinding: KeyBinding(keyCode: UInt32(kVK_Space), modifiers: UInt32(optionKey))

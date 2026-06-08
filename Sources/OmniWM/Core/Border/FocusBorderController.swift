@@ -268,14 +268,18 @@ final class FocusBorderController {
         guard let controller else { return .clear }
 
         if controller.isOwnedWindow(windowNumber: target.windowId) {
-            WMLog.focus.debug("renderEligibility: clear reason=ownedWindow windowId=\(target.windowId, privacy: .public)")
+            WMLog.focus
+                .debug("renderEligibility: clear reason=ownedWindow windowId=\(target.windowId, privacy: .public)")
             return .clear
         }
 
         if target.isManaged,
            controller.workspaceManager.entry(for: target.token) == nil
         {
-            WMLog.focus.debug("renderEligibility: clear reason=noEntry token=\(String(describing: target.token), privacy: .public)")
+            WMLog.focus
+                .debug(
+                    "renderEligibility: clear reason=noEntry token=\(String(describing: target.token), privacy: .public)"
+                )
             suppressedManagedTargets.remove(target.token)
             return .clear
         }
@@ -283,7 +287,10 @@ final class FocusBorderController {
         if target.isManaged,
            suppressedManagedTargets.contains(target.token)
         {
-            WMLog.focus.debug("renderEligibility: hide reason=suppressed token=\(String(describing: target.token), privacy: .public)")
+            WMLog.focus
+                .debug(
+                    "renderEligibility: hide reason=suppressed token=\(String(describing: target.token), privacy: .public)"
+                )
             return .hide
         }
 
@@ -295,7 +302,10 @@ final class FocusBorderController {
         if target.isManaged {
             let isOnFullscreenSpace = SkyLight.shared.windowIsOnFullscreenSpace(windowId: target.token.windowId)
             if isOnFullscreenSpace || isManagedWindowFullscreen(target.token) {
-                WMLog.focus.info("renderEligibility: hide reason=appFullscreen token=\(String(describing: target.token), privacy: .public) spaceCheck=\(isOnFullscreenSpace, privacy: .public)")
+                WMLog.focus
+                    .info(
+                        "renderEligibility: hide reason=appFullscreen token=\(String(describing: target.token), privacy: .public) spaceCheck=\(isOnFullscreenSpace, privacy: .public)"
+                    )
                 return .hide
             }
         }
@@ -304,7 +314,10 @@ final class FocusBorderController {
            let entry = controller.workspaceManager.entry(for: target.token),
            !controller.isManagedWindowDisplayable(entry.handle)
         {
-            WMLog.focus.debug("renderEligibility: hide reason=notDisplayable token=\(String(describing: target.token), privacy: .public)")
+            WMLog.focus
+                .debug(
+                    "renderEligibility: hide reason=notDisplayable token=\(String(describing: target.token), privacy: .public)"
+                )
             return .hide
         }
 

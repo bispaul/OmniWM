@@ -538,7 +538,8 @@ final class WindowActionHandler {
         }
 
         if sourceWorkspaceId == targetWorkspaceId {
-            guard engine.summonWindowRight(token, beside: focusedToken, in: targetWorkspaceId, monitorId: monitor.id) else {
+            guard engine.summonWindowRight(token, beside: focusedToken, in: targetWorkspaceId, monitorId: monitor.id)
+            else {
                 return false
             }
             commitSummonedWindowFocus(token: token, workspaceId: targetWorkspaceId)
@@ -574,7 +575,10 @@ final class WindowActionHandler {
                 rememberedFocusToken: rememberedFocusToken ?? token
             )
         )
-        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [workspaceId]) { [weak controller] in
+        controller.layoutRefreshController.requestImmediateRelayout(
+            reason: .layoutCommand,
+            affectedWorkspaceIds: [workspaceId]
+        ) { [weak controller] in
             controller?.focusWindow(token)
         }
         if startNiriScrollAnimation {

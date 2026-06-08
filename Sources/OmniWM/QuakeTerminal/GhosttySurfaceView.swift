@@ -137,7 +137,11 @@ final class GhosttySurfaceView: NSView, @preconcurrency NSTextInputClient {
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
-        NotificationCenter.default.removeObserver(self, name: NSWindow.didChangeBackingPropertiesNotification, object: nil)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: NSWindow.didChangeBackingPropertiesNotification,
+            object: nil
+        )
         NotificationCenter.default.removeObserver(self, name: NSWindow.didChangeScreenNotification, object: nil)
         guard let window else { return }
         updateDisplayState()

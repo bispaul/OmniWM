@@ -220,8 +220,10 @@ private func settingsFileSnapshot(_ url: URL) throws -> SettingsFileSnapshot {
     return SettingsFileSnapshot(
         deviceID: UInt64(statBuffer.st_dev),
         inode: UInt64(statBuffer.st_ino),
-        modificationTimeNanoseconds: Int64(statBuffer.st_mtimespec.tv_sec) * 1_000_000_000 + Int64(statBuffer.st_mtimespec.tv_nsec),
-        statusChangeTimeNanoseconds: Int64(statBuffer.st_ctimespec.tv_sec) * 1_000_000_000 + Int64(statBuffer.st_ctimespec.tv_nsec),
+        modificationTimeNanoseconds: Int64(statBuffer.st_mtimespec.tv_sec) * 1_000_000_000 +
+            Int64(statBuffer.st_mtimespec.tv_nsec),
+        statusChangeTimeNanoseconds: Int64(statBuffer.st_ctimespec.tv_sec) * 1_000_000_000 +
+            Int64(statBuffer.st_ctimespec.tv_nsec),
         fileSize: UInt64(statBuffer.st_size),
         contents: try Data(contentsOf: url)
     )
@@ -353,7 +355,11 @@ struct MonitorSettingsStoreTests {
         legacyRuntimeState.windowRestoreCatalog = catalog
 
         let settings = SettingsStore(
-            persistence: SettingsFilePersistence(directory: configurationDirectory, startWatching: false, deferSaves: false),
+            persistence: SettingsFilePersistence(
+                directory: configurationDirectory,
+                startWatching: false,
+                deferSaves: false
+            ),
             runtimeState: RuntimeStateStore(directory: runtimeStateDirectory, deferSaves: false)
         )
 
@@ -701,12 +707,30 @@ struct KeyBindingCodecTests {
     }
 
     @Test func legacyCompactPunctuationBindingsStillDecode() throws {
-        #expect(KeySymbolMapper.fromHumanReadable("Option+,") == KeyBinding(keyCode: UInt32(kVK_ANSI_Comma), modifiers: UInt32(optionKey)))
-        #expect(KeySymbolMapper.fromHumanReadable("Option+.") == KeyBinding(keyCode: UInt32(kVK_ANSI_Period), modifiers: UInt32(optionKey)))
-        #expect(KeySymbolMapper.fromHumanReadable("Option+-") == KeyBinding(keyCode: UInt32(kVK_ANSI_Minus), modifiers: UInt32(optionKey)))
-        #expect(KeySymbolMapper.fromHumanReadable("Option+=") == KeyBinding(keyCode: UInt32(kVK_ANSI_Equal), modifiers: UInt32(optionKey)))
-        #expect(KeySymbolMapper.fromHumanReadable("Option+`") == KeyBinding(keyCode: UInt32(kVK_ANSI_Grave), modifiers: UInt32(optionKey)))
-        #expect(HotkeyTrigger.fromHumanReadable("Option+,") == .chord(KeyBinding(keyCode: UInt32(kVK_ANSI_Comma), modifiers: UInt32(optionKey))))
+        #expect(KeySymbolMapper.fromHumanReadable("Option+,") == KeyBinding(
+            keyCode: UInt32(kVK_ANSI_Comma),
+            modifiers: UInt32(optionKey)
+        ))
+        #expect(KeySymbolMapper.fromHumanReadable("Option+.") == KeyBinding(
+            keyCode: UInt32(kVK_ANSI_Period),
+            modifiers: UInt32(optionKey)
+        ))
+        #expect(KeySymbolMapper.fromHumanReadable("Option+-") == KeyBinding(
+            keyCode: UInt32(kVK_ANSI_Minus),
+            modifiers: UInt32(optionKey)
+        ))
+        #expect(KeySymbolMapper.fromHumanReadable("Option+=") == KeyBinding(
+            keyCode: UInt32(kVK_ANSI_Equal),
+            modifiers: UInt32(optionKey)
+        ))
+        #expect(KeySymbolMapper.fromHumanReadable("Option+`") == KeyBinding(
+            keyCode: UInt32(kVK_ANSI_Grave),
+            modifiers: UInt32(optionKey)
+        ))
+        #expect(HotkeyTrigger.fromHumanReadable("Option+,") == .chord(KeyBinding(
+            keyCode: UInt32(kVK_ANSI_Comma),
+            modifiers: UInt32(optionKey)
+        )))
     }
 
     private func encodeSingleHotkeyBinding(_ binding: KeyBinding) throws -> String {
@@ -1484,7 +1508,10 @@ struct SettingsSectionTests {
         let runtimeState = RuntimeStateStore(directory: runtimeStateDirectory, deferSaves: false)
         let imported = runtimeState.importWindowRestoreCatalogIfMissing(fromLegacyDirectory: configurationDirectory)
         let reloaded = RuntimeStateStore(directory: runtimeStateDirectory, deferSaves: false)
-        let legacyFileURL = configurationDirectory.appendingPathComponent(RuntimeStateStore.fileName, isDirectory: false)
+        let legacyFileURL = configurationDirectory.appendingPathComponent(
+            RuntimeStateStore.fileName,
+            isDirectory: false
+        )
 
         #expect(imported)
         #expect(reloaded.windowRestoreCatalog == catalog)
@@ -1506,7 +1533,10 @@ struct SettingsSectionTests {
 
         let reloaded = RuntimeStateStore(directory: runtimeStateDirectory, deferSaves: false)
         let imported = reloaded.importWindowRestoreCatalogIfMissing(fromLegacyDirectory: configurationDirectory)
-        let legacyFileURL = configurationDirectory.appendingPathComponent(RuntimeStateStore.fileName, isDirectory: false)
+        let legacyFileURL = configurationDirectory.appendingPathComponent(
+            RuntimeStateStore.fileName,
+            isDirectory: false
+        )
 
         #expect(imported == false)
         #expect(reloaded.windowRestoreCatalog == currentCatalog)
@@ -1518,7 +1548,10 @@ struct SettingsSectionTests {
         let configurationDirectory = configurationDirectoryForTests(defaults: defaults)
         let runtimeStateDirectory = runtimeStateDirectoryForTests(defaults: defaults)
         try FileManager.default.createDirectory(at: configurationDirectory, withIntermediateDirectories: true)
-        let legacyFileURL = configurationDirectory.appendingPathComponent(RuntimeStateStore.fileName, isDirectory: false)
+        let legacyFileURL = configurationDirectory.appendingPathComponent(
+            RuntimeStateStore.fileName,
+            isDirectory: false
+        )
         try Data("not-json".utf8).write(to: legacyFileURL)
 
         let runtimeState = RuntimeStateStore(directory: runtimeStateDirectory, deferSaves: false)
@@ -1570,7 +1603,11 @@ struct SettingsSectionTests {
         let configurationDirectory = configurationDirectoryForTests(defaults: defaults)
         let runtimeStateDirectory = runtimeStateDirectoryForTests(defaults: defaults)
         let settings = SettingsStore(
-            persistence: SettingsFilePersistence(directory: configurationDirectory, startWatching: false, deferSaves: false),
+            persistence: SettingsFilePersistence(
+                directory: configurationDirectory,
+                startWatching: false,
+                deferSaves: false
+            ),
             runtimeState: RuntimeStateStore(directory: runtimeStateDirectory)
         )
 
@@ -1591,7 +1628,11 @@ struct SettingsSectionTests {
         settings.flushNow()
 
         let reloaded = SettingsStore(
-            persistence: SettingsFilePersistence(directory: configurationDirectory, startWatching: false, deferSaves: false),
+            persistence: SettingsFilePersistence(
+                directory: configurationDirectory,
+                startWatching: false,
+                deferSaves: false
+            ),
             runtimeState: RuntimeStateStore(directory: runtimeStateDirectory, deferSaves: false)
         )
 
@@ -1615,7 +1656,11 @@ struct SettingsSectionTests {
         try Data(toml.utf8).write(to: settingsURL)
 
         let settings = SettingsStore(
-            persistence: SettingsFilePersistence(directory: configurationDirectory, startWatching: false, deferSaves: false),
+            persistence: SettingsFilePersistence(
+                directory: configurationDirectory,
+                startWatching: false,
+                deferSaves: false
+            ),
             runtimeState: RuntimeStateStore(directory: runtimeStateDirectory, deferSaves: false)
         )
 
@@ -1677,7 +1722,10 @@ struct SettingsSectionTests {
 
     @Test func quakeCustomFrameResetWritesRuntimeStateWithoutRewritingSettingsFile() throws {
         let defaults = makeTestDefaults()
-        let runtimeState = RuntimeStateStore(directory: runtimeStateDirectoryForTests(defaults: defaults), deferSaves: false)
+        let runtimeState = RuntimeStateStore(
+            directory: runtimeStateDirectoryForTests(defaults: defaults),
+            deferSaves: false
+        )
         runtimeState.quakeTerminalUseCustomFrame = true
         runtimeState.quakeTerminalCustomFrame = CGRect(x: 10, y: 20, width: 1200, height: 700)
         let settings = SettingsStore(defaults: defaults)

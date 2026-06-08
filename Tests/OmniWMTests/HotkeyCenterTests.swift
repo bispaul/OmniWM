@@ -1,6 +1,6 @@
-@testable import OmniWM
 import Carbon
 import CoreGraphics
+@testable import OmniWM
 import Testing
 
 private func makeHotkeyKeyboardEvent(

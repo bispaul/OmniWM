@@ -46,7 +46,10 @@ private func makeWakeTestMonitor(
         let settings = SettingsStore(defaults: defaults)
         settings.workspaceConfigurations = [
             WorkspaceConfiguration(name: "1", monitorAssignment: .main),
-            WorkspaceConfiguration(name: "6", monitorAssignment: .specificDisplay(OutputId(displayId: 2, name: "S27R65x")))
+            WorkspaceConfiguration(
+                name: "6",
+                monitorAssignment: .specificDisplay(OutputId(displayId: 2, name: "S27R65x"))
+            )
         ]
         let controller = WMController(settings: settings)
         let slm = ServiceLifecycleManager(controller: controller)
@@ -137,7 +140,10 @@ private func makeWakeTestMonitor(
         let settings = SettingsStore(defaults: defaults)
         settings.workspaceConfigurations = [
             WorkspaceConfiguration(name: "1", monitorAssignment: .main),
-            WorkspaceConfiguration(name: "8", monitorAssignment: .specificDisplay(OutputId(displayId: 3, name: "U32J59x")))
+            WorkspaceConfiguration(
+                name: "8",
+                monitorAssignment: .specificDisplay(OutputId(displayId: 3, name: "U32J59x"))
+            )
         ]
         let controller = WMController(settings: settings)
         let slm = ServiceLifecycleManager(controller: controller)
@@ -150,7 +156,14 @@ private func makeWakeTestMonitor(
         #expect(snapshot.outputIds.contains(where: { $0.name == "U32J59x" }))
 
         let outputId = snapshot.outputIds.first { $0.name == "U32J59x" }!
-        let ext32Renamed = makeWakeTestMonitor(displayId: 99, name: "U32J59x", x: 0, y: -1440, width: 2560, height: 1440)
+        let ext32Renamed = makeWakeTestMonitor(
+            displayId: 99,
+            name: "U32J59x",
+            x: 0,
+            y: -1440,
+            width: 2560,
+            height: 1440
+        )
         let resolved = outputId.resolveMonitor(in: [retina, ext32Renamed])
         #expect(resolved != nil)
         #expect(resolved?.displayId == 99)

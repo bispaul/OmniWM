@@ -28,18 +28,23 @@ struct ClipboardHistoryServiceEnvironment {
     var pasteboardChangeCount: @MainActor () -> Int = {
         NSPasteboard.general.changeCount
     }
+
     var frontmostBundleIdentifier: @MainActor () -> String? = {
         NSWorkspace.shared.frontmostApplication?.bundleIdentifier
     }
+
     var date: () -> Date = {
         Date()
     }
+
     var capturePasteboard: @Sendable (ClipboardPasteboardCaptureConfiguration) -> ClipboardPasteboardCapture? = {
         ClipboardHistoryPasteboard.capture(configuration: $0)
     }
+
     var writePasteboard: @MainActor (ClipboardHistoryItem) -> Bool = {
         ClipboardHistoryPasteboard.write($0)
     }
+
     var makeTimer: @MainActor (TimeInterval, @escaping @MainActor () -> Void) -> ClipboardHistoryTimer = {
         ClipboardHistoryRunLoopTimer(interval: $0, action: $1)
     }

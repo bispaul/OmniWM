@@ -229,13 +229,17 @@ enum HyperKeyTrigger: Equatable, Hashable {
 
     static func modifierMask(for keyCode: UInt32) -> UInt32 {
         switch Int(keyCode) {
-        case kVK_Shift, kVK_RightShift:
+        case kVK_Shift,
+             kVK_RightShift:
             return UInt32(shiftKey)
-        case kVK_Control, kVK_RightControl:
+        case kVK_Control,
+             kVK_RightControl:
             return UInt32(controlKey)
-        case kVK_Option, kVK_RightOption:
+        case kVK_Option,
+             kVK_RightOption:
             return UInt32(optionKey)
-        case kVK_Command, kVK_RightCommand:
+        case kVK_Command,
+             kVK_RightCommand:
             return UInt32(cmdKey)
         default:
             return 0

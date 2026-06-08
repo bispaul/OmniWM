@@ -168,7 +168,8 @@ struct GeneralSettingsTab: View {
                 Toggle("Invert Direction (Natural)", isOn: $settings.gestureInvertDirection)
                     .disabled(!settings.scrollGestureEnabled)
 
-                SettingsCaption(settings.gestureInvertDirection ? "Swipe right = scroll right" : "Swipe right = scroll left")
+                SettingsCaption(settings
+                    .gestureInvertDirection ? "Swipe right = scroll right" : "Swipe right = scroll left")
 
                 Picker("Mouse Scroll Modifier", selection: $settings.scrollModifierKey) {
                     ForEach(ScrollModifierKey.allCases, id: \.self) { key in

@@ -137,7 +137,9 @@ final class ResizePlaceholderManager {
         return fallbackToken
     }
 
-    func appearanceForTests(_ token: WindowToken) -> (isOpaque: Bool, backgroundColor: NSColor?, contentBackgroundColor: NSColor?)? {
+    func appearanceForTests(_ token: WindowToken)
+        -> (isOpaque: Bool, backgroundColor: NSColor?, contentBackgroundColor: NSColor?)?
+    {
         windowsByToken[token]?.appearanceForTests()
     }
 

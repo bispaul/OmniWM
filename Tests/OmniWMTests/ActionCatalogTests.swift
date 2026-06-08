@@ -1,5 +1,5 @@
-@testable import OmniWM
 import Carbon
+@testable import OmniWM
 import Testing
 
 @Suite struct ActionCatalogTests {

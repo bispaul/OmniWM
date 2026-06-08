@@ -693,8 +693,10 @@ final class SettingsStore {
 
         quakeTerminalEnabled = export.quakeTerminalEnabled
         quakeTerminalPosition = QuakeTerminalPosition(rawValue: export.quakeTerminalPosition) ?? .center
-        quakeTerminalWidthPercent = QuakeTerminalGeometryPolicy.normalizedDimensionPercent(export.quakeTerminalWidthPercent)
-        quakeTerminalHeightPercent = QuakeTerminalGeometryPolicy.normalizedDimensionPercent(export.quakeTerminalHeightPercent)
+        quakeTerminalWidthPercent = QuakeTerminalGeometryPolicy
+            .normalizedDimensionPercent(export.quakeTerminalWidthPercent)
+        quakeTerminalHeightPercent = QuakeTerminalGeometryPolicy
+            .normalizedDimensionPercent(export.quakeTerminalHeightPercent)
         quakeTerminalAnimationDuration = export.quakeTerminalAnimationDuration
         quakeTerminalAutoHide = export.quakeTerminalAutoHide
         quakeTerminalOpacity = export.quakeTerminalOpacity ?? baseline.quakeTerminalOpacity ?? 1.0
@@ -795,7 +797,11 @@ final class SettingsStore {
     func findConflicts(for trigger: HotkeyTrigger, excluding commandId: String) -> [HotkeyBinding] {
         hotkeyBindings.filter { hotkeyBinding in
             hotkeyBinding.id != commandId &&
-                hotkeyBinding.binding.conflicts(with: trigger, leaderKey: effectiveLeaderKey, hyperTrigger: hyperTrigger)
+                hotkeyBinding.binding.conflicts(
+                    with: trigger,
+                    leaderKey: effectiveLeaderKey,
+                    hyperTrigger: hyperTrigger
+                )
         }
     }
 

@@ -1,5 +1,5 @@
-@testable import OmniWM
 import CoreGraphics
+@testable import OmniWM
 import Testing
 
 @Suite @MainActor struct CommandHandlerTests {

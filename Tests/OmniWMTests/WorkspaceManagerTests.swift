@@ -582,7 +582,6 @@ private func workspaceConfigurations(
         let refreshedEntry = try #require(settings.loadPersistedWindowRestoreCatalog().entries.first)
         #expect(refreshedEntry.restoreIntent.floatingFrame == secondFrame)
     }
-
 }
 
 @Suite struct WorkspaceManagerTests {

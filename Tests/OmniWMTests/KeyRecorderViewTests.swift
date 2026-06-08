@@ -359,5 +359,4 @@ private func makeOtherMouseEvent(type: NSEvent.EventType, buttonNumber: Int64) -
             KeyBinding(keyCode: UInt32(kVK_ANSI_S), modifiers: 0, usesHyper: true)
         ])
     }
-
 }

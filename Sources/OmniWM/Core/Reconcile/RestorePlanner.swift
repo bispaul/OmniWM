@@ -130,7 +130,10 @@ struct RestorePlanner {
         plan.interactionMonitorId = reconciled.interactionMonitorId
         plan.previousInteractionMonitorId = reconciled.previousInteractionMonitorId
 
-        WMLog.workspace.debug("RestorePlanner.planEvent: event=\(String(describing: input.event), privacy: .public) refreshRestoreIntents=\(plan.refreshRestoreIntents, privacy: .public)")
+        WMLog.workspace
+            .debug(
+                "RestorePlanner.planEvent: event=\(String(describing: input.event), privacy: .public) refreshRestoreIntents=\(plan.refreshRestoreIntents, privacy: .public)"
+            )
         return plan
     }
 
@@ -242,7 +245,10 @@ struct RestorePlanner {
             "disconnected_cache=\(plan.disconnectedVisibleWorkspaceCache.count)"
         ]
 
-        WMLog.workspace.info("RestorePlanner.planMonitorConfig: previousMonitors=\(previousMonitorIds.count, privacy: .public) newMonitors=\(newMonitorIds.count, privacy: .public) hasNewMonitor=\(hasNewMonitor, privacy: .public) assignments=\(plan.visibleAssignments.count, privacy: .public)")
+        WMLog.workspace
+            .info(
+                "RestorePlanner.planMonitorConfig: previousMonitors=\(previousMonitorIds.count, privacy: .public) newMonitors=\(newMonitorIds.count, privacy: .public) hasNewMonitor=\(hasNewMonitor, privacy: .public) assignments=\(plan.visibleAssignments.count, privacy: .public)"
+            )
         return plan
     }
 
@@ -258,7 +264,10 @@ struct RestorePlanner {
               let persistedEntry = matches.first,
               let workspaceId = input.workspaceIdForName(persistedEntry.restoreIntent.workspaceName)
         else {
-            WMLog.workspace.debug("RestorePlanner.planPersistedHydration: noMatch token=\(String(describing: input.token), privacy: .public) matchCount=\(matches.count, privacy: .public)")
+            WMLog.workspace
+                .debug(
+                    "RestorePlanner.planPersistedHydration: noMatch token=\(String(describing: input.token), privacy: .public) matchCount=\(matches.count, privacy: .public)"
+                )
             return nil
         }
 
@@ -277,7 +286,10 @@ struct RestorePlanner {
             )
             : nil
 
-        WMLog.workspace.info("RestorePlanner.planPersistedHydration: matched token=\(String(describing: input.token), privacy: .public) targetMode=\(String(describing: targetMode), privacy: .public) workspaceId=\(workspaceId.uuidString, privacy: .public)")
+        WMLog.workspace
+            .info(
+                "RestorePlanner.planPersistedHydration: matched token=\(String(describing: input.token), privacy: .public) targetMode=\(String(describing: targetMode), privacy: .public) workspaceId=\(workspaceId.uuidString, privacy: .public)"
+            )
         return PersistedHydrationPlan(
             persistedEntry: persistedEntry,
             workspaceId: workspaceId,
@@ -341,7 +353,10 @@ struct RestorePlanner {
             )
         }
 
-        WMLog.workspace.debug("RestorePlanner.planFloatingRescue: candidateCount=\(candidates.count, privacy: .public) rescuedCount=\(plan.operations.count, privacy: .public)")
+        WMLog.workspace
+            .debug(
+                "RestorePlanner.planFloatingRescue: candidateCount=\(candidates.count, privacy: .public) rescuedCount=\(plan.operations.count, privacy: .public)"
+            )
         return plan
     }
 

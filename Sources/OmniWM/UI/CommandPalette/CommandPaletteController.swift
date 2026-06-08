@@ -947,7 +947,8 @@ final class CommandPaletteController: NSObject, ObservableObject, NSWindowDelega
                 environment.scheduleClipboardPaste {
                     guard environment.isAccessibilityTrusted(),
                           !environment.isSecureInputActive(),
-                          environment.frontmostApplication()?.processIdentifier == target.focusTarget.app.processIdentifier
+                          environment.frontmostApplication()?.processIdentifier == target.focusTarget.app
+                          .processIdentifier
                     else {
                         return
                     }
