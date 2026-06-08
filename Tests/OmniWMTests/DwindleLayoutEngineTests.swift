@@ -200,6 +200,46 @@ extension DwindleLayoutEngineTests {
         #expect(firstFrame.minX < secondFrame.minX,
                 "First window should be left of second (horizontal split)")
     }
+
+    @Test func verticalSplitNavigationFindsAdjacentWindow() {
+        let engine = DwindleLayoutEngine()
+        let wsId = UUID()
+        let monitorId = Monitor.ID(displayId: 200)
+
+        let firstToken = WindowToken(pid: 1, windowId: 5001)
+        let secondToken = WindowToken(pid: 2, windowId: 5002)
+
+        let portraitScreen = CGRect(x: 0, y: 0, width: 1080, height: 1920)
+
+        engine.addWindow(token: firstToken, to: wsId, activeWindowFrame: nil, monitorId: monitorId)
+        let activeFrame = engine.calculateLayout(for: wsId, screen: portraitScreen)[firstToken]
+        engine.addWindow(token: secondToken, to: wsId, activeWindowFrame: activeFrame, monitorId: monitorId)
+        let frames = engine.calculateLayout(for: wsId, screen: portraitScreen)
+
+        guard let firstFrame = frames[firstToken],
+              let secondFrame = frames[secondToken]
+        else {
+            Issue.record("Expected frames for both windows in vertical split navigation test")
+            return
+        }
+
+        #expect(firstFrame.minY < secondFrame.minY,
+                "First window should have smaller y (vertical split)")
+        #expect(abs(firstFrame.width - secondFrame.width) < 1.0,
+                "Both windows should have same width (vertical split)")
+
+        let upFromFirst = engine.findGeometricNeighbor(
+            from: firstToken, direction: .up, in: wsId
+        )
+        #expect(upFromFirst == secondToken,
+                "UP from first (smaller y) should find second (larger y, adjacent edge)")
+
+        let downFromSecond = engine.findGeometricNeighbor(
+            from: secondToken, direction: .down, in: wsId
+        )
+        #expect(downFromSecond == firstToken,
+                "DOWN from second (larger y) should find first (smaller y, adjacent edge)")
+    }
 }
 
 @Suite struct DwindleLayoutEngineTests {

@@ -136,6 +136,11 @@ import QuartzCore
     func focusNeighbor(direction: Direction) {
         guard let controller else { return }
         withDwindleContext { engine, wsId in
+            engine.refreshCachedFrames(from: liveFrames(in: wsId), in: wsId)
+            if let focusedToken = controller.workspaceManager.focusedToken,
+               let focusedNode = engine.findNode(for: focusedToken) {
+                engine.setSelectedNode(focusedNode, in: wsId)
+            }
             if let token = engine.moveFocus(direction: direction, in: wsId) {
                 _ = controller.workspaceManager.applySessionPatch(
                     .init(
@@ -183,6 +188,14 @@ import QuartzCore
     func swapWindow(direction: Direction) {
         guard let controller else { return }
         withDwindleContext { engine, wsId in
+            let live = liveFrames(in: wsId)
+            engine.refreshCachedFrames(from: live, in: wsId)
+
+            if let focusedToken = controller.workspaceManager.focusedToken,
+               let focusedNode = engine.findNode(for: focusedToken) {
+                engine.setSelectedNode(focusedNode, in: wsId)
+            }
+
             if engine.swapWindows(direction: direction, in: wsId) {
                 controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand, affectedWorkspaceIds: [wsId])
             }
@@ -253,6 +266,17 @@ import QuartzCore
         if let v = outerGapLeft { engine.settings.outerGapLeft = v }
         if let v = outerGapRight { engine.settings.outerGapRight = v }
         controller.layoutRefreshController.requestRelayout(reason: .layoutConfigChanged)
+    }
+
+    private func liveFrames(in workspaceId: WorkspaceDescriptor.ID) -> [WindowToken: CGRect] {
+        guard let controller else { return [:] }
+        var frames: [WindowToken: CGRect] = [:]
+        for entry in controller.workspaceManager.tiledEntries(in: workspaceId) {
+            if let frame = AXWindowService.framePreferFast(entry.axRef) {
+                frames[entry.token] = frame
+            }
+        }
+        return frames
     }
 
     func withDwindleContext(

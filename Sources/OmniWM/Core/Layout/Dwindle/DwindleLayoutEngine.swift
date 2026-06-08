@@ -759,6 +759,20 @@ final class DwindleLayoutEngine {
         )
     }
 
+    func refreshCachedFrames(from liveFrames: [WindowToken: CGRect], in workspaceId: WorkspaceDescriptor.ID) {
+        guard let root = roots[workspaceId] else { return }
+        refreshCachedFramesRecursive(node: root, liveFrames: liveFrames)
+    }
+
+    private func refreshCachedFramesRecursive(node: DwindleNode, liveFrames: [WindowToken: CGRect]) {
+        if case let .leaf(handle, _) = node.kind, let handle, let liveFrame = liveFrames[handle] {
+            node.cachedFrame = liveFrame
+        }
+        for child in node.children {
+            refreshCachedFramesRecursive(node: child, liveFrames: liveFrames)
+        }
+    }
+
     func findGeometricNeighbor(
         from handle: WindowToken,
         direction: Direction,
