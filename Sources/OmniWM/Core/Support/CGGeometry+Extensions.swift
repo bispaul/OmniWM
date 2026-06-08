@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import os
 
 extension CGPoint {
     func flipY(maxY: CGFloat) -> CGPoint {
@@ -64,9 +65,13 @@ enum ScreenCoordinateSpace {
         }
     }
 
-    private nonisolated(unsafe) static var cachedTransforms: [ScreenTransform]?
-    private nonisolated(unsafe) static var cachedGlobalFrame: CGRect?
-    private nonisolated(unsafe) static var screenConfigurationToken: Int = 0
+    private static let cache = OSAllocatedUnfairLock(
+        initialState: (
+            transforms: [ScreenTransform]?.none,
+            globalFrame: CGRect?.none,
+            configToken: 0
+        )
+    )
 
     private static func currentToken() -> Int {
         var hasher = Hasher()
@@ -83,41 +88,45 @@ enum ScreenCoordinateSpace {
 
     private static func transforms() -> [ScreenTransform] {
         let token = currentToken()
-        if let cached = cachedTransforms, token == screenConfigurationToken {
-            return cached
-        }
+        return cache.withLock { state in
+            if let cached = state.transforms, token == state.configToken {
+                return cached
+            }
 
-        let transforms = NSScreen.screens.compactMap { screen -> ScreenTransform? in
-            guard let displayId = screen.displayId else { return nil }
-            let quartzFrame = CGDisplayBounds(displayId)
-            let appKitFrame = screen.frame
-            let scaleX = quartzFrame.width / max(1.0, appKitFrame.width)
-            let scaleY = quartzFrame.height / max(1.0, appKitFrame.height)
-            return ScreenTransform(
-                appKitFrame: appKitFrame,
-                quartzFrame: quartzFrame,
-                scaleX: scaleX,
-                scaleY: scaleY
-            )
-        }
+            let transforms = NSScreen.screens.compactMap { screen -> ScreenTransform? in
+                guard let displayId = screen.displayId else { return nil }
+                let quartzFrame = CGDisplayBounds(displayId)
+                let appKitFrame = screen.frame
+                let scaleX = quartzFrame.width / max(1.0, appKitFrame.width)
+                let scaleY = quartzFrame.height / max(1.0, appKitFrame.height)
+                return ScreenTransform(
+                    appKitFrame: appKitFrame,
+                    quartzFrame: quartzFrame,
+                    scaleX: scaleX,
+                    scaleY: scaleY
+                )
+            }
 
-        cachedTransforms = transforms
-        cachedGlobalFrame = nil
-        screenConfigurationToken = token
-        return transforms
+            state.transforms = transforms
+            state.globalFrame = nil
+            state.configToken = token
+            return transforms
+        }
     }
 
     static var globalFrame: CGRect {
         let token = currentToken()
-        if let cached = cachedGlobalFrame, token == screenConfigurationToken {
-            return cached
+        return cache.withLock { state in
+            if let cached = state.globalFrame, token == state.configToken {
+                return cached
+            }
+            let frame = NSScreen.screens.reduce(into: CGRect.null) { result, screen in
+                result = result.union(screen.frame)
+            }
+            state.globalFrame = frame
+            state.configToken = token
+            return frame
         }
-        let frame = NSScreen.screens.reduce(into: CGRect.null) { result, screen in
-            result = result.union(screen.frame)
-        }
-        cachedGlobalFrame = frame
-        screenConfigurationToken = token
-        return frame
     }
 
     private static func transformForQuartz(point: CGPoint) -> ScreenTransform? {

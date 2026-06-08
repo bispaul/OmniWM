@@ -16,6 +16,7 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
     private(set) var window: QuakeTerminalWindow?
     private var ghosttyApp: ghostty_app_t?
     private var ghosttyConfig: ghostty_config_t?
+    private var retainedSelfForCallbacks: UnsafeMutableRawPointer?
 
     private var tabs: [QuakeTerminalTab] = []
     private var activeTabIndex: Int = 0
@@ -101,7 +102,9 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         ghosttyConfig = config
 
         var runtimeConfig = ghostty_runtime_config_s()
-        runtimeConfig.userdata = Unmanaged.passUnretained(self).toOpaque()
+        let retainedSelf = Unmanaged.passRetained(self).toOpaque()
+        retainedSelfForCallbacks = retainedSelf
+        runtimeConfig.userdata = retainedSelf
         runtimeConfig.supports_selection_clipboard = true
         runtimeConfig.wakeup_cb = { userdata in
             guard let userdata else { return }
@@ -172,6 +175,12 @@ final class QuakeTerminalController: NSObject, NSWindowDelegate, QuakeTerminalTa
         if let ghosttyApp {
             ghostty_app_free(ghosttyApp)
             self.ghosttyApp = nil
+        }
+
+        // Balance the passRetained from initialization
+        if let retainedSelf = retainedSelfForCallbacks {
+            _ = Unmanaged<QuakeTerminalController>.fromOpaque(retainedSelf).takeRetainedValue()
+            retainedSelfForCallbacks = nil
         }
         if let ghosttyConfig {
             ghostty_config_free(ghosttyConfig)

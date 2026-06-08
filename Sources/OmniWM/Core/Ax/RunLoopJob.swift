@@ -1,9 +1,14 @@
 import Foundation
+import os
 import Synchronization
 
 final class RunLoopJob: Sendable {
     private let _cancelled = Atomic<Bool>(false)
-    nonisolated(unsafe) weak var action: RunLoopAction?
+    private let _action = OSAllocatedUnfairLock<RunLoopAction?>(initialState: nil)
+    var action: RunLoopAction? {
+        get { _action.withLock { $0 } }
+        set { _action.withLock { $0 = newValue } }
+    }
 
     var isCancelled: Bool {
         _cancelled.load(ordering: .acquiring)
