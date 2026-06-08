@@ -687,7 +687,10 @@ final class DwindleLayoutEngine {
     }
 
     private func singleWindowRect(screen: CGRect) -> CGRect {
-        let targetRatio = settings.singleWindowAspectRatio.width / settings.singleWindowAspectRatio.height
+        guard screen.width >= 1, screen.height >= 1 else { return screen }
+        let aspectHeight = max(settings.singleWindowAspectRatio.height, 1)
+        let targetRatio = settings.singleWindowAspectRatio.width / aspectHeight
+        guard targetRatio.isFinite, targetRatio > 0 else { return screen }
         let currentRatio = screen.width / screen.height
 
         if abs(targetRatio - currentRatio) < settings.singleWindowAspectRatioTolerance {
