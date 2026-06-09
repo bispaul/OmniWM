@@ -73,6 +73,7 @@ private func makeAXEventTestController(
         controller.axEventHandler.bundleIdProvider = { _ in trackedBundleId }
     }
     controller.workspaceManager.applyMonitorConfigurationChange([makeAXEventTestMonitor()])
+    controller.windowLifecycleCoordinator = WindowLifecycleCoordinator(controller: controller)
     return controller
 }
 

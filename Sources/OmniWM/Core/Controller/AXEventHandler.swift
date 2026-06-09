@@ -298,8 +298,6 @@ final class AXEventHandler: CGSEventDelegate {
     private var pendingManagedReplacementTasks: [ManagedReplacementKey: Task<Void, Never>] = [:]
     private var pendingNativeFullscreenFollowupTasks: [WindowToken: Task<Void, Never>] = [:]
     private var pendingNativeFullscreenStaleCleanupTasks: [WindowToken: Task<Void, Never>] = [:]
-    private var pendingWindowRuleReevaluationTask: Task<Void, Never>?
-    private var pendingWindowRuleReevaluationTargets: Set<WindowRuleReevaluationTarget> = []
     private var pendingWindowStabilizationTasks: [WindowToken: Task<Void, Never>] = [:]
     private var stabilizationRetryCount: [WindowToken: Int] = [:]
     private var pendingPostCreateLifecycleVerificationTasks: [WindowToken: Task<Void, Never>] = [:]
@@ -346,9 +344,7 @@ final class AXEventHandler: CGSEventDelegate {
         resetPostCreateLifecycleVerificationState()
         resetCreatedWindowRetryState()
         resetActivationRetryState()
-        pendingWindowRuleReevaluationTask?.cancel()
-        pendingWindowRuleReevaluationTask = nil
-        pendingWindowRuleReevaluationTargets.removeAll()
+        controller?.windowLifecycleCoordinator?.cancelPending()
         CGSEventObserver.shared.delegate = nil
         CGSEventObserver.shared.stop()
     }
@@ -377,30 +373,11 @@ final class AXEventHandler: CGSEventDelegate {
             controller.requestWorkspaceBarRefresh()
             if let token = resolveWindowToken(windowId) ?? resolveTrackedToken(windowId) {
                 updateManagedReplacementTitle(windowId: windowId, token: token)
-                controller.windowLifecycleCoordinator?.scheduleReevaluation(targets: [.window(token)], trigger: .titleChange)
+                controller.windowLifecycleCoordinator?.scheduleReevaluation(
+                    targets: [.window(token)],
+                    trigger: .titleChange
+                )
             }
-        }
-    }
-
-    private func scheduleWindowRuleReevaluationIfNeeded(
-        targets: Set<WindowRuleReevaluationTarget>,
-        trigger: ReevaluationTrigger
-    ) {
-        guard let controller,
-              controller.windowRuleEngine.needsWindowReevaluation,
-              !targets.isEmpty
-        else {
-            return
-        }
-
-        pendingWindowRuleReevaluationTargets.formUnion(targets)
-        pendingWindowRuleReevaluationTask?.cancel()
-        pendingWindowRuleReevaluationTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(for: .milliseconds(25))
-            guard let self, let controller = self.controller else { return }
-            let targets = self.pendingWindowRuleReevaluationTargets
-            self.pendingWindowRuleReevaluationTargets.removeAll()
-            _ = await controller.reevaluateWindowRules(for: targets)
         }
     }
 
@@ -494,9 +471,7 @@ final class AXEventHandler: CGSEventDelegate {
         controller?.focusBridge.reset()
         createFocusTrace.removeAll(keepingCapacity: true)
         managedReplacementTrace.removeAll(keepingCapacity: true)
-        pendingWindowRuleReevaluationTask?.cancel()
-        pendingWindowRuleReevaluationTask = nil
-        pendingWindowRuleReevaluationTargets.removeAll()
+        controller?.windowLifecycleCoordinator?.cancelPending()
     }
 
     func probeFocusedWindowAfterFronting(
@@ -986,7 +961,10 @@ final class AXEventHandler: CGSEventDelegate {
             reason: .axWindowCreated,
             affectedWorkspaceIds: [trackedEntry.workspaceId]
         )
-        controller.windowLifecycleCoordinator?.scheduleReevaluation(targets: [.pid(trackedEntry.pid)], trigger: .creation)
+        controller.windowLifecycleCoordinator?.scheduleReevaluation(
+            targets: [.pid(trackedEntry.pid)],
+            trigger: .creation
+        )
     }
 
     private func shouldApplyFloatingCreateFrameImmediately(
@@ -1205,7 +1183,7 @@ final class AXEventHandler: CGSEventDelegate {
                 shouldRecoverFocus: shouldRecoverFocus
             )
         }
-        scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(token.pid)], trigger: .removal)
+        controller.windowLifecycleCoordinator?.scheduleReevaluation(targets: [.pid(token.pid)], trigger: .removal)
     }
 
     func handleAppActivation(
