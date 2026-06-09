@@ -1,0 +1,63 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "About to edit a file in OmniWM/Hiro. If this is a Swift source file (.swift), check gates IN ORDER:\n\n## GATE 0 — Bug Reproduction (BLOCKING for bug fixes):\nIf this is a BUG FIX: was the bug REPRODUCED on the running binary with IPC + log evidence? Memorygraph descriptions are NOT reproduction.\nIf NOT reproduced: return ok=false reason='Bug not reproduced — Gate 0 required'\n\n## GATE 1 — Context Loaded:\n1. Serena: activate_project + read_memory mem:core, mem:controller, mem:task_completion, mem:conventions?\n2. AGENTS.md: gh pr diff 320 read for this subsystem?\n3. Memorygraph: relevant IDs loaded via get_memory?\n4. Graphify: graphify explain/path/affected on affected symbols?\n5. Upstream: git show upstream/main:<path> compared?\n6. Upstream Graphify (~/.graphify/repos/BarutSRB/Hiro) compared?\n\n## GATE 2 — Skills INVOKED (not just 'done mentally'):\n7. superpowers:brainstorming — Skill tool called?\n8. superpowers:systematic-debugging — for bugs, Skill tool called?\n9. superpowers:test-driven-development — Skill tool called, failing test written FIRST?\n10. Devil's advocate via sequentialthinking MCP?\n11. Expert subagents (architect/debugger/reviewer) dispatched?\n\n## GATE 3 — Holistic:\n12. Related bugs mapped together?\n13. Phase 1-5 + Fix A/B/C/D/E alignment checked?\n14. Architecture smell check: god node coupling, SSOT, purity violations?\n15. Niri column model understood? (scrolling, not expanding)\n\nGate 0 blocks 1-3. Return ok=false listing missed gates.\n\nTool input: $ARGUMENTS",
+            "statusMessage": "Gate check: reproduction → context → skills → holistic..."
+          }
+        ]
+      },
+      {
+        "matcher": "TaskUpdate",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Task update in OmniWM/Hiro. If status='completed', verify ALL:\n\n## Evidence:\n1. Test counts with specific numbers + exit codes\n2. make verify output\n3. Runtime: binary launched, IPC ping, 30s log stream with counts\n\n## Skills INVOKED (Skill tool called, not just done mentally):\n4. superpowers:verification-before-completion — WAS IT INVOKED?\n5. coderabbit:code-review — WAS IT RUN on the diff?\n6. Expert subagents dispatched for review?\n\n## Review:\n7. Graphify updated + coupling regression check?\n8. Architecture smell check on the diff?\n9. Upstream comparison done?\n\n## Persistence (ALL 9 systems updated in ONE pass):\n10. CLAUDE.md updated?\n11. Serena memories updated?\n12. Memorygraph entry stored + relationships linked?\n13. Memory MCP entities/observations updated?\n14. Dotfiles MEMORY.md index updated?\n15. Dotfiles evaluation + next-session updated?\n16. Graphify rebuilt?\n17. Hooks updated if needed?\n18. CodeRabbit findings addressed?\n\n## Safety:\n19. If layout changes: clean workspace test FIRST?\n20. Clean restart: kill → rebuild → launch → IPC → 30s logs?\n\nReturn ok=false if ANY gate missed. Not 'completed' → ok=true.\n\nTool input: $ARGUMENTS",
+            "statusMessage": "Completion check: evidence + skills + review + persistence + safety..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "if": "Bash(pkill*OmniWM*)",
+            "prompt": "About to kill running OmniWM/Hiro binary (user's live desktop).\n\nVerify:\n1. swift build -c debug completed successfully\n2. swift test --filter <relevant> passed with specific count\n3. make format-check + make lint clean\n4. CodeRabbit review run on the diff BEFORE deploying\n5. If LAYOUT fix (cachedWidth, size, viewport, normalizeColumnSizes): tested on CLEAN workspace first? Stale state persists across restarts.\n\nIf layout fix without clean workspace test: return ok=false.\n\nTool input: $ARGUMENTS",
+            "statusMessage": "Deployment safety check..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "if": "Bash(git commit*)",
+            "prompt": "Git commit made in OmniWM/Hiro. Post-commit checklist:\n\n## Pre-commit gates (should have been done BEFORE):\n1. make format-check passed?\n2. make lint passed?\n3. swift test --filter passed with count?\n4. CodeRabbit review (coderabbit:code-review skill) run on diff BEFORE commit?\n5. Graphify updated + coupling check?\n\n## Skills that should have been invoked:\n6. superpowers:test-driven-development invoked?\n7. superpowers:verification-before-completion invoked?\n8. Expert subagents for review?\n\n## Architecture:\n9. Phase 1-5 + Fix A/B/C/D/E alignment verified?\n10. Architecture smell check (god node coupling, SSOT, purity)?\n11. Holistic: related bugs/changes mapped together?\n\n## Persistence (update ALL 9 systems NOW if not done):\n12. CLAUDE.md, Serena, Memorygraph, Memory MCP, MEMORY.md, evaluation, next-session, Graphify, hooks\n\n## Runtime:\n13. Binary needs rebuild + deploy + IPC ping + 30s logs?\n\nReturn ok=true (advisory — commit already happened, fix gaps before pushing).\n\nTool output: $ARGUMENTS",
+            "continueOnBlock": true,
+            "statusMessage": "Post-commit: quality + skills + architecture + persistence..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "prompt",
+            "if": "Edit|Write(*.swift)",
+            "prompt": "Swift file modified. Check:\n1. If source (not test): was superpowers:test-driven-development SKILL invoked (not just tests written)? Was a failing test written FIRST?\n2. If layout engine (NiriLayout, NiriNode, ViewportState, ColumnOps): Niri scrolling model understood? normalizeColumnSizes is dead code.\n3. Was CodeRabbit already run or will it run before commit?\n4. Reminder: swift test --filter + make format-check before committing.\n\nReturn ok=true (advisory).",
+            "continueOnBlock": true,
+            "statusMessage": "Post-edit: TDD + model + review reminder..."
+          }
+        ]
+      }
+    ]
+  }
+}
