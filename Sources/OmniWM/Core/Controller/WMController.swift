@@ -2074,13 +2074,17 @@ final class WMController {
             ?? AXWindowService.axWindowRef(for: UInt32(token.windowId), pid: token.pid)
     }
 
-    @discardableResult
-    func reevaluateWindowRules(
-        for targets: Set<WindowRuleReevaluationTarget>,
-        context: WindowRuleReevaluationContext = .automatic
-    ) async -> WindowRuleReevaluationOutcome {
-        guard !targets.isEmpty else { return .none }
+    // MARK: - Window Rule Reevaluation
 
+    private struct ResolvedReevaluationTargets {
+        let tokensToReevaluate: Set<WindowToken>
+        let liveWindowsByToken: [WindowToken: AXWindowRef]
+        let resolvedAnyTarget: Bool
+    }
+
+    private func resolveReevaluationTargets(
+        _ targets: Set<WindowRuleReevaluationTarget>
+    ) async -> ResolvedReevaluationTargets {
         var liveWindowsByToken: [WindowToken: AXWindowRef] = [:]
         var tokensToReevaluate: Set<WindowToken> = []
         var pidTargets: Set<pid_t> = []
@@ -2132,19 +2136,24 @@ final class WMController {
             }
         }
 
-        guard !tokensToReevaluate.isEmpty else {
-            return WindowRuleReevaluationOutcome(
-                resolvedAnyTarget: resolvedAnyTarget,
-                evaluatedAnyWindow: false,
-                relayoutNeeded: false
-            )
-        }
+        return ResolvedReevaluationTargets(
+            tokensToReevaluate: tokensToReevaluate,
+            liveWindowsByToken: liveWindowsByToken,
+            resolvedAnyTarget: resolvedAnyTarget
+        )
+    }
 
+    private func evaluateAndApplyDispositions(
+        tokens: Set<WindowToken>,
+        liveWindowsByToken: [WindowToken: AXWindowRef],
+        resolvedAnyTarget: Bool,
+        context: WindowRuleReevaluationContext
+    ) -> WindowRuleReevaluationOutcome {
         var relayoutNeeded = false
         var evaluatedAnyWindow = false
         var affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
 
-        for token in tokensToReevaluate.sorted(by: {
+        for token in tokens.sorted(by: {
             if $0.pid == $1.pid {
                 return $0.windowId < $1.windowId
             }
@@ -2294,6 +2303,28 @@ final class WMController {
             resolvedAnyTarget: resolvedAnyTarget,
             evaluatedAnyWindow: evaluatedAnyWindow,
             relayoutNeeded: relayoutNeeded
+        )
+    }
+
+    @discardableResult
+    func reevaluateWindowRules(
+        for targets: Set<WindowRuleReevaluationTarget>,
+        context: WindowRuleReevaluationContext = .automatic
+    ) async -> WindowRuleReevaluationOutcome {
+        guard !targets.isEmpty else { return .none }
+        let resolved = await resolveReevaluationTargets(targets)
+        guard !resolved.tokensToReevaluate.isEmpty else {
+            return WindowRuleReevaluationOutcome(
+                resolvedAnyTarget: resolved.resolvedAnyTarget,
+                evaluatedAnyWindow: false,
+                relayoutNeeded: false
+            )
+        }
+        return evaluateAndApplyDispositions(
+            tokens: resolved.tokensToReevaluate,
+            liveWindowsByToken: resolved.liveWindowsByToken,
+            resolvedAnyTarget: resolved.resolvedAnyTarget,
+            context: context
         )
     }
 

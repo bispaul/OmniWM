@@ -159,7 +159,16 @@ Niri architecture is cleaner than Dwindle (external ViewportState, parameterized
 Fix D (viewport scoping) needs runtime evidence from bug reproduction before implementation.
 Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` + memorygraph `bafc9b77`.
 
-### Bug Status (build 86, 2026-06-09)
+### God Node Remediation (expert panel validated, 2026-06-09)
+5 prioritized extractions. Plan: `.claude/plans/eager-moseying-matsumoto.md`. Memorygraph `595714f5`.
+1. **reevaluateWindowRules decomposition** (WMController, private methods, LOW risk) — bug #19 positional fix
+2. **RefreshQueueManager** (LRC, ~400 lines, LOW risk) — 25-case merge matrix, 0 test coverage
+3. **DisplayLinkManager** (LRC, ~250 lines, MEDIUM risk) — bug #15 animation scoping
+4. **ManagedReplacementCorrelator** (AXEventHandler, ~700 lines, MEDIUM-HIGH risk) — 20% reduction
+5. **RefreshMergeMatrixTests** (test-only, ~300 lines) — Fix D safety net
+**Not touched:** WorkspaceManager (all LOW), WMController forwarding (stable API), ForTests providers, LRC buildFullRefreshExecutionPlan.
+
+### Bug Status (build 87, 2026-06-09)
 - **Bug #7** (column gap after moveToWorkspace): OPEN — cannot reproduce. Phase 3 pipeline handles viewport shift (diagnostic proof). normalizeColumnSizes is dead code (0 callers). Memorygraph `340b4ffd`.
 - **Bug #6/22** (Chrome verificationMismatch retry loop): OPEN — cannot reproduce in normal operation. 0 mismatches in 42 frame writes (30min sample). Original 13-retry loop was amplified by bug #19 re-admission storm (now fixed). Wake-only: 4 events in 15s, self-resolving. Expert panel design ready if resurfaces. Memorygraph `e4ad0d6b`.
 - **Bug #19** (Chrome re-admission storm): FIXED (build 85). 0 .pid reevaluation triggers in 8h. Was the amplifier for bugs #6/#7.
