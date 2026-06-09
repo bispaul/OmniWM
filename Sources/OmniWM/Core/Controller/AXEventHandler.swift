@@ -986,7 +986,7 @@ final class AXEventHandler: CGSEventDelegate {
             reason: .axWindowCreated,
             affectedWorkspaceIds: [trackedEntry.workspaceId]
         )
-        scheduleWindowRuleReevaluationIfNeeded(targets: [.pid(trackedEntry.pid)], trigger: .creation)
+        controller.windowLifecycleCoordinator?.scheduleReevaluation(targets: [.pid(trackedEntry.pid)], trigger: .creation)
     }
 
     private func shouldApplyFloatingCreateFrameImmediately(
