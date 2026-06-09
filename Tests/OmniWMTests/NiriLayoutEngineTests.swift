@@ -6456,12 +6456,12 @@ private func makeCenteredCrossMonitorFixture(
         }
     }
 
-    @Test func structuralMoveDoesNotNormalizeColumnWidths() {
+    @Test func structuralMovePreservesColumnWidths() {
         let engine = NiriLayoutEngine()
         let wsId = UUID()
 
-        _ = engine.addWindow(handle: makeTestHandle(pid: 1), to: wsId, afterSelection: nil)
-        _ = engine.addWindow(handle: makeTestHandle(pid: 2), to: wsId, afterSelection: nil)
+        let w1 = engine.addWindow(handle: makeTestHandle(pid: 1), to: wsId, afterSelection: nil)
+        let w2 = engine.addWindow(handle: makeTestHandle(pid: 2), to: wsId, afterSelection: nil)
         _ = engine.addWindow(handle: makeTestHandle(pid: 3), to: wsId, afterSelection: nil)
 
         let cols = engine.columns(in: wsId)
@@ -6469,9 +6469,23 @@ private func makeCenteredCrossMonitorFixture(
         cols[1].size = 0.3
         cols[2].size = 0.2
 
-        #expect(cols[0].size == 0.5)
-        #expect(cols[1].size == 0.3)
-        #expect(cols[2].size == 0.2)
+        var state = ViewportState()
+        state.activeColumnIndex = 1
+        state.selectedNodeId = w2.id
+
+        let targetColumn = cols[0]
+        _ = engine.consumeWindowIntoColumn(
+            focusedColumn: targetColumn,
+            in: wsId,
+            motion: MotionSnapshot(animationsEnabled: false),
+            state: &state,
+            gaps: 8
+        )
+
+        let colsAfter = engine.columns(in: wsId)
+        #expect(colsAfter.count == 2)
+        #expect(colsAfter[0].size == 0.5, "Structural move should preserve column size")
+        #expect(colsAfter[1].size == 0.2, "Uninvolved column should keep its size")
     }
 
     @Test func neighboringRightMonitorKeepsPartiallyRevealedColumnHiddenUntilFullyContained() {

@@ -241,6 +241,7 @@ extension NiriLayoutEngine {
         }
 
         let totalSize = cols.reduce(CGFloat(0)) { $0 + $1.size }
+        guard totalSize > 0 else { return }
         let avgSize = totalSize / CGFloat(cols.count)
 
         for col in cols {
