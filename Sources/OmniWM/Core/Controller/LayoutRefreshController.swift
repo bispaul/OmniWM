@@ -3,7 +3,7 @@ import Foundation
 import os
 import QuartzCore
 
-@MainActor final class LayoutRefreshController: NSObject {
+@MainActor final class LayoutRefreshController {
     typealias PostLayoutAction = @MainActor () -> Void
 
     enum RefreshRoute: Equatable {
@@ -102,6 +102,7 @@ import QuartzCore
 
     weak var controller: WMController?
     private(set) var queueManager: RefreshQueueManager!
+    private(set) var displayLinkManager: DisplayLinkManager!
     static let hiddenWindowEdgeRevealEpsilon: CGFloat = 1.0
     private static let delayedRevealVerificationDelay: Duration = .milliseconds(50)
 
@@ -168,11 +169,8 @@ import QuartzCore
         var isImmediateLayoutInProgress: Bool = false
         var isIncrementalRefreshInProgress: Bool = false
         var isFullEnumerationInProgress: Bool = false
-        var displayLinksByDisplay: [CGDirectDisplayID: CADisplayLink] = [:]
-        var refreshRateByDisplay: [CGDirectDisplayID: Double] = [:]
         var closingAnimationsByDisplay: [CGDirectDisplayID: [Int: ClosingAnimation]] = [:]
         var dirtyWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
-        var screenChangeObserver: NSObjectProtocol?
         var hasCompletedInitialRefresh: Bool = false
         var didExecuteRefreshExecutionPlan: Bool = false
     }
@@ -201,7 +199,6 @@ import QuartzCore
 
     init(controller: WMController) {
         self.controller = controller
-        super.init()
         queueManager = RefreshQueueManager(
             executor: { [weak self] refresh in
                 guard let self else { return false }
@@ -211,44 +208,16 @@ import QuartzCore
                 self?.finishRefresh(refresh, didComplete: completed)
             }
         )
+        displayLinkManager = DisplayLinkManager()
+        displayLinkManager.delegate = self
     }
 
     func setup() {
-        detectRefreshRates()
-        layoutState.screenChangeObserver = NotificationCenter.default.addObserver(
-            forName: NSApplication.didChangeScreenParametersNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.handleScreenParametersChanged()
-            }
-        }
-    }
-
-    private func getOrCreateDisplayLink(for displayId: CGDirectDisplayID) -> CADisplayLink? {
-        if let existing = layoutState.displayLinksByDisplay[displayId] {
-            return existing
-        }
-
-        guard let screen = NSScreen.screens.first(where: { $0.displayId == displayId }) else {
-            return nil
-        }
-        WMLog.layout.debug("Display link created")
-        let link = screen.displayLink(target: self, selector: #selector(displayLinkFired(_:)))
-        layoutState.displayLinksByDisplay[displayId] = link
-        return link
-    }
-
-    private func handleScreenParametersChanged() {
-        detectRefreshRates()
+        displayLinkManager.setup()
     }
 
     func cleanupForMonitorDisconnect(displayId: CGDirectDisplayID, migrateAnimations: Bool) {
-        if let link = layoutState.displayLinksByDisplay.removeValue(forKey: displayId) {
-            WMLog.layout.debug("Display link invalidated")
-            link.invalidate()
-        }
+        displayLinkManager.removeDisplayLink(for: displayId)
 
         layoutState.closingAnimationsByDisplay.removeValue(forKey: displayId)
 
@@ -260,29 +229,6 @@ import QuartzCore
             niriHandler.scrollAnimationByDisplay.removeValue(forKey: displayId)
         }
         dwindleHandler.dwindleAnimationByDisplay.removeValue(forKey: displayId)
-    }
-
-    private func detectRefreshRates() {
-        layoutState.refreshRateByDisplay.removeAll()
-        for screen in NSScreen.screens {
-            guard let displayId = screen.displayId else { continue }
-            if let mode = CGDisplayCopyDisplayMode(displayId) {
-                let rate = mode.refreshRate > 0 ? mode.refreshRate : 60.0
-                layoutState.refreshRateByDisplay[displayId] = rate
-            } else {
-                layoutState.refreshRateByDisplay[displayId] = 60.0
-            }
-        }
-    }
-
-    @objc private func displayLinkFired(_ displayLink: CADisplayLink) {
-        guard let displayId = layoutState.displayLinksByDisplay.first(where: { $0.value === displayLink })?.key
-        else { return }
-
-        niriHandler.tickScrollAnimation(targetTime: displayLink.targetTimestamp, displayId: displayId)
-        dwindleHandler.tickDwindleAnimation(targetTime: displayLink.targetTimestamp, displayId: displayId)
-        tickClosingAnimations(targetTime: displayLink.targetTimestamp, displayId: displayId)
-        drainDirtyWorkspaces(displayId: displayId)
     }
 
     private func drainDirtyWorkspaces(displayId: CGDirectDisplayID) {
@@ -297,7 +243,7 @@ import QuartzCore
                 affectedWorkspaceIds: drained
             )
         )
-        stopDisplayLinkIfIdle(for: displayId)
+        displayLinkManager.stopDisplayLinkIfIdle(for: displayId)
     }
 
     func startScrollAnimation(for workspaceId: WorkspaceDescriptor.ID) {
@@ -312,7 +258,7 @@ import QuartzCore
             return
         }
 
-        guard let displayLink = getOrCreateDisplayLink(for: targetDisplayId) else { return }
+        guard let displayLink = displayLinkManager.getOrCreateDisplayLink(for: targetDisplayId) else { return }
         guard niriHandler.registerScrollAnimation(workspaceId, on: targetDisplayId) else {
             return
         }
@@ -321,14 +267,14 @@ import QuartzCore
 
     func stopScrollAnimation(for displayId: CGDirectDisplayID) {
         niriHandler.scrollAnimationByDisplay.removeValue(forKey: displayId)
-        stopDisplayLinkIfIdle(for: displayId)
+        displayLinkManager.stopDisplayLinkIfIdle(for: displayId)
     }
 
     func stopAllScrollAnimations() {
         let displayIds = Array(niriHandler.scrollAnimationByDisplay.keys)
         niriHandler.scrollAnimationByDisplay.removeAll()
         for displayId in displayIds {
-            stopDisplayLinkIfIdle(for: displayId)
+            displayLinkManager.stopDisplayLinkIfIdle(for: displayId)
         }
     }
 
@@ -339,7 +285,7 @@ import QuartzCore
         guard dwindleHandler.registerDwindleAnimation(workspaceId, monitor: monitor, on: targetDisplayId)
         else { return }
 
-        if let displayLink = getOrCreateDisplayLink(for: targetDisplayId) {
+        if let displayLink = displayLinkManager.getOrCreateDisplayLink(for: targetDisplayId) {
             displayLink.add(to: .main, forMode: .common)
         }
     }
@@ -354,7 +300,7 @@ import QuartzCore
         let displacement = CGPoint(x: 0, y: -closeOffset)
 
         let now = CACurrentMediaTime()
-        let refreshRate = layoutState.refreshRateByDisplay[monitor.displayId] ?? 60.0
+        let refreshRate = displayLinkManager.refreshRate(for: monitor.displayId)
         let animation = SpringAnimation(
             from: 0,
             to: 1,
@@ -374,39 +320,26 @@ import QuartzCore
         )
         layoutState.closingAnimationsByDisplay[monitor.displayId] = animations
 
-        if let displayLink = getOrCreateDisplayLink(for: monitor.displayId) {
+        if let displayLink = displayLinkManager.getOrCreateDisplayLink(for: monitor.displayId) {
             displayLink.add(to: .main, forMode: .common)
         }
     }
 
     func stopDwindleAnimation(for displayId: CGDirectDisplayID) {
         dwindleHandler.dwindleAnimationByDisplay.removeValue(forKey: displayId)
-        stopDisplayLinkIfIdle(for: displayId)
+        displayLinkManager.stopDisplayLinkIfIdle(for: displayId)
     }
 
     func stopAllDwindleAnimations() {
         let displayIds = Array(dwindleHandler.dwindleAnimationByDisplay.keys)
         dwindleHandler.dwindleAnimationByDisplay.removeAll()
         for displayId in displayIds {
-            stopDisplayLinkIfIdle(for: displayId)
+            displayLinkManager.stopDisplayLinkIfIdle(for: displayId)
         }
     }
 
     func hasDwindleAnimationRunning(in workspaceId: WorkspaceDescriptor.ID) -> Bool {
         dwindleHandler.hasDwindleAnimationRunning(in: workspaceId)
-    }
-
-    private func stopDisplayLinkIfIdle(for displayId: CGDirectDisplayID) {
-        if niriHandler.scrollAnimationByDisplay[displayId] == nil,
-           dwindleHandler.dwindleAnimationByDisplay[displayId] == nil,
-           layoutState.closingAnimationsByDisplay[displayId].map({ $0.isEmpty }) ?? true,
-           layoutState.dirtyWorkspaceIds.isEmpty
-        {
-            // Idle display links must not remain cached after teardown.
-            if let link = layoutState.displayLinksByDisplay.removeValue(forKey: displayId) {
-                link.invalidate()
-            }
-        }
     }
 
     private func tickClosingAnimations(targetTime: CFTimeInterval, displayId: CGDirectDisplayID) {
@@ -434,7 +367,7 @@ import QuartzCore
 
         if remaining.isEmpty {
             layoutState.closingAnimationsByDisplay.removeValue(forKey: displayId)
-            stopDisplayLinkIfIdle(for: displayId)
+            displayLinkManager.stopDisplayLinkIfIdle(for: displayId)
         } else {
             layoutState.closingAnimationsByDisplay[displayId] = remaining
         }
@@ -775,7 +708,7 @@ import QuartzCore
         } else {
             return
         }
-        guard let displayLink = getOrCreateDisplayLink(for: targetDisplayId) else { return }
+        guard let displayLink = displayLinkManager.getOrCreateDisplayLink(for: targetDisplayId) else { return }
         displayLink.add(to: .main, forMode: .common)
     }
 
@@ -992,8 +925,7 @@ import QuartzCore
     }
 
     func drainDirtyWorkspacesForTests() {
-        guard let displayId = layoutState.displayLinksByDisplay.keys.first
-            ?? NSScreen.main?.displayId
+        guard let displayId = displayLinkManager.anyActiveDisplayId
         else { return }
         drainDirtyWorkspaces(displayId: displayId)
     }
@@ -1029,10 +961,7 @@ import QuartzCore
         nativeFullscreenRestoredFrameApplyTokens.removeAll()
         pendingResizePlaceholderFallbackEvidenceByToken.removeAll()
 
-        for (_, link) in layoutState.displayLinksByDisplay {
-            link.invalidate()
-        }
-        layoutState.displayLinksByDisplay.removeAll()
+        displayLinkManager.resetAll()
         niriHandler.scrollAnimationByDisplay.removeAll()
         dwindleHandler.dwindleAnimationByDisplay.removeAll()
         layoutState.closingAnimationsByDisplay.removeAll()
@@ -1040,10 +969,7 @@ import QuartzCore
 
         controller?.axManager.clearInactiveWorkspaceWindows()
 
-        if let observer = layoutState.screenChangeObserver {
-            NotificationCenter.default.removeObserver(observer)
-            layoutState.screenChangeObserver = nil
-        }
+        displayLinkManager.teardown()
     }
 
     private func executeFullRefresh(refresh: ScheduledRefresh) async throws -> Bool {
@@ -3339,5 +3265,24 @@ final class LayoutDiffExecutor {
         }
 
         return controller.workspaceManager.monitors.first(where: { $0.displayId == snapshot.displayId })
+    }
+}
+
+// MARK: - DisplayLinkManagerDelegate
+
+extension LayoutRefreshController: DisplayLinkManagerDelegate {
+    func displayLinkDidFire(displayId: CGDirectDisplayID, targetTime: CFTimeInterval) {
+        niriHandler.tickScrollAnimation(targetTime: targetTime, displayId: displayId)
+        dwindleHandler.tickDwindleAnimation(targetTime: targetTime, displayId: displayId)
+        tickClosingAnimations(targetTime: targetTime, displayId: displayId)
+        drainDirtyWorkspaces(displayId: displayId)
+    }
+
+    func isDisplayLinkNeeded(for displayId: CGDirectDisplayID) -> Bool {
+        if niriHandler.scrollAnimationByDisplay[displayId] != nil { return true }
+        if dwindleHandler.dwindleAnimationByDisplay[displayId] != nil { return true }
+        if let animations = layoutState.closingAnimationsByDisplay[displayId], !animations.isEmpty { return true }
+        if !layoutState.dirtyWorkspaceIds.isEmpty { return true }
+        return false
     }
 }

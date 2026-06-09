@@ -395,8 +395,8 @@ enum NiriWindowMoveResult {
             removalSeed: removalSeed,
             gap: CGFloat(controller.workspaceManager.gaps),
             outerGaps: controller.workspaceManager.outerGaps,
-            displayRefreshRate: controller.layoutRefreshController.layoutState
-                .refreshRateByDisplay[monitor.displayId] ?? 60.0,
+            displayRefreshRate: controller.layoutRefreshController.displayLinkManager
+                .refreshRate(for: monitor.displayId),
             isActiveWorkspace: refreshInput.isActiveWorkspace
         )
     }
