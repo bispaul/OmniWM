@@ -3,7 +3,7 @@
 ## Project
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
-Branch: `fix/scope-relayout-to-workspace`. Build 88. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 90. PID check: `pgrep -x OmniWM`.
 
 ## Constitution — MANDATORY Process Gates
 
