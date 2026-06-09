@@ -505,9 +505,23 @@ final class WorkspaceNavigationHandler {
 
         var newSourceFocusToken: WindowToken?
         if let newFocusId = result.newFocusNodeId,
-           let newFocusNode = engine.findNode(by: newFocusId) as? NiriWindow
+           let newFocusNode = engine.findNode(by: newFocusId)
         {
-            newSourceFocusToken = newFocusNode.token
+            newSourceFocusToken = (newFocusNode as? NiriWindow)?.token
+
+            if let sourceMonitor = controller.workspaceManager.monitor(for: sourceWorkspaceId) {
+                let gap = CGFloat(controller.workspaceManager.gaps)
+                let workingFrame = controller.insetWorkingFrame(for: sourceMonitor)
+                engine.ensureSelectionVisible(
+                    node: newFocusNode,
+                    in: sourceWorkspaceId,
+                    motion: controller.motionPolicy.snapshot(),
+                    state: &sourceState,
+                    workingFrame: workingFrame,
+                    gaps: gap,
+                    animate: false
+                )
+            }
         }
 
         applySessionTransfer(

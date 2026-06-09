@@ -172,6 +172,7 @@ extension NiriLayoutEngine {
         workingFrame: CGRect,
         gaps: CGFloat,
         orientation: Monitor.Orientation = .horizontal,
+        animate: Bool = true,
         animationConfig: SpringConfig? = nil,
         fromContainerIndex: Int? = nil,
         previousActiveContainerPosition: CGFloat? = nil
@@ -228,7 +229,7 @@ extension NiriLayoutEngine {
             viewportSpan: viewportSpan,
             motion: motion,
             sizeKeyPath: sizeKeyPath,
-            animate: true,
+            animate: animate,
             centerMode: settings.centerFocusedColumn,
             alwaysCenterSingleColumn: settings.alwaysCenterSingleColumn,
             animationConfig: animationConfig,
