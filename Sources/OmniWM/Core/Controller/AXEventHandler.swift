@@ -377,7 +377,7 @@ final class AXEventHandler: CGSEventDelegate {
             controller.requestWorkspaceBarRefresh()
             if let token = resolveWindowToken(windowId) ?? resolveTrackedToken(windowId) {
                 updateManagedReplacementTitle(windowId: windowId, token: token)
-                scheduleWindowRuleReevaluationIfNeeded(targets: [.window(token)], trigger: .titleChange)
+                controller.windowLifecycleCoordinator?.scheduleReevaluation(targets: [.window(token)], trigger: .titleChange)
             }
         }
     }

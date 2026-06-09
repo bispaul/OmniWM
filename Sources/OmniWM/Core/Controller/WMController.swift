@@ -87,6 +87,7 @@ final class WMController {
     let axManager = AXManager()
     let appInfoCache = AppInfoCache()
     let focusBridge: FocusBridgeCoordinator
+    var windowLifecycleCoordinator: WindowLifecycleCoordinator?
     let focusPolicyEngine: FocusPolicyEngine
     private let restorePlanner = RestorePlanner()
     let windowRuleEngine = WindowRuleEngine()
