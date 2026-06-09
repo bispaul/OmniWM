@@ -604,4 +604,35 @@ import Testing
 
         #expect(completed.isEmpty)
     }
+
+    // MARK: - Flutter Prevention (immediateRelayout merge must not cancel active)
+
+    @Test func immediateRelayoutMergeDoesNotCancelActiveTask() async throws {
+        var completionResults: [Bool] = []
+
+        let manager = RefreshQueueManager(
+            executor: { _ in
+                try? await Task.sleep(for: .milliseconds(20))
+                return !Task.isCancelled
+            },
+            onComplete: { _, didComplete in
+                completionResults.append(didComplete)
+            }
+        )
+
+        let refresh1 = makeRefresh(kind: .immediateRelayout, reason: .workspaceTransition)
+        manager.enqueue(refresh1)
+
+        try await Task.sleep(for: .milliseconds(5))
+
+        let refresh2 = makeRefresh(kind: .immediateRelayout, reason: .workspaceTransition)
+        manager.enqueue(refresh2)
+
+        try await Task.sleep(for: .milliseconds(100))
+
+        #expect(
+            completionResults.first == true,
+            "First immediateRelayout should complete (not be cancelled) when second immediateRelayout merges into pending"
+        )
+    }
 }

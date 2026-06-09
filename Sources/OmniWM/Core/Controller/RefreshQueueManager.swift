@@ -72,7 +72,6 @@ import Foundation
             cancelActiveTask()
         case (.immediateRelayout, .immediateRelayout):
             mergePendingRefresh(refresh)
-            cancelActiveTask()
         case (.immediateRelayout, .relayout):
             mergePendingRefresh(refresh)
         case (.immediateRelayout, .visibilityRefresh):
