@@ -633,6 +633,10 @@ final class WorkspaceNavigationHandler {
             dwindleEngine.removeWindow(token: token, from: sourceWsId)
         }
 
+        if !sourceIsDwindle, let sourceWsId, let engine = controller.niriEngine {
+            engine.normalizeColumnSizes(in: sourceWsId)
+        }
+
         let succeeded: Bool
         if movedWithNiri {
             succeeded = true
