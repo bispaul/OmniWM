@@ -232,22 +232,14 @@ extension NiriLayoutEngine {
 
     func normalizeColumnSizes(in workspaceId: WorkspaceDescriptor.ID) {
         let cols = columns(in: workspaceId)
-        guard !cols.isEmpty else { return }
-
-        if cols.count == 1 {
-            cols[0].size = 1.0
-            cols[0].cachedWidth = 0
-            return
-        }
+        guard cols.count > 1 else { return }
 
         let totalSize = cols.reduce(CGFloat(0)) { $0 + $1.size }
-        guard totalSize > 0 else { return }
         let avgSize = totalSize / CGFloat(cols.count)
 
         for col in cols {
             let normalized = col.size / avgSize
             col.size = max(0.5, min(2.0, normalized))
-            col.cachedWidth = 0
         }
     }
 
