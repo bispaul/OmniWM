@@ -3,7 +3,7 @@
 ## Project
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
-Branch: `fix/scope-relayout-to-workspace`. Build 87. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 88. PID check: `pgrep -x OmniWM`.
 
 ## Constitution — MANDATORY Process Gates
 
@@ -44,6 +44,11 @@ Branch: `fix/scope-relayout-to-workspace`. Build 87. PID check: `pgrep -x OmniWM
 8. **TDD** — `superpowers:test-driven-development`. Write failing test FIRST.
 9. **Devil's advocate** — challenge every architectural decision BEFORE implementing. Use `mcp__sequential-thinking__sequentialthinking` for structured reasoning.
 10. **Use skills to make decisions** — don't ask the user what to do next. Invoke the relevant skill and follow its process.
+
+### After ANY Rebuild + Deploy
+1. **Verify logs are flowing**: `/usr/bin/log show --predicate 'processIdentifier == <PID> AND subsystem == "com.omniwm"' --last 10s --info --debug` — must show output. If empty, the binary lost Accessibility permission (macOS revokes on unsigned binary change).
+2. **Verify hotkeys work**: stream `category == "input"` while pressing a hotkey. If no events, re-add `.build/debug/OmniWM` to Accessibility via symlink method.
+3. **Every `swift build` produces a new unsigned binary** — macOS may revoke CGEventTap permission. This is expected development friction, not a code bug.
 
 ### Before ANY Deployment to User's Desktop
 
@@ -131,6 +136,7 @@ Update ALL 9 systems in ONE pass:
 - NEVER deploy layout/viewport fixes to user's desktop without clean workspace testing — stale state (cachedWidth, size) persists across restarts and corrupts windows
 - Niri is a SCROLLING model — columns DON'T expand to fill the display. The viewport scrolls. normalizeColumnSizes is almost certainly wrong. applyOverspread centers without changing widths.
 - Add diagnostic logging BEFORE fixing, not after the fix fails
+- Expert panels can be unanimously wrong — ALWAYS deploy + count metrics (frame batches, relayout count) before AND after. If worse, revert immediately.
 - NEVER claim "done" without measurable evidence
 - NEVER call something a "2-line fix" — investigate fully before estimating
 - IPC simulation ≠ keyboard verification (click-focus desync is invisible to IPC)
@@ -174,6 +180,8 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 - **Bug #19** (Chrome re-admission storm): FIXED (build 85). 0 .pid reevaluation triggers in 8h. Was the amplifier for bugs #6/#7.
 - **Bug #21** (Dwindle wake wrong-monitor coordinates): OPEN — pre-existing. Memorygraph `dd0141b7`.
 - **Bug #20** (Ghostty tab phantom columns): OPEN — needs design. Memorygraph `a816fa8e`.
+- **Flutter during moveToWorkspace**: REPRODUCED. 7 frame write batches / 200ms. cancelActiveTask removal kept (build 88, prevents torn frames). lastAppliedFrames fix REVERTED (amplified 7→17). Deep architectural issue — display link ticks + frame suppression + SkyLight moves. Needs Extraction 3 + Fix D. Pre-existing upstream. Memorygraph `91ce7d92`.
+- **Portrait display window loss after sleep/wake**: REPRODUCED (build 88). WS 6 Chrome+Slack removed during wake, not recovered on restart. willSleep may not fire for debug binary (BackgroundOnly). Memorygraph `33b4d04f`.
 - **Evidence**: 8h log analysis (memorygraph `a2964876`). 42 frame writes / 0 mismatches in normal operation. Wake: 4 mismatches, self-resolving.
 
 ## Cross-References
