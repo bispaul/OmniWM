@@ -4,9 +4,9 @@ import Foundation
     typealias Executor = (LayoutRefreshController.ScheduledRefresh) async -> Bool
     typealias CompletionHandler = (LayoutRefreshController.ScheduledRefresh, Bool) -> Void
 
-    private var activeRefreshTask: Task<Void, Never>?
-    private var activeRefresh: LayoutRefreshController.ScheduledRefresh?
-    private var pendingRefresh: LayoutRefreshController.ScheduledRefresh?
+    private(set) var activeRefreshTask: Task<Void, Never>?
+    private(set) var activeRefresh: LayoutRefreshController.ScheduledRefresh?
+    private(set) var pendingRefresh: LayoutRefreshController.ScheduledRefresh?
 
     private let executor: Executor
     private let onComplete: CompletionHandler
@@ -28,6 +28,11 @@ import Foundation
 
     func cancelActiveTask() {
         activeRefreshTask?.cancel()
+    }
+
+    func clearActiveState() {
+        activeRefreshTask = nil
+        activeRefresh = nil
     }
 
     func reset() {
@@ -235,7 +240,7 @@ import Foundation
         self.pendingRefresh = pendingRefresh
     }
 
-    private func startNextRefreshIfNeeded() {
+    func startNextRefreshIfNeeded() {
         guard activeRefreshTask == nil, let refresh = pendingRefresh else { return }
 
         pendingRefresh = nil
@@ -247,7 +252,7 @@ import Foundation
         }
     }
 
-    private func preserveCancelledRefreshState(_ refresh: LayoutRefreshController.ScheduledRefresh) {
+    func preserveCancelledRefreshState(_ refresh: LayoutRefreshController.ScheduledRefresh) {
         guard var pendingRefresh else {
             self.pendingRefresh = refresh
             return

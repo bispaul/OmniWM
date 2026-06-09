@@ -101,6 +101,7 @@ import QuartzCore
     }
 
     weak var controller: WMController?
+    private(set) var queueManager: RefreshQueueManager!
     static let hiddenWindowEdgeRevealEpsilon: CGFloat = 1.0
     private static let delayedRevealVerificationDelay: Duration = .milliseconds(50)
 
@@ -164,9 +165,6 @@ import QuartzCore
             }
         }
 
-        var activeRefreshTask: Task<Void, Never>?
-        var activeRefresh: ScheduledRefresh?
-        var pendingRefresh: ScheduledRefresh?
         var isImmediateLayoutInProgress: Bool = false
         var isIncrementalRefreshInProgress: Bool = false
         var isFullEnumerationInProgress: Bool = false
@@ -204,6 +202,15 @@ import QuartzCore
     init(controller: WMController) {
         self.controller = controller
         super.init()
+        queueManager = RefreshQueueManager(
+            executor: { [weak self] refresh in
+                guard let self else { return false }
+                return await self.execute(refresh)
+            },
+            onComplete: { [weak self] refresh, completed in
+                self?.finishRefresh(refresh, didComplete: completed)
+            }
+        )
     }
 
     func setup() {
@@ -979,7 +986,7 @@ import QuartzCore
     }
 
     func waitForRefreshWorkForTests() async {
-        while let task = layoutState.activeRefreshTask {
+        while let task = queueManager?.activeRefreshTask {
             await task.value
         }
     }
@@ -1017,10 +1024,7 @@ import QuartzCore
     }
 
     func resetState() {
-        layoutState.activeRefreshTask?.cancel()
-        layoutState.activeRefreshTask = nil
-        layoutState.activeRefresh = nil
-        layoutState.pendingRefresh = nil
+        queueManager?.reset()
         layoutState.didExecuteRefreshExecutionPlan = false
         nativeFullscreenRestoredFrameApplyTokens.removeAll()
         pendingResizePlaceholderFallbackEvidenceByToken.removeAll()
@@ -1712,222 +1716,10 @@ import QuartzCore
 
     private func enqueueRefresh(_ refresh: ScheduledRefresh) {
         recordRefreshRequest(refresh.reason, affectedWorkspaceIds: refresh.affectedWorkspaceIds)
-        if let activeRefresh = layoutState.activeRefresh {
-            handleRefresh(refresh, whileActive: activeRefresh)
-            return
-        }
-
-        mergePendingRefresh(refresh)
-        startNextRefreshIfNeeded()
+        queueManager.enqueue(refresh)
     }
 
-    private func handleRefresh(_ refresh: ScheduledRefresh, whileActive activeRefresh: ScheduledRefresh) {
-        switch (activeRefresh.kind, refresh.kind) {
-        case (.fullRescan, .fullRescan):
-            mergePendingRefresh(refresh)
-        case (.fullRescan, .visibilityRefresh):
-            absorbIntoActiveFullRescan(refresh)
-        case (.fullRescan, .windowRemoval),
-             (.fullRescan, .immediateRelayout),
-             (.fullRescan, .relayout):
-            mergePendingRefresh(refresh)
-        case (.visibilityRefresh, .visibilityRefresh):
-            mergePendingRefresh(refresh)
-        case (.visibilityRefresh, .fullRescan),
-             (.visibilityRefresh, .windowRemoval),
-             (.visibilityRefresh, .immediateRelayout),
-             (.visibilityRefresh, .relayout):
-            mergePendingRefresh(refresh)
-            layoutState.activeRefreshTask?.cancel()
-        case (.windowRemoval, .fullRescan):
-            mergePendingRefresh(refresh)
-        case (.windowRemoval, _):
-            mergePendingRefresh(refresh)
-        case (.immediateRelayout, .fullRescan):
-            mergePendingRefresh(refresh)
-            layoutState.activeRefreshTask?.cancel()
-        case (.immediateRelayout, .immediateRelayout):
-            mergePendingRefresh(refresh)
-            layoutState.activeRefreshTask?.cancel()
-        case (.immediateRelayout, .relayout):
-            mergePendingRefresh(refresh)
-        case (.immediateRelayout, .visibilityRefresh):
-            mergePendingRefresh(refresh)
-        case (.immediateRelayout, .windowRemoval):
-            mergePendingRefresh(refresh)
-            layoutState.activeRefreshTask?.cancel()
-        case (.relayout, .fullRescan),
-             (.relayout, .immediateRelayout),
-             (.relayout, .relayout),
-             (.relayout, .windowRemoval):
-            mergePendingRefresh(refresh)
-            layoutState.activeRefreshTask?.cancel()
-        case (.relayout, .visibilityRefresh):
-            mergePendingRefresh(refresh)
-        }
-    }
-
-    private func absorbIntoActiveFullRescan(_ refresh: ScheduledRefresh) {
-        guard var activeRefresh = layoutState.activeRefresh else { return }
-        activeRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-        mergeAbsorbedVisibility(into: &activeRefresh, from: refresh)
-        layoutState.activeRefresh = activeRefresh
-    }
-
-    private func mergePendingRefresh(_ refresh: ScheduledRefresh) {
-        guard var pendingRefresh = layoutState.pendingRefresh else {
-            layoutState.pendingRefresh = refresh
-            return
-        }
-
-        let existingAffectedWorkspaceIds = pendingRefresh.affectedWorkspaceIds
-
-        switch (pendingRefresh.kind, refresh.kind) {
-        case (.fullRescan, .fullRescan):
-            pendingRefresh.reason = refresh.reason
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.fullRescan, _):
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.visibilityRefresh, .fullRescan),
-             (.visibilityRefresh, .windowRemoval),
-             (.visibilityRefresh, .immediateRelayout),
-             (.visibilityRefresh, .relayout):
-            var upgradedRefresh = refresh
-            upgradedRefresh.postLayoutActions.append(contentsOf: pendingRefresh.postLayoutActions)
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: pendingRefresh)
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: refresh)
-            pendingRefresh = upgradedRefresh
-        case (.visibilityRefresh, .visibilityRefresh):
-            pendingRefresh.reason = refresh.reason
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-        case (.windowRemoval, .fullRescan),
-             (.immediateRelayout, .fullRescan),
-             (.relayout, .fullRescan):
-            var upgradedRefresh = refresh
-            upgradedRefresh.postLayoutActions.append(contentsOf: pendingRefresh.postLayoutActions)
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: pendingRefresh)
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: refresh)
-            pendingRefresh = upgradedRefresh
-        case (.windowRemoval, .windowRemoval):
-            pendingRefresh.reason = refresh.reason
-            pendingRefresh.windowRemovalPayloads = mergeWindowRemovalPayloads(
-                pendingRefresh.windowRemovalPayloads,
-                with: refresh.windowRemovalPayloads
-            )
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.windowRemoval, .immediateRelayout):
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeFollowUp(
-                into: &pendingRefresh,
-                kind: .immediateRelayout,
-                reason: refresh.reason,
-                affectedWorkspaceIds: refresh.affectedWorkspaceIds
-            )
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.windowRemoval, .relayout):
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeFollowUp(
-                into: &pendingRefresh,
-                kind: .relayout,
-                reason: refresh.reason,
-                affectedWorkspaceIds: refresh.affectedWorkspaceIds
-            )
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.windowRemoval, .visibilityRefresh):
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.immediateRelayout, .windowRemoval):
-            var upgradedRefresh = refresh
-            upgradedRefresh.postLayoutActions.append(contentsOf: pendingRefresh.postLayoutActions)
-            upgradedRefresh.followUpRefresh = pendingRefresh.followUpRefresh
-            mergeFollowUp(
-                into: &upgradedRefresh,
-                kind: .immediateRelayout,
-                reason: pendingRefresh.reason,
-                affectedWorkspaceIds: pendingRefresh.affectedWorkspaceIds
-            )
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: pendingRefresh)
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: refresh)
-            pendingRefresh = upgradedRefresh
-        case (.relayout, .windowRemoval):
-            var upgradedRefresh = refresh
-            upgradedRefresh.postLayoutActions.append(contentsOf: pendingRefresh.postLayoutActions)
-            mergeFollowUp(
-                into: &upgradedRefresh,
-                kind: .relayout,
-                reason: pendingRefresh.reason,
-                affectedWorkspaceIds: pendingRefresh.affectedWorkspaceIds
-            )
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: pendingRefresh)
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: refresh)
-            pendingRefresh = upgradedRefresh
-        case (.immediateRelayout, .visibilityRefresh),
-             (.relayout, .visibilityRefresh):
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.immediateRelayout, .immediateRelayout),
-             (.relayout, .relayout):
-            pendingRefresh.reason = refresh.reason
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            pendingRefresh.followUpRefresh = mergeFollowUpRefresh(
-                pendingRefresh.followUpRefresh,
-                with: refresh.followUpRefresh
-            )
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.immediateRelayout, .relayout):
-            pendingRefresh.postLayoutActions.append(contentsOf: refresh.postLayoutActions)
-            mergeFollowUp(
-                into: &pendingRefresh,
-                kind: .relayout,
-                reason: refresh.reason,
-                affectedWorkspaceIds: refresh.affectedWorkspaceIds
-            )
-            mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        case (.relayout, .immediateRelayout):
-            var upgradedRefresh = refresh
-            upgradedRefresh.postLayoutActions.append(contentsOf: pendingRefresh.postLayoutActions)
-            upgradedRefresh.followUpRefresh = mergeFollowUpRefresh(
-                pendingRefresh.followUpRefresh,
-                with: refresh.followUpRefresh
-            )
-            mergeFollowUp(
-                into: &upgradedRefresh,
-                kind: .relayout,
-                reason: pendingRefresh.reason,
-                affectedWorkspaceIds: pendingRefresh.affectedWorkspaceIds
-            )
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: pendingRefresh)
-            mergeAbsorbedVisibility(into: &upgradedRefresh, from: refresh)
-            pendingRefresh = upgradedRefresh
-        }
-
-        pendingRefresh.affectedWorkspaceIds = mergedAffectedWorkspaceIds(
-            pendingRefresh.affectedWorkspaceIds,
-            existingAffectedWorkspaceIds
-        )
-        pendingRefresh.affectedWorkspaceIds = mergedAffectedWorkspaceIds(
-            pendingRefresh.affectedWorkspaceIds,
-            refresh.affectedWorkspaceIds
-        )
-
-        layoutState.pendingRefresh = pendingRefresh
-    }
-
-    private func startNextRefreshIfNeeded() {
-        guard layoutState.activeRefreshTask == nil, let refresh = layoutState.pendingRefresh else { return }
-
-        layoutState.pendingRefresh = nil
-        layoutState.activeRefresh = refresh
-        layoutState.didExecuteRefreshExecutionPlan = false
-        layoutState.activeRefreshTask = Task { @MainActor [weak self] in
-            guard let self else { return }
-            let didComplete = await self.execute(refresh)
-            self.finishRefresh(refresh, didComplete: didComplete)
-        }
-    }
+    // Queue merge/dispatch methods are now in RefreshQueueManager.
 
     private func execute(_ refresh: ScheduledRefresh) async -> Bool {
         do {
@@ -1954,15 +1746,14 @@ import QuartzCore
     }
 
     private func finishRefresh(_ refresh: ScheduledRefresh, didComplete: Bool) {
-        let completedRefresh = layoutState.activeRefresh ?? refresh
+        let completedRefresh = queueManager.activeRefresh ?? refresh
         let didExecuteRefreshExecutionPlan = layoutState.didExecuteRefreshExecutionPlan
 
         if !didComplete {
-            preserveCancelledRefreshState(completedRefresh)
+            queueManager.preserveCancelledRefreshState(completedRefresh)
         }
 
-        layoutState.activeRefreshTask = nil
-        layoutState.activeRefresh = nil
+        queueManager.clearActiveState()
         layoutState.didExecuteRefreshExecutionPlan = false
 
         if didComplete {
@@ -1991,7 +1782,7 @@ import QuartzCore
             }
         }
 
-        startNextRefreshIfNeeded()
+        queueManager.startNextRefreshIfNeeded()
     }
 
     private func recordRefreshExecution(_ route: RefreshRoute, reason: RefreshReason) {
@@ -2016,113 +1807,9 @@ import QuartzCore
         debugCounters.lastAffectedWorkspaceIdsByReason[reason] = affectedWorkspaceIds
     }
 
-    private func mergeWindowRemovalPayloads(
-        _ existingPayloads: [WindowRemovalPayload],
-        with incomingPayloads: [WindowRemovalPayload]
-    ) -> [WindowRemovalPayload] {
-        existingPayloads + incomingPayloads
-    }
-
-    private func mergedAffectedWorkspaceIds(
-        _ existing: Set<WorkspaceDescriptor.ID>,
-        _ incoming: Set<WorkspaceDescriptor.ID>
-    ) -> Set<WorkspaceDescriptor.ID> {
-        guard !existing.isEmpty, !incoming.isEmpty else { return [] }
-        return existing.union(incoming)
-    }
-
-    private func mergeFollowUp(
-        into refresh: inout ScheduledRefresh,
-        kind: ScheduledRefreshKind,
-        reason: RefreshReason,
-        affectedWorkspaceIds: Set<WorkspaceDescriptor.ID> = []
-    ) {
-        refresh.followUpRefresh = mergeFollowUpRefresh(
-            refresh.followUpRefresh,
-            with: .init(kind: kind, reason: reason, affectedWorkspaceIds: affectedWorkspaceIds)
-        )
-    }
-
-    private func mergeAbsorbedVisibility(into refresh: inout ScheduledRefresh, from incoming: ScheduledRefresh) {
-        switch incoming.kind {
-        case .visibilityRefresh:
-            refresh.needsVisibilityReconciliation = true
-            refresh.visibilityReason = incoming.reason
-        case .fullRescan,
-             .windowRemoval,
-             .immediateRelayout,
-             .relayout:
-            guard incoming.needsVisibilityReconciliation else { return }
-            refresh.needsVisibilityReconciliation = true
-            refresh.visibilityReason = incoming.visibilityReason ?? refresh.visibilityReason
-        }
-    }
-
-    private func mergeFollowUpRefresh(
-        _ existing: FollowUpRefresh?,
-        with incoming: FollowUpRefresh?
-    ) -> FollowUpRefresh? {
-        switch (existing, incoming) {
-        case (nil, nil):
-            return nil
-        case let (value?, nil),
-             let (nil, value?):
-            return value
-        case let (existing?, incoming?):
-            var merged = incoming
-            merged.affectedWorkspaceIds = mergedAffectedWorkspaceIds(
-                existing.affectedWorkspaceIds,
-                incoming.affectedWorkspaceIds
-            )
-            if existing.kind == .immediateRelayout || incoming.kind == .immediateRelayout {
-                if incoming.kind == .immediateRelayout {
-                    return merged
-                }
-                var kept = existing
-                kept.affectedWorkspaceIds = mergedAffectedWorkspaceIds(
-                    existing.affectedWorkspaceIds,
-                    incoming.affectedWorkspaceIds
-                )
-                return kept
-            }
-            return merged
-        }
-    }
-
-    private func preserveCancelledRefreshState(_ refresh: ScheduledRefresh) {
-        guard var pendingRefresh = layoutState.pendingRefresh else {
-            layoutState.pendingRefresh = refresh
-            return
-        }
-
-        if !refresh.postLayoutActions.isEmpty {
-            pendingRefresh.postLayoutActions.insert(contentsOf: refresh.postLayoutActions, at: 0)
-        }
-
-        pendingRefresh.affectedWorkspaceIds = mergedAffectedWorkspaceIds(
-            pendingRefresh.affectedWorkspaceIds,
-            refresh.affectedWorkspaceIds
-        )
-
-        if refresh.kind == .windowRemoval, !refresh.windowRemovalPayloads.isEmpty {
-            pendingRefresh.windowRemovalPayloads = mergeWindowRemovalPayloads(
-                refresh.windowRemovalPayloads,
-                with: pendingRefresh.windowRemovalPayloads
-            )
-            if pendingRefresh.kind != .fullRescan, pendingRefresh.kind != .windowRemoval {
-                pendingRefresh.kind = .windowRemoval
-                pendingRefresh.reason = refresh.reason
-            }
-        }
-
-        mergeAbsorbedVisibility(into: &pendingRefresh, from: refresh)
-        pendingRefresh.followUpRefresh = mergeFollowUpRefresh(
-            refresh.followUpRefresh,
-            with: pendingRefresh.followUpRefresh
-        )
-
-        layoutState.pendingRefresh = pendingRefresh
-    }
+    // Merge helpers (mergeWindowRemovalPayloads, mergedAffectedWorkspaceIds,
+    // mergeFollowUp, mergeAbsorbedVisibility, mergeFollowUpRefresh,
+    // preserveCancelledRefreshState) are now in RefreshQueueManager.
 
     private func performVisibilitySideEffects(on controller: WMController) {
         controller.niriLayoutHandler.updateTabbedColumnOverlays(forceOrdering: true)

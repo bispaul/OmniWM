@@ -5173,7 +5173,7 @@ private func makeCenteredCrossMonitorFixture(
         var capturedAffectedIds: Set<WorkspaceDescriptor.ID>?
         fixture.controller.layoutRefreshController.resetDebugState()
         fixture.controller.layoutRefreshController.debugHooks.onRelayout = { _, _ in
-            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?
+            capturedAffectedIds = fixture.controller.layoutRefreshController.queueManager.activeRefresh?
                 .affectedWorkspaceIds
             return true
         }
@@ -5190,7 +5190,7 @@ private func makeCenteredCrossMonitorFixture(
         var capturedAffectedIds: Set<WorkspaceDescriptor.ID>?
         fixture.controller.layoutRefreshController.resetDebugState()
         fixture.controller.layoutRefreshController.debugHooks.onRelayout = { _, _ in
-            capturedAffectedIds = fixture.controller.layoutRefreshController.layoutState.activeRefresh?
+            capturedAffectedIds = fixture.controller.layoutRefreshController.queueManager.activeRefresh?
                 .affectedWorkspaceIds
             return true
         }

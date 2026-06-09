@@ -4370,7 +4370,7 @@ private func syncNiriWorkspaceStatesForRefreshTests(
                     )
                     newToken = token
                     visibleWindows.value.append((makeRefreshTestWindow(windowId: newWindowId), getpid(), newWindowId))
-                    lateCreateWasQueuedDuringFullRescan = controller.layoutRefreshController.layoutState.activeRefresh?
+                    lateCreateWasQueuedDuringFullRescan = controller.layoutRefreshController.queueManager.activeRefresh?
                         .kind == .fullRescan
                     controller.layoutRefreshController.requestRelayout(
                         reason: .axWindowCreated,
@@ -4605,7 +4605,7 @@ private func syncNiriWorkspaceStatesForRefreshTests(
         controller.layoutRefreshController.resetDebugState()
         controller.layoutRefreshController.debugHooks.onRelayout = { _, _ in
             affectedWorkspaceSnapshots.append(
-                controller.layoutRefreshController.layoutState.activeRefresh?.affectedWorkspaceIds ?? []
+                controller.layoutRefreshController.queueManager.activeRefresh?.affectedWorkspaceIds ?? []
             )
             return true
         }
