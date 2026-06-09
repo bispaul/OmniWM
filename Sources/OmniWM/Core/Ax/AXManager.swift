@@ -608,7 +608,6 @@ final class AXManager {
                     )
                 ))
             }
-            lastAppliedFrames.removeValue(forKey: windowId)
             pendingFrameWrites.removeValue(forKey: windowId)
             recentFrameWriteFailures.removeValue(forKey: windowId)
             retryBudgetByWindowId.removeValue(forKey: windowId)
