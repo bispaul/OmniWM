@@ -6368,6 +6368,112 @@ private func makeCenteredCrossMonitorFixture(
         }
     }
 
+    // MARK: - normalizeColumnSizes (bug #7)
+
+    @Test func normalizeColumnSizesRedistributesAfterRemoval() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+
+        let w1 = engine.addWindow(handle: makeTestHandle(pid: 1), to: wsId, afterSelection: nil)
+        let w2 = engine.addWindow(handle: makeTestHandle(pid: 2), to: wsId, afterSelection: nil)
+        let w3 = engine.addWindow(handle: makeTestHandle(pid: 3), to: wsId, afterSelection: nil)
+
+        #expect(engine.columns(in: wsId).count == 3)
+
+        engine.removeWindow(token: w2.token)
+
+        let colsBefore = engine.columns(in: wsId)
+        #expect(colsBefore.count == 2)
+
+        engine.normalizeColumnSizes(in: wsId)
+
+        let colsAfter = engine.columns(in: wsId)
+        #expect(colsAfter.count == 2)
+        for col in colsAfter {
+            #expect(col.size == 1.0, "Column size should be 1.0 after normalization, got \(col.size)")
+            #expect(col.cachedWidth == 0, "cachedWidth should be reset to 0 after normalization")
+        }
+    }
+
+    @Test func normalizeColumnSizesSetsFullWidthForSingleColumn() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+
+        let w1 = engine.addWindow(handle: makeTestHandle(pid: 1), to: wsId, afterSelection: nil)
+        let w2 = engine.addWindow(handle: makeTestHandle(pid: 2), to: wsId, afterSelection: nil)
+
+        let cols = engine.columns(in: wsId)
+        cols[0].size = 0.3
+        cols[1].size = 0.7
+
+        engine.removeWindow(token: w2.token)
+        #expect(engine.columns(in: wsId).count == 1)
+
+        engine.normalizeColumnSizes(in: wsId)
+
+        let remaining = engine.columns(in: wsId)
+        #expect(remaining.count == 1)
+        #expect(remaining[0].size == 1.0, "Single remaining column should be set to full size 1.0")
+        #expect(remaining[0].cachedWidth == 0, "cachedWidth should be reset to 0")
+    }
+
+    @Test func normalizeColumnSizesNoOpsOnEmptyWorkspace() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+
+        engine.normalizeColumnSizes(in: wsId)
+        #expect(engine.columns(in: wsId).isEmpty)
+    }
+
+    @Test func moveWindowToWorkspaceNormalizesSourceColumnWidths() {
+        let engine = NiriLayoutEngine()
+        let sourceWsId = UUID()
+        let targetWsId = UUID()
+
+        let w1 = engine.addWindow(handle: makeTestHandle(pid: 1), to: sourceWsId, afterSelection: nil)
+        let w2 = engine.addWindow(handle: makeTestHandle(pid: 2), to: sourceWsId, afterSelection: nil)
+        let w3 = engine.addWindow(handle: makeTestHandle(pid: 3), to: sourceWsId, afterSelection: nil)
+        #expect(engine.columns(in: sourceWsId).count == 3)
+
+        var sourceState = ViewportState()
+        var targetState = ViewportState()
+        let result = engine.moveWindowToWorkspace(
+            w2,
+            from: sourceWsId,
+            to: targetWsId,
+            sourceState: &sourceState,
+            targetState: &targetState
+        )
+        #expect(result != nil)
+        #expect(engine.columns(in: sourceWsId).count == 2)
+
+        engine.normalizeColumnSizes(in: sourceWsId)
+
+        let sourceCols = engine.columns(in: sourceWsId)
+        for col in sourceCols {
+            #expect(col.size == 1.0, "Source column should be normalized to 1.0 after transfer")
+            #expect(col.cachedWidth == 0, "cachedWidth should be reset after normalization")
+        }
+    }
+
+    @Test func structuralMoveDoesNotNormalizeColumnWidths() {
+        let engine = NiriLayoutEngine()
+        let wsId = UUID()
+
+        _ = engine.addWindow(handle: makeTestHandle(pid: 1), to: wsId, afterSelection: nil)
+        _ = engine.addWindow(handle: makeTestHandle(pid: 2), to: wsId, afterSelection: nil)
+        _ = engine.addWindow(handle: makeTestHandle(pid: 3), to: wsId, afterSelection: nil)
+
+        let cols = engine.columns(in: wsId)
+        cols[0].size = 0.5
+        cols[1].size = 0.3
+        cols[2].size = 0.2
+
+        #expect(cols[0].size == 0.5)
+        #expect(cols[1].size == 0.3)
+        #expect(cols[2].size == 0.2)
+    }
+
     @Test func neighboringRightMonitorKeepsPartiallyRevealedColumnHiddenUntilFullyContained() {
         let fixture = makeHorizontalNeighboringRevealFixture(workspaceOnPrimary: true, pidBase: 51)
         let engine = fixture.engine
