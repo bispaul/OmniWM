@@ -129,6 +129,10 @@ extension NiriCreateFocusTraceEvent: CustomStringConvertible {
 
 @MainActor
 final class AXEventHandler: CGSEventDelegate {
+    typealias ManagedReplacementTraceEvent = ManagedReplacementCorrelator.ManagedReplacementTraceEvent
+    typealias PreparedCreate = ManagedReplacementCorrelator.PreparedCreate
+    typealias PreparedDestroy = ManagedReplacementCorrelator.PreparedDestroy
+
     struct DebugCounters {
         var geometryRelayoutRequests = 0
         var geometryRelayoutsSuppressedDuringGesture = 0
@@ -136,143 +140,6 @@ final class AXEventHandler: CGSEventDelegate {
         var scopedGeometryRelayoutRequests = 0
     }
 
-    struct ManagedReplacementTraceEvent: Equatable {
-        enum Kind: Equatable {
-            case enqueued(
-                policy: String,
-                createCount: Int,
-                destroyCount: Int,
-                holdCount: Int,
-                deadlineReset: Bool
-            )
-            case flushed(
-                policy: String,
-                createCount: Int,
-                destroyCount: Int,
-                holdCount: Int,
-                elapsedMillis: Int
-            )
-            case matched(policy: String, elapsedMillis: Int)
-        }
-
-        let timestamp: TimeInterval
-        let pid: pid_t
-        let workspaceId: WorkspaceDescriptor.ID
-        let kind: Kind
-    }
-
-    private struct PreparedCreate {
-        let windowId: UInt32
-        let token: WindowToken
-        let axRef: AXWindowRef
-        let ruleEffects: ManagedWindowRuleEffects
-        let replacementMetadata: ManagedReplacementMetadata
-        let hasStructuralReplacementWorkspaceMatch: Bool
-        let requiresPostCreateLifecycleVerification: Bool
-
-        var bundleId: String? {
-            replacementMetadata.bundleId
-        }
-
-        var workspaceId: WorkspaceDescriptor.ID {
-            replacementMetadata.workspaceId
-        }
-
-        var mode: TrackedWindowMode {
-            replacementMetadata.mode
-        }
-    }
-
-    private struct PreparedDestroy {
-        let token: WindowToken
-        let replacementMetadata: ManagedReplacementMetadata
-
-        var bundleId: String? {
-            replacementMetadata.bundleId
-        }
-
-        var workspaceId: WorkspaceDescriptor.ID {
-            replacementMetadata.workspaceId
-        }
-
-        var mode: TrackedWindowMode {
-            replacementMetadata.mode
-        }
-    }
-
-    private struct ManagedReplacementKey: Hashable {
-        let pid: pid_t
-        let workspaceId: WorkspaceDescriptor.ID
-    }
-
-    private enum ManagedReplacementCorrelationPolicy {
-        case structural
-    }
-
-    private struct PendingManagedCreate {
-        let sequence: UInt64
-        let candidate: PreparedCreate
-    }
-
-    private struct PendingManagedDestroy {
-        let sequence: UInt64
-        let candidate: PreparedDestroy
-    }
-
-    private enum PendingManagedReplacementEvent {
-        case create(PendingManagedCreate)
-        case destroy(PendingManagedDestroy)
-
-        var sequence: UInt64 {
-            switch self {
-            case let .create(create): create.sequence
-            case let .destroy(destroy): destroy.sequence
-            }
-        }
-    }
-
-    private struct PendingManagedReplacementBurst {
-        let policy: ManagedReplacementCorrelationPolicy
-        let firstEventUptime: TimeInterval
-        var creates: [PendingManagedCreate] = []
-        var destroys: [PendingManagedDestroy] = []
-
-        mutating func append(create: PendingManagedCreate) {
-            guard !creates.contains(where: { $0.candidate.token == create.candidate.token }) else { return }
-            creates.append(create)
-        }
-
-        mutating func append(destroy: PendingManagedDestroy) {
-            guard !destroys.contains(where: { $0.candidate.token == destroy.candidate.token }) else { return }
-            destroys.append(destroy)
-        }
-
-        var orderedEvents: [PendingManagedReplacementEvent] {
-            let events = creates.map(PendingManagedReplacementEvent.create) + destroys
-                .map(PendingManagedReplacementEvent.destroy)
-            return events.sorted { $0.sequence < $1.sequence }
-        }
-
-        func orderedEvents(excludingSequences sequences: Set<UInt64>) -> [PendingManagedReplacementEvent] {
-            orderedEvents.filter { !sequences.contains($0.sequence) }
-        }
-    }
-
-    private struct MatchedManagedReplacementPair {
-        let destroy: PendingManagedDestroy
-        let create: PendingManagedCreate
-
-        var excludedSequences: Set<UInt64> {
-            [destroy.sequence, create.sequence]
-        }
-    }
-
-    private struct StructuralReplacementMatch {
-        let token: WindowToken
-        let workspaceId: WorkspaceDescriptor.ID
-    }
-
-    private static let managedReplacementGraceDelay: Duration = .milliseconds(150)
     private static let nativeFullscreenFollowupDelay: Duration = .seconds(1)
     private static let nativeFullscreenStaleCleanupDelay: Duration = .seconds(
         Int64(WorkspaceManager.staleUnavailableNativeFullscreenTimeout)
@@ -284,18 +151,14 @@ final class AXEventHandler: CGSEventDelegate {
     private static let createPlacementContextTTL: TimeInterval = 15
     private static let activationRetryLimit = 5
     private static let createFocusTraceLimit = 128
-    private static let managedReplacementTraceLimit = 128
     private static let createFocusTraceLoggingEnabled =
         ProcessInfo.processInfo.environment["OMNIWM_DEBUG_NIRI_CREATE_FOCUS"] == "1"
-    private static let managedReplacementTraceLoggingEnabled =
-        ProcessInfo.processInfo.environment["OMNIWM_DEBUG_MANAGED_REPLACEMENT"] == "1"
 
     weak var controller: WMController?
+    private(set) var managedReplacementCorrelator: ManagedReplacementCorrelator?
     private var deferredCreatedWindowIds: Set<UInt32> = []
     private var deferredCreatedWindowOrder: [UInt32] = []
     private var createPlacementContextsByWindowId: [UInt32: WindowCreatePlacementContext] = [:]
-    private var pendingManagedReplacementBursts: [ManagedReplacementKey: PendingManagedReplacementBurst] = [:]
-    private var pendingManagedReplacementTasks: [ManagedReplacementKey: Task<Void, Never>] = [:]
     private var pendingNativeFullscreenFollowupTasks: [WindowToken: Task<Void, Never>] = [:]
     private var pendingNativeFullscreenStaleCleanupTasks: [WindowToken: Task<Void, Never>] = [:]
     private var pendingWindowStabilizationTasks: [WindowToken: Task<Void, Never>] = [:]
@@ -306,8 +169,6 @@ final class AXEventHandler: CGSEventDelegate {
     private var pendingActivationRetryTask: Task<Void, Never>?
     private var pendingActivationRetryRequestId: UInt64?
     private var createFocusTrace: [NiriCreateFocusTraceEvent] = []
-    private var managedReplacementTrace: [ManagedReplacementTraceEvent] = []
-    private var nextManagedReplacementEventSequence: UInt64 = 0
     var windowInfoProvider: ((UInt32) -> WindowServerInfo?)?
     var windowInfoProviderIsAuthoritativeForTests = false
     var axWindowRefProvider: ((UInt32, pid_t) -> AXWindowRef?)?
@@ -320,7 +181,11 @@ final class AXEventHandler: CGSEventDelegate {
     var fastFrameProvider: ((AXWindowRef) -> CGRect?)?
     var isFullscreenProvider: ((AXWindowRef) -> Bool)?
     var spaceDisplayResolver: ((UInt64, [Monitor]) -> CGDirectDisplayID?)?
-    var managedReplacementTimeSourceForTests: (() -> TimeInterval)?
+    var managedReplacementTimeSourceForTests: (() -> TimeInterval)? {
+        get { managedReplacementCorrelator?.timeSourceForTests }
+        set { managedReplacementCorrelator?.timeSourceForTests = newValue }
+    }
+
     var axContextWarmupHandlerForTests: ((pid_t) -> Void)?
     var windowExistsInWindowServerForTests: ((UInt32) -> Bool)?
     private(set) var debugCounters = DebugCounters()
@@ -329,6 +194,9 @@ final class AXEventHandler: CGSEventDelegate {
         controller: WMController
     ) {
         self.controller = controller
+        let correlator = ManagedReplacementCorrelator()
+        correlator.delegate = self
+        self.managedReplacementCorrelator = correlator
     }
 
     func setup() {
@@ -338,7 +206,7 @@ final class AXEventHandler: CGSEventDelegate {
 
     func cleanup() {
         resetCreatePlacementContextState()
-        resetManagedReplacementState()
+        managedReplacementCorrelator?.reset()
         resetNativeFullscreenReplacementState()
         resetWindowStabilizationState()
         resetPostCreateLifecycleVerificationState()
@@ -451,8 +319,8 @@ final class AXEventHandler: CGSEventDelegate {
         }
 
         cancelCreatedWindowRetry(windowId: windowId)
-        if shouldDelayManagedReplacementCreate(candidate) {
-            enqueueManagedReplacementCreate(candidate)
+        if managedReplacementCorrelator?.shouldDelayCreate(candidate) == true {
+            managedReplacementCorrelator?.enqueueCreate(candidate)
             return
         }
 
@@ -461,7 +329,7 @@ final class AXEventHandler: CGSEventDelegate {
 
     func resetDebugStateForTests() {
         debugCounters = .init()
-        resetManagedReplacementState()
+        managedReplacementCorrelator?.reset()
         resetNativeFullscreenReplacementState()
         resetWindowStabilizationState()
         resetPostCreateLifecycleVerificationState()
@@ -470,7 +338,7 @@ final class AXEventHandler: CGSEventDelegate {
         resetActivationRetryState()
         controller?.focusBridge.reset()
         createFocusTrace.removeAll(keepingCapacity: true)
-        managedReplacementTrace.removeAll(keepingCapacity: true)
+        managedReplacementCorrelator?.clearTrace()
         controller?.windowLifecycleCoordinator?.cancelPending()
     }
 
@@ -498,8 +366,8 @@ final class AXEventHandler: CGSEventDelegate {
         createFocusTrace
     }
 
-    func managedReplacementTraceSnapshotForTests() -> [ManagedReplacementTraceEvent] {
-        managedReplacementTrace
+    func managedReplacementTraceSnapshotForTests() -> [ManagedReplacementCorrelator.ManagedReplacementTraceEvent] {
+        managedReplacementCorrelator?.traceSnapshotForTests() ?? []
     }
 
     func pendingCreatePlacementContext(for windowId: Int) -> WindowCreatePlacementContext? {
@@ -519,12 +387,12 @@ final class AXEventHandler: CGSEventDelegate {
         mode: TrackedWindowMode,
         facts: WindowRuleFacts
     ) -> WorkspaceDescriptor.ID? {
-        structuralReplacementMatch(
+        managedReplacementCorrelator?.structuralReplacementWorkspaceIdForCreate(
             token: token,
             bundleId: bundleId,
             mode: mode,
             facts: facts
-        )?.workspaceId
+        )
     }
 
     @discardableResult
@@ -536,33 +404,14 @@ final class AXEventHandler: CGSEventDelegate {
         mode: TrackedWindowMode,
         facts: WindowRuleFacts
     ) -> Bool {
-        guard let match = structuralReplacementMatch(
+        managedReplacementCorrelator?.rekeyIfNeeded(
             token: token,
-            bundleId: bundleId,
-            mode: mode,
-            facts: facts
-        ) else {
-            return false
-        }
-
-        let metadata = makeManagedReplacementMetadata(
-            bundleId: bundleId,
-            workspaceId: match.workspaceId,
-            mode: mode,
-            facts: facts
-        )
-        guard rekeyManagedWindowIdentity(
-            from: match.token,
-            to: token,
             windowId: windowId,
             axRef: axRef,
-            managedReplacementMetadata: metadata
-        ) != nil else {
-            return false
-        }
-
-        discardCreatePlacementContext(windowId: windowId)
-        return true
+            bundleId: bundleId,
+            mode: mode,
+            facts: facts
+        ) ?? false
     }
 
     func recordNiriCreateFocusTrace(_ event: NiriCreateFocusTraceEvent) {
@@ -573,40 +422,6 @@ final class AXEventHandler: CGSEventDelegate {
 
         if Self.createFocusTraceLoggingEnabled {
             fputs("[NiriCreateFocus] \(event.description)\n", stderr)
-        }
-    }
-
-    private func managedReplacementCurrentUptime() -> TimeInterval {
-        managedReplacementTimeSourceForTests?() ?? ProcessInfo.processInfo.systemUptime
-    }
-
-    private func managedReplacementPolicyName(_ policy: ManagedReplacementCorrelationPolicy) -> String {
-        switch policy {
-        case .structural:
-            "structural"
-        }
-    }
-
-    private func recordManagedReplacementTrace(
-        key: ManagedReplacementKey,
-        kind: ManagedReplacementTraceEvent.Kind
-    ) {
-        let event = ManagedReplacementTraceEvent(
-            timestamp: managedReplacementCurrentUptime(),
-            pid: key.pid,
-            workspaceId: key.workspaceId,
-            kind: kind
-        )
-        if managedReplacementTrace.count == Self.managedReplacementTraceLimit {
-            managedReplacementTrace.removeFirst()
-        }
-        managedReplacementTrace.append(event)
-
-        if Self.managedReplacementTraceLoggingEnabled {
-            fputs(
-                "[ManagedReplacement] pid=\(key.pid) workspace=\(key.workspaceId.uuidString) kind=\(String(describing: kind))\n",
-                stderr
-            )
         }
     }
 
@@ -847,8 +662,8 @@ final class AXEventHandler: CGSEventDelegate {
                 continue
             }
             cancelCreatedWindowRetry(windowId: windowId)
-            if shouldDelayManagedReplacementCreate(candidate) {
-                enqueueManagedReplacementCreate(candidate)
+            if managedReplacementCorrelator?.shouldDelayCreate(candidate) == true {
+                managedReplacementCorrelator?.enqueueCreate(candidate)
             } else {
                 trackPreparedCreate(candidate)
             }
@@ -1455,8 +1270,8 @@ final class AXEventHandler: CGSEventDelegate {
         guard candidate.token == token else { return false }
 
         cancelCreatedWindowRetry(windowId: windowId)
-        if shouldDelayManagedReplacementCreate(candidate) {
-            enqueueManagedReplacementCreate(candidate)
+        if managedReplacementCorrelator?.shouldDelayCreate(candidate) == true {
+            managedReplacementCorrelator?.enqueueCreate(candidate)
             return true
         }
 
@@ -2050,12 +1865,7 @@ final class AXEventHandler: CGSEventDelegate {
     }
 
     func resetManagedReplacementState() {
-        for (_, task) in pendingManagedReplacementTasks {
-            task.cancel()
-        }
-        pendingManagedReplacementTasks.removeAll()
-        pendingManagedReplacementBursts.removeAll()
-        nextManagedReplacementEventSequence = 0
+        managedReplacementCorrelator?.reset()
     }
 
     func resetWindowStabilizationState() {
@@ -2067,13 +1877,7 @@ final class AXEventHandler: CGSEventDelegate {
     }
 
     func flushPendingManagedReplacementEventsForTests() {
-        let keys = pendingManagedReplacementBursts.keys.sorted {
-            ($0.pid, $0.workspaceId.uuidString) < ($1.pid, $1.workspaceId.uuidString)
-        }
-        for key in keys {
-            pendingManagedReplacementTasks.removeValue(forKey: key)?.cancel()
-            flushManagedReplacementBurst(for: key)
-        }
+        managedReplacementCorrelator?.flushForTests()
     }
 
     func flushPendingNativeFullscreenFollowupsForTests() {
@@ -2212,11 +2016,21 @@ final class AXEventHandler: CGSEventDelegate {
             token: token,
             axRef: axRef,
             ruleEffects: evaluation.decision.ruleEffects,
-            replacementMetadata: makeManagedReplacementMetadata(
+            replacementMetadata: managedReplacementCorrelator?.makeManagedReplacementMetadata(
                 bundleId: resolvedBundleId,
                 workspaceId: workspaceId,
                 mode: trackedMode,
                 facts: evaluation.facts
+            ) ?? ManagedReplacementMetadata(
+                bundleId: resolvedBundleId,
+                workspaceId: workspaceId,
+                mode: trackedMode,
+                role: nil,
+                subrole: nil,
+                title: nil,
+                windowLevel: nil,
+                parentWindowId: nil,
+                frame: nil
             ),
             hasStructuralReplacementWorkspaceMatch: structuralReplacementWorkspaceId != nil,
             requiresPostCreateLifecycleVerification: requiresPostCreateLifecycleVerification(
@@ -2290,15 +2104,16 @@ final class AXEventHandler: CGSEventDelegate {
 
         let bundleId = resolveBundleId(token.pid) ?? entry.managedReplacementMetadata?.bundleId
         let windowInfo = resolveWindowInfo(windowId)
-        let cachedMetadata = overlayWindowServerInfo(
+        guard let correlator = managedReplacementCorrelator else { return nil }
+        let cachedMetadata = correlator.overlayWindowServerInfo(
             windowInfo,
-            onto: cachedManagedReplacementMetadata(
+            onto: correlator.cachedManagedReplacementMetadata(
                 for: entry,
                 fallbackBundleId: bundleId
             )
         )
         let replacementMetadata: ManagedReplacementMetadata
-        if managedReplacementNeedsLiveAXFacts(cachedMetadata) {
+        if correlator.managedReplacementNeedsLiveAXFacts(cachedMetadata) {
             let facts = managedReplacementFacts(
                 for: entry.axRef,
                 pid: token.pid,
@@ -2306,7 +2121,7 @@ final class AXEventHandler: CGSEventDelegate {
                 windowInfo: windowInfo,
                 includeTitle: false
             )
-            let liveMetadata = makeManagedReplacementMetadata(
+            let liveMetadata = correlator.makeManagedReplacementMetadata(
                 bundleId: cachedMetadata.bundleId,
                 workspaceId: entry.workspaceId,
                 mode: entry.mode,
@@ -2351,7 +2166,7 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
 
-        let shouldDelayDestroy = shouldDelayManagedReplacementDestroy(candidate)
+        let shouldDelayDestroy = managedReplacementCorrelator?.shouldDelayDestroy(candidate) ?? false
         if shouldDelayDestroy, handleNativeFullscreenDestroy(candidate.token) {
             return
         }
@@ -2360,7 +2175,7 @@ final class AXEventHandler: CGSEventDelegate {
             if controller?.currentKeyboardFocusTargetForRendering()?.token == candidate.token {
                 controller?.focusBorderController.hide()
             }
-            enqueueManagedReplacementDestroy(candidate)
+            managedReplacementCorrelator?.enqueueDestroy(candidate)
             return
         }
 
@@ -2386,214 +2201,6 @@ final class AXEventHandler: CGSEventDelegate {
 
     private func processPreparedDestroy(_ candidate: PreparedDestroy) {
         handleRemoved(token: candidate.token)
-    }
-
-    private func shouldDelayManagedReplacementCreate(_ candidate: PreparedCreate) -> Bool {
-        guard let _ = managedReplacementCorrelationPolicy(for: candidate.replacementMetadata) else {
-            return false
-        }
-
-        let key = ManagedReplacementKey(pid: candidate.token.pid, workspaceId: candidate.workspaceId)
-        if pendingManagedReplacementBursts[key] != nil {
-            return true
-        }
-
-        return candidate.hasStructuralReplacementWorkspaceMatch
-    }
-
-    private func shouldDelayManagedReplacementDestroy(_ candidate: PreparedDestroy) -> Bool {
-        managedReplacementCorrelationPolicy(for: candidate.replacementMetadata) != nil
-    }
-
-    private func enqueueManagedReplacementCreate(_ candidate: PreparedCreate) {
-        guard let policy = managedReplacementCorrelationPolicy(for: candidate.replacementMetadata) else { return }
-        let key = ManagedReplacementKey(pid: candidate.token.pid, workspaceId: candidate.workspaceId)
-        let isNewBurst = pendingManagedReplacementBursts[key] == nil
-        var burst = pendingManagedReplacementBursts[key] ?? PendingManagedReplacementBurst(
-            policy: policy,
-            firstEventUptime: managedReplacementCurrentUptime()
-        )
-        let pendingCreate = PendingManagedCreate(sequence: nextManagedReplacementSequence(), candidate: candidate)
-        burst.append(create: pendingCreate)
-        pendingManagedReplacementBursts[key] = burst
-        let resetExistingDeadline = isNewBurst
-        recordManagedReplacementTrace(
-            key: key,
-            kind: .enqueued(
-                policy: managedReplacementPolicyName(policy),
-                createCount: burst.creates.count,
-                destroyCount: burst.destroys.count,
-                holdCount: 0,
-                deadlineReset: resetExistingDeadline
-            )
-        )
-        scheduleManagedReplacementFlush(
-            for: key,
-            policy: policy,
-            resetExistingDeadline: resetExistingDeadline
-        )
-    }
-
-    private func enqueueManagedReplacementDestroy(_ candidate: PreparedDestroy) {
-        guard let policy = managedReplacementCorrelationPolicy(for: candidate.replacementMetadata) else { return }
-        let key = ManagedReplacementKey(pid: candidate.token.pid, workspaceId: candidate.workspaceId)
-        let isNewBurst = pendingManagedReplacementBursts[key] == nil
-        var burst = pendingManagedReplacementBursts[key] ?? PendingManagedReplacementBurst(
-            policy: policy,
-            firstEventUptime: managedReplacementCurrentUptime()
-        )
-        let pendingDestroy = PendingManagedDestroy(sequence: nextManagedReplacementSequence(), candidate: candidate)
-        burst.append(destroy: pendingDestroy)
-        pendingManagedReplacementBursts[key] = burst
-        let resetExistingDeadline = isNewBurst
-        recordManagedReplacementTrace(
-            key: key,
-            kind: .enqueued(
-                policy: managedReplacementPolicyName(policy),
-                createCount: burst.creates.count,
-                destroyCount: burst.destroys.count,
-                holdCount: 0,
-                deadlineReset: resetExistingDeadline
-            )
-        )
-        scheduleManagedReplacementFlush(
-            for: key,
-            policy: policy,
-            resetExistingDeadline: resetExistingDeadline
-        )
-    }
-
-    private func matchedManagedReplacementPair(
-        in burst: PendingManagedReplacementBurst
-    ) -> MatchedManagedReplacementPair? {
-        var matchedPair: MatchedManagedReplacementPair?
-
-        for destroy in burst.destroys {
-            for create in burst.creates {
-                guard destroy.candidate.token != create.candidate.token,
-                      managedReplacementMetadataMatches(
-                          oldToken: destroy.candidate.token,
-                          old: destroy.candidate.replacementMetadata,
-                          new: create.candidate.replacementMetadata,
-                          newFacts: nil
-                      )
-                else {
-                    continue
-                }
-
-                if matchedPair != nil {
-                    return nil
-                }
-                matchedPair = MatchedManagedReplacementPair(destroy: destroy, create: create)
-            }
-        }
-
-        return matchedPair
-    }
-
-    @discardableResult
-    private func completeManagedReplacement(
-        destroy: PendingManagedDestroy,
-        create: PendingManagedCreate
-    ) -> Bool {
-        rekeyManagedReplacement(from: destroy.candidate.token, to: create.candidate)
-    }
-
-    private func replayManagedReplacementEvents(_ events: [PendingManagedReplacementEvent]) {
-        for event in events.sorted(by: { $0.sequence < $1.sequence }) {
-            switch event {
-            case let .create(create):
-                trackPreparedCreate(create.candidate)
-            case let .destroy(destroy):
-                let windowId = UInt32(destroy.candidate.token.windowId)
-                let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
-                    controller?.serviceLifecycleManager.isAwaitingRestore == true
-                if isInProtectedWindow, windowExistsInWindowServer(windowId) {
-                    WMLog.ax.info(
-                        "Deferred destroy suppressed (wake/reconfig, still in window server): windowId=\(windowId, privacy: .public)"
-                    )
-                    continue
-                }
-                processPreparedDestroy(destroy.candidate)
-            }
-        }
-    }
-
-    @discardableResult
-    private func rekeyManagedReplacement(from oldToken: WindowToken, to create: PreparedCreate) -> Bool {
-        let entry = rekeyManagedWindowIdentity(
-            from: oldToken,
-            to: create.token,
-            windowId: create.windowId,
-            axRef: create.axRef,
-            managedReplacementMetadata: create.replacementMetadata
-        )
-        if entry != nil {
-            discardCreatePlacementContext(windowId: create.windowId)
-        }
-        return entry != nil
-    }
-
-    private func makeManagedReplacementMetadata(
-        bundleId: String?,
-        workspaceId: WorkspaceDescriptor.ID,
-        mode: TrackedWindowMode,
-        facts: WindowRuleFacts
-    ) -> ManagedReplacementMetadata {
-        ManagedReplacementMetadata(
-            bundleId: bundleId,
-            workspaceId: workspaceId,
-            mode: mode,
-            role: facts.ax.role,
-            subrole: facts.ax.subrole,
-            title: facts.ax.title,
-            windowLevel: facts.windowServer?.level,
-            parentWindowId: normalizedParentWindowId(facts.windowServer?.parentId),
-            frame: facts.windowServer?.frame,
-            transientWindowServerEvidence: facts.windowServer?.hasTransientSurfaceEvidence ?? false,
-            degradedWindowServerChildEvidence: facts.degradedWindowServerChildEvidence
-        )
-    }
-
-    private func normalizedParentWindowId(_ parentWindowId: UInt32?) -> UInt32? {
-        guard let parentWindowId, parentWindowId != 0 else { return nil }
-        return parentWindowId
-    }
-
-    private func cachedManagedReplacementMetadata(
-        for entry: WindowModel.Entry,
-        fallbackBundleId: String?
-    ) -> ManagedReplacementMetadata {
-        var metadata = entry.managedReplacementMetadata ?? ManagedReplacementMetadata(
-            bundleId: fallbackBundleId,
-            workspaceId: entry.workspaceId,
-            mode: entry.mode,
-            role: nil,
-            subrole: nil,
-            title: nil,
-            windowLevel: nil,
-            parentWindowId: nil,
-            frame: nil
-        )
-        metadata.bundleId = metadata.bundleId ?? fallbackBundleId
-        metadata.workspaceId = entry.workspaceId
-        metadata.mode = entry.mode
-        return metadata
-    }
-
-    private func overlayWindowServerInfo(
-        _ windowInfo: WindowServerInfo?,
-        onto metadata: ManagedReplacementMetadata
-    ) -> ManagedReplacementMetadata {
-        guard let windowInfo else { return metadata }
-        var metadata = metadata
-        metadata.title = windowInfo.title ?? metadata.title
-        metadata.windowLevel = windowInfo.level
-        metadata.parentWindowId = normalizedParentWindowId(windowInfo.parentId) ?? metadata.parentWindowId
-        if !windowInfo.frame.isNull, !windowInfo.frame.isEmpty {
-            metadata.frame = windowInfo.frame
-        }
-        return metadata
     }
 
     private func managedReplacementFacts(
@@ -2624,216 +2231,6 @@ final class AXEventHandler: CGSEventDelegate {
             sizeConstraints: nil,
             windowServer: windowInfo
         )
-    }
-
-    private func managedReplacementNeedsLiveAXFacts(
-        _ metadata: ManagedReplacementMetadata
-    ) -> Bool {
-        guard metadata.role != nil, metadata.subrole != nil else {
-            return true
-        }
-        return !managedReplacementHasStructuralAnchor(metadata)
-    }
-
-    private func structuralReplacementMatch(
-        token: WindowToken,
-        bundleId: String?,
-        mode: TrackedWindowMode,
-        facts: WindowRuleFacts
-    ) -> StructuralReplacementMatch? {
-        guard let controller,
-              let fallbackWorkspaceId = controller.activeWorkspace()?.id
-              ?? controller.workspaceManager.primaryWorkspace()?.id
-              ?? controller.workspaceManager.workspaces.first?.id
-        else {
-            return nil
-        }
-
-        let baseMetadata = makeManagedReplacementMetadata(
-            bundleId: bundleId,
-            workspaceId: fallbackWorkspaceId,
-            mode: mode,
-            facts: facts
-        )
-        guard managedReplacementCorrelationPolicy(for: baseMetadata) != nil else { return nil }
-
-        var match: StructuralReplacementMatch?
-        func recordMatch(token: WindowToken, workspaceId: WorkspaceDescriptor.ID) -> Bool {
-            if match != nil {
-                return false
-            }
-            match = StructuralReplacementMatch(token: token, workspaceId: workspaceId)
-            return true
-        }
-
-        func matches(_ oldMetadata: ManagedReplacementMetadata, oldToken: WindowToken) -> Bool {
-            var newMetadata = baseMetadata
-            newMetadata.workspaceId = oldMetadata.workspaceId
-            return managedReplacementMetadataMatches(
-                oldToken: oldToken,
-                old: oldMetadata,
-                new: newMetadata,
-                newFacts: facts
-            )
-        }
-
-        for burst in pendingManagedReplacementBursts.values {
-            for destroy in burst.destroys where destroy.candidate.token.pid == token.pid {
-                let metadata = destroy.candidate.replacementMetadata
-                if matches(metadata, oldToken: destroy.candidate.token),
-                   !recordMatch(token: destroy.candidate.token, workspaceId: metadata.workspaceId)
-                {
-                    return nil
-                }
-            }
-        }
-
-        for entry in controller.workspaceManager.entries(forPid: token.pid) where entry.token != token {
-            let cachedMetadata = cachedManagedReplacementMetadata(
-                for: entry,
-                fallbackBundleId: bundleId
-            )
-            if matches(cachedMetadata, oldToken: entry.token),
-               !recordMatch(token: entry.token, workspaceId: cachedMetadata.workspaceId)
-            {
-                return nil
-            }
-            if match?.token == entry.token {
-                continue
-            }
-            let liveMetadata = overlayWindowServerInfo(
-                UInt32(exactly: entry.windowId).flatMap(resolveWindowInfo),
-                onto: cachedMetadata
-            )
-            if liveMetadata != cachedMetadata,
-               matches(liveMetadata, oldToken: entry.token),
-               !recordMatch(token: entry.token, workspaceId: liveMetadata.workspaceId)
-            {
-                return nil
-            }
-        }
-
-        return match
-    }
-
-    private func managedReplacementCorrelationPolicy(
-        for metadata: ManagedReplacementMetadata
-    ) -> ManagedReplacementCorrelationPolicy? {
-        guard metadata.role != nil,
-              metadata.subrole != nil,
-              managedReplacementHasStructuralAnchor(metadata)
-        else { return nil }
-        return .structural
-    }
-
-    private func managedReplacementMetadataMatches(
-        oldToken: WindowToken,
-        old: ManagedReplacementMetadata,
-        new: ManagedReplacementMetadata,
-        newFacts: WindowRuleFacts?
-    ) -> Bool {
-        if managedReplacementIsDirectFloatingChild(oldToken: oldToken, new: new, newFacts: newFacts) {
-            return false
-        }
-
-        guard managedReplacementCorrelationPolicy(for: old) != nil,
-              managedReplacementCorrelationPolicy(for: new) != nil,
-              managedReplacementBundleIdsMatch(old.bundleId, new.bundleId),
-              old.workspaceId == new.workspaceId,
-              old.role == new.role,
-              old.subrole == new.subrole,
-              managedReplacementWindowLevelsMatch(old.windowLevel, new.windowLevel)
-        else {
-            return false
-        }
-
-        return managedReplacementStructuralAnchorsMatch(oldToken: oldToken, old: old, new: new)
-    }
-
-    private func managedReplacementIsDirectFloatingChild(
-        oldToken: WindowToken,
-        new: ManagedReplacementMetadata,
-        newFacts: WindowRuleFacts?
-    ) -> Bool {
-        guard new.mode == .floating,
-              let oldWindowId = UInt32(exactly: oldToken.windowId),
-              new.parentWindowId == oldWindowId
-        else {
-            return false
-        }
-
-        if managedReplacementHasAXChildEvidence(new) {
-            return true
-        }
-
-        if new.degradedWindowServerChildEvidence {
-            return true
-        }
-
-        return newFacts?.degradedWindowServerChildEvidence == true
-    }
-
-    private func managedReplacementHasAXChildEvidence(_ metadata: ManagedReplacementMetadata) -> Bool {
-        if metadata.role == kAXSheetRole as String {
-            return true
-        }
-
-        guard let subrole = metadata.subrole else {
-            return false
-        }
-
-        return subrole == kAXDialogSubrole as String
-            || subrole == kAXSystemDialogSubrole as String
-            || subrole != kAXStandardWindowSubrole as String
-    }
-
-    private func managedReplacementHasStructuralAnchor(
-        _ metadata: ManagedReplacementMetadata
-    ) -> Bool {
-        metadata.parentWindowId != nil || metadata.frame != nil
-    }
-
-    private func managedReplacementBundleIdsMatch(_ lhs: String?, _ rhs: String?) -> Bool {
-        switch (lhs?.lowercased(), rhs?.lowercased()) {
-        case let (lhs?, rhs?):
-            return lhs == rhs
-        default:
-            return true
-        }
-    }
-
-    private func managedReplacementWindowLevelsMatch(_ lhs: Int32?, _ rhs: Int32?) -> Bool {
-        guard let lhs, let rhs else { return true }
-        return lhs == rhs
-    }
-
-    private func managedReplacementStructuralAnchorsMatch(
-        oldToken: WindowToken,
-        old: ManagedReplacementMetadata,
-        new: ManagedReplacementMetadata
-    ) -> Bool {
-        let framesClose = framesAreCloseForManagedReplacement(old.frame, new.frame)
-        let hasFrameEvidence = old.frame != nil && new.frame != nil
-
-        switch (old.parentWindowId, new.parentWindowId) {
-        case let (oldParentWindowId?, newParentWindowId?) where oldParentWindowId == newParentWindowId:
-            return hasFrameEvidence ? framesClose : true
-        case let (_, newParentWindowId?) where UInt32(exactly: oldToken.windowId) == newParentWindowId:
-            return framesClose
-        case (_?, _?):
-            return false
-        default:
-            return framesClose
-        }
-    }
-
-    private func framesAreCloseForManagedReplacement(_ lhs: CGRect?, _ rhs: CGRect?) -> Bool {
-        guard let lhs, let rhs else { return false }
-
-        return abs(lhs.midX - rhs.midX) <= 96
-            && abs(lhs.midY - rhs.midY) <= 96
-            && abs(lhs.width - rhs.width) <= 64
-            && abs(lhs.height - rhs.height) <= 64
     }
 
     private func refreshBorderAfterManagedRekey(entry: WindowModel.Entry) {
@@ -2907,76 +2304,6 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
         cancelNativeFullscreenLifecycleTasks(for: token)
-    }
-
-    private func managedReplacementGraceDelay(for policy: ManagedReplacementCorrelationPolicy) -> Duration {
-        switch policy {
-        case .structural:
-            Self.managedReplacementGraceDelay
-        }
-    }
-
-    private func scheduleManagedReplacementFlush(
-        for key: ManagedReplacementKey,
-        policy: ManagedReplacementCorrelationPolicy,
-        resetExistingDeadline: Bool
-    ) {
-        if resetExistingDeadline {
-            pendingManagedReplacementTasks.removeValue(forKey: key)?.cancel()
-        } else if pendingManagedReplacementTasks[key] != nil {
-            return
-        }
-
-        let delay = managedReplacementGraceDelay(for: policy)
-        pendingManagedReplacementTasks[key] = Task { @MainActor [weak self] in
-            try? await Task.sleep(for: delay)
-            guard !Task.isCancelled else { return }
-            self?.flushManagedReplacementBurst(for: key)
-        }
-    }
-
-    private func flushManagedReplacementBurst(for key: ManagedReplacementKey) {
-        pendingManagedReplacementTasks.removeValue(forKey: key)?.cancel()
-        guard let burst = pendingManagedReplacementBursts.removeValue(forKey: key) else { return }
-        let elapsedMillis = max(
-            0,
-            Int(((managedReplacementCurrentUptime() - burst.firstEventUptime) * 1000).rounded())
-        )
-        recordManagedReplacementTrace(
-            key: key,
-            kind: .flushed(
-                policy: managedReplacementPolicyName(burst.policy),
-                createCount: burst.creates.count,
-                destroyCount: burst.destroys.count,
-                holdCount: 0,
-                elapsedMillis: elapsedMillis
-            )
-        )
-
-        if let pair = matchedManagedReplacementPair(in: burst) {
-            if completeManagedReplacement(destroy: pair.destroy, create: pair.create) {
-                recordManagedReplacementTrace(
-                    key: key,
-                    kind: .matched(
-                        policy: managedReplacementPolicyName(burst.policy),
-                        elapsedMillis: elapsedMillis
-                    )
-                )
-                replayManagedReplacementEvents(
-                    burst.orderedEvents(excludingSequences: pair.excludedSequences)
-                )
-            } else {
-                replayManagedReplacementEvents(burst.orderedEvents)
-            }
-            return
-        }
-
-        replayManagedReplacementEvents(burst.orderedEvents)
-    }
-
-    private func nextManagedReplacementSequence() -> UInt64 {
-        defer { nextManagedReplacementEventSequence += 1 }
-        return nextManagedReplacementEventSequence
     }
 
     private func updateManagedReplacementFrame(_ frame: CGRect, for entry: WindowModel.Entry) {
@@ -3552,5 +2879,58 @@ final class AXEventHandler: CGSEventDelegate {
         }
         return controller.appInfoCache.bundleId(for: pid) ?? NSRunningApplication(processIdentifier: pid)?
             .bundleIdentifier
+    }
+}
+
+// MARK: - ManagedReplacementCorrelatorDelegate
+
+extension AXEventHandler: ManagedReplacementCorrelatorDelegate {
+    func correlatorRekeyReplacement(
+        from oldToken: WindowToken,
+        to newToken: WindowToken,
+        windowId: UInt32,
+        axRef: AXWindowRef,
+        metadata: ManagedReplacementMetadata
+    ) -> Bool {
+        let entry = rekeyManagedWindowIdentity(
+            from: oldToken,
+            to: newToken,
+            windowId: windowId,
+            axRef: axRef,
+            managedReplacementMetadata: metadata
+        )
+        if entry != nil {
+            discardCreatePlacementContext(windowId: windowId)
+        }
+        return entry != nil
+    }
+
+    func correlatorReplayCreate(_ create: PreparedCreate) {
+        trackPreparedCreate(create)
+    }
+
+    func correlatorReplayDestroy(_ destroy: PreparedDestroy) {
+        processPreparedDestroy(destroy)
+    }
+
+    func correlatorShouldSuppressDestroyReplay(windowId: UInt32) -> Bool {
+        let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
+            controller?.serviceLifecycleManager.isAwaitingRestore == true
+        return isInProtectedWindow && windowExistsInWindowServer(windowId)
+    }
+
+    func correlatorFallbackWorkspaceId() -> WorkspaceDescriptor.ID? {
+        guard let controller else { return nil }
+        return controller.activeWorkspace()?.id
+            ?? controller.workspaceManager.primaryWorkspace()?.id
+            ?? controller.workspaceManager.workspaces.first?.id
+    }
+
+    func correlatorEntriesForPid(_ pid: pid_t) -> [WindowModel.Entry] {
+        controller?.workspaceManager.entries(forPid: pid) ?? []
+    }
+
+    func correlatorWindowInfo(windowId: UInt32) -> WindowServerInfo? {
+        resolveWindowInfo(windowId)
     }
 }
