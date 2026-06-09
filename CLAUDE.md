@@ -180,7 +180,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 - **Bug #19** (Chrome re-admission storm): FIXED (build 85). 0 .pid reevaluation triggers in 8h. Was the amplifier for bugs #6/#7.
 - **Bug #21** (Dwindle wake wrong-monitor coordinates): OPEN — pre-existing. Memorygraph `dd0141b7`.
 - **Bug #20** (Ghostty tab phantom columns): OPEN — needs design. Memorygraph `a816fa8e`.
-- **Flutter during moveToWorkspace**: REPRODUCED. 7 frame write batches / 200ms. cancelActiveTask removal kept (build 88, prevents torn frames). lastAppliedFrames fix REVERTED (amplified 7→17). Deep architectural issue — display link ticks + frame suppression + SkyLight moves. Needs Extraction 3 + Fix D. Pre-existing upstream. Memorygraph `91ce7d92`.
+- **Flutter during moveToWorkspace**: REPRODUCED. 5 fix attempts failed (Phase 4.5 STOP). Root cause: scroll animation itself (30+ LayoutDiffExecutor writes/1.5s). cancelActiveTask removal kept (build 88). Needs architectural approach: study upstream with debugger, not more patching. Memorygraph `91ce7d92`.
 - **Portrait display window loss after sleep/wake**: REPRODUCED (build 88). WS 6 Chrome+Slack removed during wake, not recovered on restart. willSleep may not fire for debug binary (BackgroundOnly). Memorygraph `33b4d04f`.
 - **Evidence**: 8h log analysis (memorygraph `a2964876`). 42 frame writes / 0 mismatches in normal operation. Wake: 4 mismatches, self-resolving.
 
