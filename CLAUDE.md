@@ -4,11 +4,12 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) is no longer maintained.** This fork is the primary codebase. Last upstream: v0.4.9.6 build 53.
-Branch: `fix/scope-relayout-to-workspace`. Build 97. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 98. PID check: `pgrep -x OmniWM`.
 
 ### Architecture Status
 Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god node extractions done.
 **5 SSOT invariants missing** (memorygraph `6ab03ce1`): ALL investigated, ALL upstream behavior.
+**Hydration matching (SSOT #6)**: FIXED (build 98). Fallback metadata populated from evaluation.facts + AXWindowService.titlePreferFast. Hydration scoped to admission events only (0 noMatch spam). Two-restart migration — first restart saves enriched catalog, second restart restores window positions.
 1. **Window identity**: FIXED (build 95). WorkspaceAssignmentManager with recently-removed cache (2s TTL, pid+bundleId key). Session-only — disk catalog reload deferred.
 2. **Workspace assignment**: FIXED (build 95). Central `assignWindowToWorkspace()` gate with `WorkspaceAssignmentReason` enum. trackPreparedCreate refactored to use gate. Bug #23 fixed.
 3. **Display coalescing**: FIXED (build 92). 300ms trailing-edge debounce in handleMonitorConfigurationChanged. 15 SLM tests pass.
@@ -186,8 +187,8 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 5. **RefreshMergeMatrixTests** (test-only, ~300 lines) — Fix D safety net
 **Not touched:** WorkspaceManager (all LOW), WMController forwarding (stable API), ForTests providers, LRC buildFullRefreshExecutionPlan.
 
-### Bug Status (build 90, 2026-06-10)
-- **Bug #7** (column gap after moveToWorkspace): OPEN — cannot reproduce. Phase 3 pipeline handles viewport shift (diagnostic proof). normalizeColumnSizes is dead code (0 callers). Memorygraph `340b4ffd`.
+### Bug Status (build 97, 2026-06-10)
+- **Bug #7/27** (column gap after moveToWorkspace): **REPRODUCED** (build 97). VSCode ws1→ws8 (landscape 2560px). IPC frames show correct positions (x=2, x=1281, each 1277px) but visual rendering has left-side gap. Two requestImmediateRelayout passes (102ms + 208ms). atomicTransfer preserved source width (861→1277 via relayout). Logs: `.claude/bug27_ws_transfer_logs.txt`. Memorygraph `0486d6ce`.
 - **Bug #6/22** (Chrome verificationMismatch retry loop): OPEN — cannot reproduce in normal operation. 0 mismatches in 42 frame writes (30min sample). Original 13-retry loop was amplified by bug #19 re-admission storm (now fixed). Wake-only: 4 events in 15s, self-resolving. Expert panel design ready if resurfaces. Memorygraph `e4ad0d6b`.
 - **Bug #19** (Chrome re-admission storm): FIXED (build 85). 0 .pid reevaluation triggers in 8h. Was the amplifier for bugs #6/#7.
 - **Bug #20** (Ghostty tab phantom columns): OPEN — needs design. Memorygraph `a816fa8e`.
