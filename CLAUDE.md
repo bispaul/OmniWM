@@ -3,7 +3,18 @@
 ## Project
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
-Branch: `fix/scope-relayout-to-workspace`. Build 90. PID check: `pgrep -x OmniWM`.
+**Upstream (BarutSRB/Hiro) is no longer maintained.** This fork is the primary codebase. Last upstream: v0.4.9.6 build 53.
+Branch: `fix/scope-relayout-to-workspace`. Build 91. PID check: `pgrep -x OmniWM`.
+
+### Architecture Status
+Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god node extractions done.
+**5 SSOT invariants missing** (memorygraph `6ab03ce1`): ALL investigated, ALL upstream behavior.
+1. **Window identity**: `bootPersistedWindowRestoreCatalog` loaded once at boot, never reloaded → noMatch always (RestorePlanner.swift:255, WorkspaceManager.swift:237)
+2. **Workspace assignment**: 5 ungated paths (AXEventHandler:327, LRC:2955, SLM:245, WNH:435, WM:1102). Bug #23 root cause: native fullscreen placeholder uses layout plan workspace, not original.
+3. **Display coalescing**: DisplayConfigurationObserver 100ms debounce delays but doesn't coalesce per-monitor callbacks → 7 rescans (SLM:224-289)
+4. **Admission dedup**: FIXED (build 91). Guard in trackPreparedCreate skips already-tracked windows. 165 tests pass.
+5. **Focus reconciliation**: FocusPolicyLease expiry doesn't reconcile with macOS keyboard focus. Needs investigation.
+Architecture ~30% toward clean.
 
 ## Constitution — MANDATORY Process Gates
 
@@ -49,6 +60,7 @@ Branch: `fix/scope-relayout-to-workspace`. Build 90. PID check: `pgrep -x OmniWM
 1. **Verify logs are flowing**: `/usr/bin/log show --predicate 'processIdentifier == <PID> AND subsystem == "com.omniwm"' --last 10s --info --debug` — must show output. If empty, the binary lost Accessibility permission (macOS revokes on unsigned binary change).
 2. **Verify hotkeys work**: stream `category == "input"` while pressing a hotkey. If no events, re-add `.build/debug/OmniWM` to Accessibility via symlink method.
 3. **Every `swift build` produces a new unsigned binary** — macOS may revoke CGEventTap permission. This is expected development friction, not a code bug.
+4. **Restart SketchyBar watcher**: `.build/debug/omniwmctl watch --all --exec sketchybar --trigger omniwm_workspace_changed &` — the watch process dies on every Hiro restart.
 
 ### Before ANY Deployment to User's Desktop
 
@@ -174,12 +186,14 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 5. **RefreshMergeMatrixTests** (test-only, ~300 lines) — Fix D safety net
 **Not touched:** WorkspaceManager (all LOW), WMController forwarding (stable API), ForTests providers, LRC buildFullRefreshExecutionPlan.
 
-### Bug Status (build 87, 2026-06-09)
+### Bug Status (build 90, 2026-06-10)
 - **Bug #7** (column gap after moveToWorkspace): OPEN — cannot reproduce. Phase 3 pipeline handles viewport shift (diagnostic proof). normalizeColumnSizes is dead code (0 callers). Memorygraph `340b4ffd`.
 - **Bug #6/22** (Chrome verificationMismatch retry loop): OPEN — cannot reproduce in normal operation. 0 mismatches in 42 frame writes (30min sample). Original 13-retry loop was amplified by bug #19 re-admission storm (now fixed). Wake-only: 4 events in 15s, self-resolving. Expert panel design ready if resurfaces. Memorygraph `e4ad0d6b`.
 - **Bug #19** (Chrome re-admission storm): FIXED (build 85). 0 .pid reevaluation triggers in 8h. Was the amplifier for bugs #6/#7.
-- **Bug #21** (Dwindle wake wrong-monitor coordinates): OPEN — pre-existing. Memorygraph `dd0141b7`.
 - **Bug #20** (Ghostty tab phantom columns): OPEN — needs design. Memorygraph `a816fa8e`.
+- **Bug #21** (Dwindle wake wrong-monitor coordinates): OPEN — pre-existing. Memorygraph `dd0141b7`.
+- **Bug #23** (native fullscreen wrong workspace): REPRODUCED (build 90). Slack on WS6 portrait → green button → placeholder assigned to WS1 (main display) instead of WS6. On exit, Slack returns to WS1. Cross-display workspace assignment bug. Memorygraph `49720f51`.
+- **Bug #24** (focus desync portrait Dwindle): USER-REPORTED (build 90). Border on Slack but Caps+F went to Chrome. FocusPolicyLease(nativeAppSwitch) may suppress focusFollowsMouse. Needs independent reproduction. Memorygraph `f4abd2b4`.
 - **Flutter during moveToWorkspace**: REPRODUCED. 5 fix attempts failed (Phase 4.5 STOP). Root cause: scroll animation itself (30+ LayoutDiffExecutor writes/1.5s). cancelActiveTask removal kept (build 88). Needs architectural approach: study upstream with debugger, not more patching. Memorygraph `91ce7d92`.
 - **Portrait display window loss after sleep/wake**: REPRODUCED (build 88). WS 6 Chrome+Slack removed during wake, not recovered on restart. willSleep may not fire for debug binary (BackgroundOnly). Memorygraph `33b4d04f`.
 - **Evidence**: 8h log analysis (memorygraph `a2964876`). 42 frame writes / 0 mismatches in normal operation. Wake: 4 mismatches, self-resolving.

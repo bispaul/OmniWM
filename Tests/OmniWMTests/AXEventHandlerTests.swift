@@ -10981,6 +10981,56 @@ private func waitUntilAXEventTest(
 
         #expect(controller.workspaceManager.entry(for: token) == nil)
     }
+
+    @Test @MainActor func trackPreparedCreateSkipsDuplicateAdmission() async {
+        let controller = makeAXEventTestController()
+        guard let workspaceId = controller.activeWorkspace()?.id else {
+            Issue.record("Missing active workspace")
+            return
+        }
+
+        let windowId: UInt32 = 900
+        let pid = getpid()
+        let axRef = AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: Int(windowId))
+
+        _ = controller.workspaceManager.addWindow(
+            axRef,
+            pid: pid,
+            windowId: Int(windowId),
+            to: workspaceId
+        )
+        #expect(controller.workspaceManager.entry(for: WindowToken(pid: pid, windowId: Int(windowId))) != nil)
+
+        var relayoutReasons: [RefreshReason] = []
+        controller.layoutRefreshController.resetDebugState()
+        controller.layoutRefreshController.debugHooks.onRelayout = { reason, _ in
+            relayoutReasons.append(reason)
+            return true
+        }
+
+        let windowInfo = makeAXEventWindowInfo(id: windowId, pid: pid)
+        controller.axEventHandler.windowInfoProviderIsAuthoritativeForTests = true
+        controller.axEventHandler.windowInfoProvider = { candidateId in
+            guard candidateId == windowId else { return nil }
+            return windowInfo
+        }
+        controller.axEventHandler.axWindowRefProvider = { candidateId, candidatePid in
+            guard candidateId == windowId, candidatePid == pid else { return nil }
+            return axRef
+        }
+        controller.axEventHandler.windowFactsProvider = { _, _ in
+            makeAXEventWindowRuleFacts()
+        }
+        controller.axEventHandler.frameProvider = { _ in .zero }
+
+        controller.axEventHandler.cgsEventObserver(
+            CGSEventObserver.shared,
+            didReceive: .created(windowId: windowId, spaceId: 0)
+        )
+
+        let createdRelayouts = relayoutReasons.filter { $0 == .axWindowCreated }
+        #expect(createdRelayouts.isEmpty, "Already-tracked window should not trigger duplicate admission relayout")
+    }
 }
 
 // MARK: - Bug #19 Regression: Untracked window destroy reevaluation guard

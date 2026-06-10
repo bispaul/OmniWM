@@ -700,6 +700,14 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
 
+        if controller.workspaceManager.entry(for: candidate.token) != nil {
+            WMLog.ax
+                .info(
+                    "trackPreparedCreate: skipping already-tracked windowId=\(candidate.windowId, privacy: .public)"
+                )
+            return
+        }
+
         WMLog.ax
             .info(
                 "trackPreparedCreate: windowId=\(candidate.windowId, privacy: .public) pid=\(candidate.token.pid, privacy: .public) mode=\(String(describing: candidate.mode), privacy: .public) workspaceId=\(candidate.workspaceId.uuidString, privacy: .public)"
