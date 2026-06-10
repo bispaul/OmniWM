@@ -13,7 +13,7 @@ Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god n
 2. **Workspace assignment**: FIXED (build 95). Central `assignWindowToWorkspace()` gate with `WorkspaceAssignmentReason` enum. trackPreparedCreate refactored to use gate. Bug #23 fixed.
 3. **Display coalescing**: FIXED (build 92). 300ms trailing-edge debounce in handleMonitorConfigurationChanged. 15 SLM tests pass.
 4. **Admission dedup**: FIXED (build 91). Guard in trackPreparedCreate skips already-tracked windows. 165 tests pass.
-5. **Focus reconciliation**: FIXED (build 93). reconcileMacOSFocus calls performWindowFronting after managedFocusConfirmed. Guards: isSystemUIActive + hasNonAppSwitchFocusSuppression. 167 AXEventHandler tests pass.
+5. **Focus reconciliation**: FIXED (build 93+95b). Two layers: reconcileMacOSFocus on nativeAppSwitch + reconcileFocusBeforeCommand on hotkey dispatch (compares border PID vs macOS frontmost PID). The hotkey-level fix is critical — macOS 14+ ignores activateIgnoringOtherApps, so passive reconciliation doesn't work; the hotkey press provides user interaction context macOS requires.
 Architecture ~30% toward clean.
 
 ## Constitution — MANDATORY Process Gates
