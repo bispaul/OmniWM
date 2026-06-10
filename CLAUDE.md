@@ -4,7 +4,7 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) is no longer maintained.** This fork is the primary codebase. Last upstream: v0.4.9.6 build 53.
-Branch: `fix/scope-relayout-to-workspace`. Build 95. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 95b. PID check: `pgrep -x OmniWM`.
 
 ### Architecture Status
 Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god node extractions done.
