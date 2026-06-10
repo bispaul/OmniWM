@@ -2042,7 +2042,7 @@ final class AXEventHandler: CGSEventDelegate {
                 mode: trackedMode,
                 role: evaluation.facts.ax.role,
                 subrole: evaluation.facts.ax.subrole,
-                title: evaluation.facts.ax.title,
+                title: evaluation.facts.ax.title ?? AXWindowService.titlePreferFast(windowId: windowId),
                 windowLevel: evaluation.facts.windowServer?.level,
                 parentWindowId: evaluation.facts.windowServer?.parentId,
                 frame: evaluation.facts.windowServer?.frame

@@ -1341,7 +1341,8 @@ import QuartzCore
                 mode: admittedMode,
                 role: evaluation.facts.ax.role ?? existingEntry?.managedReplacementMetadata?.role,
                 subrole: evaluation.facts.ax.subrole ?? existingEntry?.managedReplacementMetadata?.subrole,
-                title: evaluation.facts.ax.title ?? existingEntry?.managedReplacementMetadata?.title,
+                title: evaluation.facts.ax.title ?? AXWindowService.titlePreferFast(windowId: UInt32(winId))
+                    ?? existingEntry?.managedReplacementMetadata?.title,
                 windowLevel: evaluation.facts.windowServer?.level ?? existingEntry?.managedReplacementMetadata?
                     .windowLevel,
                 parentWindowId: parentWindowId,
