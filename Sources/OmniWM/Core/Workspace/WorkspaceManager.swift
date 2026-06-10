@@ -205,6 +205,7 @@ final class WorkspaceManager {
     private(set) var outerGaps: LayoutGaps.OuterGaps = .zero
     private let windows = WindowModel()
     private let reconcileTrace = ReconcileTraceRecorder()
+    private(set) lazy var assignmentManager = WorkspaceAssignmentManager(workspaceManager: self)
     private lazy var runtimeStore = RuntimeStore(traceRecorder: reconcileTrace)
     private let restorePlanner = RestorePlanner()
     private let bootPersistedWindowRestoreCatalog: PersistedWindowRestoreCatalog
