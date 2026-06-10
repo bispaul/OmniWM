@@ -2841,16 +2841,17 @@ extension WMController {
         windowFocusOperations.raiseWindow(axRef.element)
     }
 
+    private static let systemBundleIds: Set<String> = [
+        "com.apple.Spotlight",
+        "com.apple.SecurityAgent",
+        "com.apple.notificationcenterui",
+        "com.apple.dock"
+    ]
+
     private func isSystemUIActive() -> Bool {
         if isLockScreenActive { return true }
         guard let frontBundle = NSWorkspace.shared.frontmostApplication?.bundleIdentifier else { return false }
-        let systemBundleIds = [
-            "com.apple.Spotlight",
-            "com.apple.SecurityAgent",
-            "com.apple.notificationcenterui",
-            "com.apple.dock"
-        ]
-        return systemBundleIds.contains(frontBundle)
+        return Self.systemBundleIds.contains(frontBundle)
     }
 
     func reconcileFocusBeforeCommand() {

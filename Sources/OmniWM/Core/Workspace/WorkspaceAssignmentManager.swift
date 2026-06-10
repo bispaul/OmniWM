@@ -4,8 +4,6 @@ import os
 enum WorkspaceAssignmentReason {
     case admission
     case transfer
-    case nativeFullscreen
-    case displayReconfigure
 }
 
 @MainActor
@@ -24,16 +22,25 @@ final class WorkspaceAssignmentManager {
 
     private var recentlyRemovedWorkspaces: [RecentRemovalKey: RecentRemoval] = [:]
     private static let cacheExpiryInterval: TimeInterval = 2.0
+    private static let cacheMaxSize = 64
+    var clockForTests: (() -> Date)?
 
     init(workspaceManager: WorkspaceManager) {
         self.workspaceManager = workspaceManager
+    }
+
+    private func now() -> Date {
+        clockForTests?() ?? Date()
     }
 
     // MARK: - Recently-Removed Cache
 
     func recordRemoval(token: WindowToken, workspaceId: WorkspaceDescriptor.ID, bundleId: String?) {
         let key = RecentRemovalKey(pid: token.pid, bundleId: bundleId)
-        recentlyRemovedWorkspaces[key] = RecentRemoval(workspaceId: workspaceId, removedAt: Date())
+        recentlyRemovedWorkspaces[key] = RecentRemoval(workspaceId: workspaceId, removedAt: now())
+        if recentlyRemovedWorkspaces.count > Self.cacheMaxSize {
+            sweepExpiredEntries()
+        }
         WMLog.workspace.info(
             "recordRemoval: cached workspace for pid=\(token.pid, privacy: .public) bundleId=\(bundleId ?? "nil", privacy: .public)"
         )
@@ -42,12 +49,19 @@ final class WorkspaceAssignmentManager {
     private func cachedWorkspace(pid: pid_t, bundleId: String?) -> WorkspaceDescriptor.ID? {
         let key = RecentRemovalKey(pid: pid, bundleId: bundleId)
         guard let removal = recentlyRemovedWorkspaces[key],
-              Date().timeIntervalSince(removal.removedAt) < Self.cacheExpiryInterval
+              now().timeIntervalSince(removal.removedAt) < Self.cacheExpiryInterval
         else {
             recentlyRemovedWorkspaces.removeValue(forKey: key)
             return nil
         }
         return removal.workspaceId
+    }
+
+    private func sweepExpiredEntries() {
+        let current = now()
+        recentlyRemovedWorkspaces = recentlyRemovedWorkspaces.filter { _, removal in
+            current.timeIntervalSince(removal.removedAt) < Self.cacheExpiryInterval
+        }
     }
 
     // MARK: - Central Assignment Gate
@@ -98,5 +112,11 @@ final class WorkspaceAssignmentManager {
 
     func setWorkspace(for token: WindowToken, to workspace: WorkspaceDescriptor.ID) {
         workspaceManager.setWorkspace(for: token, to: workspace)
+    }
+
+    // MARK: - Test Support
+
+    func cachedWorkspaceForTests(pid: pid_t, bundleId: String?) -> WorkspaceDescriptor.ID? {
+        cachedWorkspace(pid: pid, bundleId: bundleId)
     }
 }

@@ -142,7 +142,9 @@ private func makeTestWindow(windowId: Int) -> AXWindowRef {
         let testBundleId = "com.test.expiry"
         let ax = makeTestWindow(windowId: 301)
 
-        // Add and remove window
+        var fakeClock = Date()
+        controller.workspaceManager.assignmentManager.clockForTests = { fakeClock }
+
         let token = controller.workspaceManager.addWindow(
             ax, pid: testPid, windowId: 301, to: ws1
         )
@@ -151,10 +153,8 @@ private func makeTestWindow(windowId: Int) -> AXWindowRef {
         )
         controller.workspaceManager.removeWindow(pid: testPid, windowId: 301)
 
-        // Wait for cache to expire (>2 seconds)
-        try await Task.sleep(for: .seconds(2.1))
+        fakeClock = fakeClock.addingTimeInterval(2.1)
 
-        // Re-assign targeting WS2
         let ax2 = makeTestWindow(windowId: 302)
         let newToken = controller.workspaceManager.assignmentManager.assignWindowToWorkspace(
             ax2,
@@ -169,7 +169,6 @@ private func makeTestWindow(windowId: Int) -> AXWindowRef {
             )
         )
 
-        // Assert: window lands on WS2 (cache expired)
         let entry = controller.workspaceManager.entry(for: newToken)
         #expect(entry != nil)
         #expect(entry?.workspaceId == ws2)
@@ -264,5 +263,41 @@ private func makeTestWindow(windowId: Int) -> AXWindowRef {
         let entry = controller.workspaceManager.entry(for: newToken)
         #expect(entry != nil)
         #expect(entry?.workspaceId == ws2)
+    }
+
+    @Test @MainActor func cacheSweepsExpiredEntriesWhenOverSizeCap() async {
+        let settings = SettingsStore(defaults: makeTestDefaults())
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main)
+        ]
+        let controller = WMController(settings: settings)
+        let monitor = makeTestMonitor()
+        controller.workspaceManager.applyMonitorConfigurationChange([monitor])
+
+        guard let ws1 = controller.workspaceManager.workspaceId(for: "1", createIfMissing: true)
+        else {
+            Issue.record("Failed to create workspace")
+            return
+        }
+
+        var fakeClock = Date()
+        let wam = controller.workspaceManager.assignmentManager
+        wam.clockForTests = { fakeClock }
+
+        for i in 0 ..< 70 {
+            let token = WindowToken(pid: pid_t(60_000 + i), windowId: 6000 + i)
+            wam.recordRemoval(token: token, workspaceId: ws1, bundleId: "com.test.sweep.\(i)")
+        }
+
+        fakeClock = fakeClock.addingTimeInterval(2.1)
+
+        let freshToken = WindowToken(pid: 70_000, windowId: 7000)
+        wam.recordRemoval(token: freshToken, workspaceId: ws1, bundleId: "com.test.fresh")
+
+        let cached = wam.cachedWorkspaceForTests(pid: 70_000, bundleId: "com.test.fresh")
+        #expect(cached == ws1, "Fresh entry should survive sweep")
+
+        let expired = wam.cachedWorkspaceForTests(pid: 60_000, bundleId: "com.test.sweep.0")
+        #expect(expired == nil, "Expired entry should be swept")
     }
 }
