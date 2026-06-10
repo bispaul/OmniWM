@@ -80,9 +80,12 @@ final class ServiceLifecycleManager {
     private(set) var sleepSnapshot: SleepStateSnapshot?
     private var restoreTimerTask: Task<Void, Never>?
     private var darkWakeTimeoutTask: Task<Void, Never>?
+    private var pendingTopologyTask: Task<Void, Never>?
+    private static let topologyCoalesceInterval: UInt64 = 300_000_000 // 300ms
     var accessibilityPermissionStreamProviderForTests: ((Bool) -> AsyncStream<Bool>)?
     var accessibilityPermissionStateProviderForTests: (() -> Bool)?
     var accessibilityPermissionRequestHandlerForTests: (() -> Bool)?
+    var applyMonitorConfigurationChangedCountForTests: (() -> Void)?
 
     init(controller: WMController) {
         self.controller = controller
@@ -254,13 +257,19 @@ final class ServiceLifecycleManager {
     }
 
     private func handleMonitorConfigurationChanged() {
-        applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
+        pendingTopologyTask?.cancel()
+        pendingTopologyTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: Self.topologyCoalesceInterval)
+            guard !Task.isCancelled, let self else { return }
+            applyMonitorConfigurationChanged(currentMonitors: Monitor.current())
+        }
     }
 
     func applyMonitorConfigurationChanged(
         currentMonitors: [Monitor],
         performPostUpdateActions: Bool = true
     ) {
+        applyMonitorConfigurationChangedCountForTests?()
         guard let controller else { return }
         // Invalidate border cache so it gets fully recomputed after monitor change
         // (prevents stale geometry when display ID or coordinate space changes, e.g. KVM switch)

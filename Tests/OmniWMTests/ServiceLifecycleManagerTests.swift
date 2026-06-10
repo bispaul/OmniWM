@@ -759,4 +759,34 @@ private func waitUntilServiceLifecycleTest(
         #expect(settings.mouseWarpMonitorOrder == ["Right", "Left"])
         #expect(settings.effectiveMouseWarpMonitorOrder(for: [left, right]) == ["Right", "Left"])
     }
+
+    @Test @MainActor func displayEventCoalescingDebounces5RapidEventsToSingleApply() async {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main)
+        ]
+
+        let controller = WMController(settings: settings)
+        let lifecycleManager = controller.serviceLifecycleManager
+        let monitor = makeLifecycleMonitor(displayId: 100, name: "Main", x: 0, y: 0)
+        controller.workspaceManager.applyMonitorConfigurationChange([monitor])
+
+        var applyCount = 0
+        lifecycleManager.applyMonitorConfigurationChangedCountForTests = {
+            applyCount += 1
+        }
+
+        // Fire 5 rapid display events — should coalesce into 1
+        for _ in 0 ..< 5 {
+            lifecycleManager.handleDisplayEventForTests(.connected(monitor))
+        }
+
+        // Wait for debounce to settle — poll until the apply fires (300ms debounce + margin)
+        await waitUntilServiceLifecycleTest(iterations: 500) {
+            applyCount >= 1
+        }
+
+        #expect(applyCount == 1, "Expected 5 rapid events to coalesce into 1 apply, got \(applyCount)")
+    }
 }
