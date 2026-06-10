@@ -64,6 +64,8 @@ final class CommandHandler {
         }
         WMLog.input.info("performCommand: executing command=\(String(describing: command), privacy: .public)")
 
+        controller.reconcileFocusBeforeCommand()
+
         switch command {
         case let .focus(direction):
             layoutHandler(as: LayoutFocusable.self)?.focusNeighbor(direction: direction)

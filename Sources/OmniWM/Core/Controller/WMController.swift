@@ -2862,6 +2862,21 @@ extension WMController {
         performWindowFronting(pid: entry.pid, windowId: entry.windowId, axRef: entry.axRef)
     }
 
+    func reconcileFocusBeforeCommand() {
+        guard let borderTarget = focusBorderController.currentTarget else { return }
+        let frontPid = NSWorkspace.shared.frontmostApplication?.processIdentifier
+        if frontPid != borderTarget.pid {
+            WMLog.focus.info(
+                "reconcileFocusBeforeCommand: border=\(borderTarget.token.windowId, privacy: .public) macOS frontmost pid=\(frontPid ?? 0, privacy: .public) — syncing"
+            )
+            performWindowFronting(
+                pid: borderTarget.pid,
+                windowId: borderTarget.token.windowId,
+                axRef: borderTarget.axRef
+            )
+        }
+    }
+
     func activateNativeFullscreenPlaceholder(_ token: WindowToken) {
         guard let entry = workspaceManager.entry(for: token) else { return }
         guard workspaceManager.layoutReason(for: token) == .nativeFullscreen else { return }
