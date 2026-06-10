@@ -4,7 +4,7 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) is no longer maintained.** This fork is the primary codebase. Last upstream: v0.4.9.6 build 53.
-Branch: `fix/scope-relayout-to-workspace`. Build 98. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 99. PID check: `pgrep -x OmniWM`.
 
 ### Architecture Status
 Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god node extractions done.
@@ -200,11 +200,12 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 - **Bug #26** (Focus feedback loop): FIXED (build 96). Passive reconciliation removed.
 
 **OPEN (runtime-verified):**
-- **Bug #7/27** (column gap after moveToWorkspace): REPRODUCED. Graphify: NO path atomicTransfer→applyOverspread. 0 viewport centering events during transfer. Visual gaps confirmed by user. Memorygraph `0486d6ce`.
+- **Bug #7/27** (column gap after moveToWorkspace): FIX IN PROGRESS (build 99). ensureSelectionVisible added to atomicTransferWindow destination. Same-display transfers need verification. Cross-display transfers exposed Bug #30 (wrong frame geometry). Memorygraph `0486d6ce`.
 - **Bug #7/27/15** (Niri viewport gap — column gap, navigation gap, cross-monitor disruption): ALL OPEN. Shared root cause: Niri layout engine doesn't call `applyOverspread`/`ensureSelectionVisible` after `atomicTransferWindow` or column navigation. Graphify: NO path from transfer→centering. Affects ALL Niri displays (Retina, 32", any). CADisplayLink animation path also global (not per-display). Memorygraph `0486d6ce`, `8416a7ba`.
 - **Bug #28** (WhatsApp floating→tiling on wake): REPRODUCED (build 98). Mode lost during wake — willSleep not firing, no snapshot. Memorygraph `40a444c8`.
 - **Bug #29** (column reorder on Retina after wake): REPRODUCED (build 98). Columns shuffled — no snapshot for column placement. Memorygraph `b8ee5a66`.
 - **Portrait wake window loss**: OPEN (improved — 0 removals in build 98 vs 15+ before). willSleep still not firing for debug binary. Memorygraph `33b4d04f`.
+- **Bug #30** (cross-display transfer wrong frame geometry): REPRODUCED (build 99). Chrome ws8→ws1 gets y=1103/h=1436 (32" geometry) instead of Retina geometry. verificationMismatch + candidateFailed cycle. Exposed by viewport centering fix. Memorygraph `e8a27ef5`.
 - **Ghost border** during Chrome tabs: OBSERVED. isOwnedWindow missing in destroy handler. <1ms visual impact. Memorygraph `0336d9a4`.
 - **Flutter during moveToWorkspace**: Phase 4.5 STOP. 5 attempts failed. Needs debugger/upstream study. Memorygraph `91ce7d92`.
 
