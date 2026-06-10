@@ -196,4 +196,196 @@ struct RestorePlannerTests {
 
         #expect(plan == nil)
     }
+
+    @Test func softMatchSucceedsWhenMetadataHasRoleAndSubrole() throws {
+        let planner = RestorePlanner()
+        let monitor = makeLayoutPlanTestMonitor(displayId: 704, name: "Main")
+        let savedWorkspaceId = WorkspaceDescriptor.ID()
+        let catalogMetadata = makeRestorePlannerMetadata(
+            bundleId: "com.mitchellh.ghostty",
+            workspaceId: savedWorkspaceId,
+            title: "~"
+        )
+        let catalogToken = WindowToken(pid: 100, windowId: 1)
+        let entry = makeRestorePlannerCatalogEntry(
+            token: catalogToken,
+            metadata: catalogMetadata,
+            workspaceName: "1",
+            monitor: monitor
+        )
+
+        let admissionToken = WindowToken(pid: 200, windowId: 2)
+        let admissionMetadata = makeRestorePlannerMetadata(
+            bundleId: "com.mitchellh.ghostty",
+            workspaceId: WorkspaceDescriptor.ID(),
+            title: "~"
+        )
+
+        let plan = try #require(
+            planner.planPersistedHydration(
+                .init(
+                    token: admissionToken,
+                    metadata: admissionMetadata,
+                    catalog: PersistedWindowRestoreCatalog(entries: [entry]),
+                    consumedEntries: [],
+                    monitors: [monitor],
+                    workspaceIdForName: { name in
+                        ["1": savedWorkspaceId][name]
+                    }
+                )
+            )
+        )
+
+        #expect(plan.workspaceId == savedWorkspaceId)
+    }
+
+    @Test func softMatchFailsWhenMetadataHasNilRoleAndSubrole() {
+        let planner = RestorePlanner()
+        let monitor = makeLayoutPlanTestMonitor(displayId: 705, name: "Main")
+        let workspaceId = WorkspaceDescriptor.ID()
+        let catalogMetadata = makeRestorePlannerMetadata(
+            bundleId: "com.mitchellh.ghostty",
+            workspaceId: workspaceId,
+            title: "~"
+        )
+        let catalogToken = WindowToken(pid: 101, windowId: 1)
+        let entry = makeRestorePlannerCatalogEntry(
+            token: catalogToken,
+            metadata: catalogMetadata,
+            workspaceName: "1",
+            monitor: monitor
+        )
+
+        let admissionToken = WindowToken(pid: 201, windowId: 2)
+        let admissionMetadata = ManagedReplacementMetadata(
+            bundleId: "com.mitchellh.ghostty",
+            workspaceId: WorkspaceDescriptor.ID(),
+            mode: .tiling,
+            role: nil,
+            subrole: nil,
+            title: nil,
+            windowLevel: nil,
+            parentWindowId: nil,
+            frame: nil
+        )
+
+        let plan = planner.planPersistedHydration(
+            .init(
+                token: admissionToken,
+                metadata: admissionMetadata,
+                catalog: PersistedWindowRestoreCatalog(entries: [entry]),
+                consumedEntries: [],
+                monitors: [monitor],
+                workspaceIdForName: { _ in workspaceId }
+            )
+        )
+
+        #expect(plan == nil)
+    }
+
+    @Test func multiWindowTitleDisambiguationMatchesUniquelyByTitle() throws {
+        let planner = RestorePlanner()
+        let monitor = makeLayoutPlanTestMonitor(displayId: 706, name: "Main")
+        let ws1Id = WorkspaceDescriptor.ID()
+        let ws2Id = WorkspaceDescriptor.ID()
+
+        let gmailMetadata = makeRestorePlannerMetadata(
+            bundleId: "com.google.chrome",
+            workspaceId: ws1Id,
+            title: "Gmail"
+        )
+        let githubMetadata = makeRestorePlannerMetadata(
+            bundleId: "com.google.chrome",
+            workspaceId: ws2Id,
+            title: "GitHub"
+        )
+        let gmailEntry = makeRestorePlannerCatalogEntry(
+            token: WindowToken(pid: 102, windowId: 1),
+            metadata: gmailMetadata,
+            workspaceName: "1",
+            monitor: monitor
+        )
+        let githubEntry = makeRestorePlannerCatalogEntry(
+            token: WindowToken(pid: 102, windowId: 2),
+            metadata: githubMetadata,
+            workspaceName: "2",
+            monitor: monitor
+        )
+
+        let admissionToken = WindowToken(pid: 300, windowId: 3)
+        let admissionMetadata = makeRestorePlannerMetadata(
+            bundleId: "com.google.chrome",
+            workspaceId: WorkspaceDescriptor.ID(),
+            title: "GitHub"
+        )
+
+        let plan = try #require(
+            planner.planPersistedHydration(
+                .init(
+                    token: admissionToken,
+                    metadata: admissionMetadata,
+                    catalog: PersistedWindowRestoreCatalog(entries: [gmailEntry, githubEntry]),
+                    consumedEntries: [],
+                    monitors: [monitor],
+                    workspaceIdForName: { name in
+                        ["1": ws1Id, "2": ws2Id][name]
+                    }
+                )
+            )
+        )
+
+        #expect(plan.workspaceId == ws2Id)
+    }
+
+    @Test func identicalTitlesCauseAmbiguousRejection() {
+        let planner = RestorePlanner()
+        let monitor = makeLayoutPlanTestMonitor(displayId: 707, name: "Main")
+        let ws1Id = WorkspaceDescriptor.ID()
+        let ws2Id = WorkspaceDescriptor.ID()
+
+        let metadata1 = makeRestorePlannerMetadata(
+            bundleId: "com.google.chrome",
+            workspaceId: ws1Id,
+            title: "New Tab"
+        )
+        let metadata2 = makeRestorePlannerMetadata(
+            bundleId: "com.google.chrome",
+            workspaceId: ws2Id,
+            title: "New Tab"
+        )
+        let entry1 = makeRestorePlannerCatalogEntry(
+            token: WindowToken(pid: 103, windowId: 1),
+            metadata: metadata1,
+            workspaceName: "1",
+            monitor: monitor
+        )
+        let entry2 = makeRestorePlannerCatalogEntry(
+            token: WindowToken(pid: 103, windowId: 2),
+            metadata: metadata2,
+            workspaceName: "2",
+            monitor: monitor
+        )
+
+        let admissionToken = WindowToken(pid: 400, windowId: 3)
+        let admissionMetadata = makeRestorePlannerMetadata(
+            bundleId: "com.google.chrome",
+            workspaceId: WorkspaceDescriptor.ID(),
+            title: "New Tab"
+        )
+
+        let plan = planner.planPersistedHydration(
+            .init(
+                token: admissionToken,
+                metadata: admissionMetadata,
+                catalog: PersistedWindowRestoreCatalog(entries: [entry1, entry2]),
+                consumedEntries: [],
+                monitors: [monitor],
+                workspaceIdForName: { name in
+                    ["1": ws1Id, "2": ws2Id][name]
+                }
+            )
+        )
+
+        #expect(plan == nil)
+    }
 }
