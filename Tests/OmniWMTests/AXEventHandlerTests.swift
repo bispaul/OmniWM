@@ -11087,7 +11087,7 @@ private func waitUntilAXEventTest(
 
     // MARK: - Focus Reconciliation (Build 93)
 
-    @Test @MainActor func focusReconciliationFiresAfterNativeAppSwitchFocusChange() async {
+    @Test @MainActor func nativeAppSwitchDoesNotTriggerPassiveReconciliation() async {
         var reconciledTokens: [WindowToken] = []
         let controller = makeAXEventTestController()
         controller.hasStartedServices = true
@@ -11132,7 +11132,10 @@ private func waitUntilAXEventTest(
         )
 
         #expect(controller.workspaceManager.focusedToken == targetToken)
-        #expect(reconciledTokens == [targetToken])
+        #expect(
+            reconciledTokens.isEmpty,
+            "Passive reconciliation removed — causes focus feedback loop. Reconciliation only at hotkey dispatch."
+        )
     }
 
     @Test @MainActor func focusReconciliationSkippedWhenFocusPolicyLeaseIsSuppressing() async {

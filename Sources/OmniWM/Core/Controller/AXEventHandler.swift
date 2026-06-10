@@ -1438,9 +1438,9 @@ final class AXEventHandler: CGSEventDelegate {
             _ = controller.focusBorderController.focusChanged(to: target, forceOrdering: true)
         }
 
-        if shouldConfirmRequest {
-            controller.reconcileMacOSFocus(to: entry.token)
-        }
+        // Passive reconciliation removed — caused focus feedback loop (focus ping-pong
+        // at 50ms between 3 windows). reconcileFocusBeforeCommand in CommandHandler
+        // handles the actual use case (hotkey targets border window, not macOS focus).
 
         controller.niriLayoutHandler.updateTabbedColumnOverlays(forceOrdering: true)
         if shouldActivateWorkspace, shouldConfirmRequest {

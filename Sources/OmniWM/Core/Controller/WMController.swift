@@ -2227,11 +2227,12 @@ final class WMController {
                 continue
             }
 
-            _ = workspaceManager.addWindow(
+            _ = workspaceManager.assignmentManager.assignWindowToWorkspace(
                 axRef,
                 pid: token.pid,
                 windowId: token.windowId,
                 to: workspaceId,
+                reason: .admission,
                 mode: oldMode ?? effectiveTrackedMode,
                 ruleEffects: evaluation.decision.ruleEffects
             )
@@ -2673,7 +2674,7 @@ final class WMController {
         _ token: WindowToken,
         to workspaceId: WorkspaceDescriptor.ID
     ) {
-        workspaceManager.setWorkspace(for: token, to: workspaceId)
+        workspaceManager.assignmentManager.setWorkspace(for: token, to: workspaceId)
         guard let entry = workspaceManager.entry(for: token) else { return }
         focusBorderController.updateFocusedTargetWorkspace(
             matching: token,

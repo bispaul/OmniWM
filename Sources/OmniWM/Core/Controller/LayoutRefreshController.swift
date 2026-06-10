@@ -1354,11 +1354,12 @@ import QuartzCore
                     || evaluation.facts.degradedWindowServerChildEvidence
             )
 
-            _ = controller.workspaceManager.addWindow(
+            _ = controller.workspaceManager.assignmentManager.assignWindowToWorkspace(
                 ax,
                 pid: pid,
                 windowId: winId,
                 to: wsForWindow,
+                reason: .admission,
                 mode: admittedMode,
                 ruleEffects: ruleEffects,
                 managedReplacementMetadata: managedReplacementMetadata
