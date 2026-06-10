@@ -200,7 +200,7 @@ final class WMController {
     @ObservationIgnored
     var liveFrameProviderForTests: ((WindowModel.Entry) -> CGRect?)?
     @ObservationIgnored
-    var focusReconciliationHookForTests: ((WindowToken) -> Void)?
+    var frontmostPidProviderForTests: (() -> pid_t?)?
     @ObservationIgnored
     var warpMouseCursorPosition: (CGPoint) -> Void = { CGWarpMouseCursorPosition($0) }
     @ObservationIgnored
@@ -2853,19 +2853,9 @@ extension WMController {
         return systemBundleIds.contains(frontBundle)
     }
 
-    func reconcileMacOSFocus(to token: WindowToken) {
-        guard let entry = workspaceManager.entry(for: token),
-              !isSystemUIActive(),
-              !focusPolicyEngine.hasNonAppSwitchFocusSuppression
-        else { return }
-
-        focusReconciliationHookForTests?(token)
-        performWindowFronting(pid: entry.pid, windowId: entry.windowId, axRef: entry.axRef)
-    }
-
     func reconcileFocusBeforeCommand() {
         guard let borderTarget = focusBorderController.currentTarget else { return }
-        let frontPid = NSWorkspace.shared.frontmostApplication?.processIdentifier
+        let frontPid = frontmostPidProviderForTests?() ?? NSWorkspace.shared.frontmostApplication?.processIdentifier
         if frontPid != borderTarget.pid {
             WMLog.focus.info(
                 "reconcileFocusBeforeCommand: border=\(borderTarget.token.windowId, privacy: .public) macOS frontmost pid=\(frontPid ?? 0, privacy: .public) — syncing"

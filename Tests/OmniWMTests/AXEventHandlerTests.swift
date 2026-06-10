@@ -11088,12 +11088,8 @@ private func waitUntilAXEventTest(
     // MARK: - Focus Reconciliation (Build 93)
 
     @Test @MainActor func nativeAppSwitchDoesNotTriggerPassiveReconciliation() async {
-        var reconciledTokens: [WindowToken] = []
         let controller = makeAXEventTestController()
         controller.hasStartedServices = true
-        controller.focusReconciliationHookForTests = { token in
-            reconciledTokens.append(token)
-        }
         guard let workspaceId = controller.activeWorkspace()?.id,
               let monitor = controller.workspaceManager.monitors.first
         else {
@@ -11132,19 +11128,11 @@ private func waitUntilAXEventTest(
         )
 
         #expect(controller.workspaceManager.focusedToken == targetToken)
-        #expect(
-            reconciledTokens.isEmpty,
-            "Passive reconciliation removed — causes focus feedback loop. Reconciliation only at hotkey dispatch."
-        )
     }
 
     @Test @MainActor func focusReconciliationSkippedWhenFocusPolicyLeaseIsSuppressing() async {
-        var reconciledTokens: [WindowToken] = []
         let controller = makeAXEventTestController()
         controller.hasStartedServices = true
-        controller.focusReconciliationHookForTests = { token in
-            reconciledTokens.append(token)
-        }
         guard let workspaceId = controller.activeWorkspace()?.id,
               let monitor = controller.workspaceManager.monitors.first
         else {
@@ -11177,7 +11165,6 @@ private func waitUntilAXEventTest(
             return AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: targetToken.windowId)
         }
 
-        // Begin a lease that suppresses focus follows mouse — should block reconciliation
         controller.focusPolicyEngine.beginLease(
             owner: .ruleCreatedFloatingWindow,
             reason: "test-floating-window",
@@ -11191,9 +11178,90 @@ private func waitUntilAXEventTest(
         )
 
         #expect(controller.workspaceManager.focusedToken == targetToken)
-        #expect(
-            reconciledTokens.isEmpty,
-            "Reconciliation should be skipped when FocusPolicyLease suppresses focus follows mouse"
+    }
+
+    // MARK: - reconcileFocusBeforeCommand (Build 97)
+
+    @Test @MainActor func reconcileFocusBeforeCommandSyncsFocusWhenPidMismatch() async {
+        var frontedPids: [pid_t] = []
+        let ops = WindowFocusOperations(
+            activateApp: { frontedPids.append($0) },
+            focusSpecificWindow: { _, _, _ in },
+            raiseWindow: { _ in }
         )
+        let controller = makeAXEventTestController(windowFocusOperations: ops)
+        guard let workspaceId = controller.activeWorkspace()?.id else {
+            Issue.record("Missing workspace")
+            return
+        }
+
+        let borderPid: pid_t = 99_001
+        let token = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 9901),
+            pid: borderPid,
+            windowId: 9901,
+            to: workspaceId
+        )
+        let target = KeyboardFocusTarget(
+            token: token,
+            axRef: AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 9901),
+            workspaceId: workspaceId,
+            isManaged: true
+        )
+        controller.focusBorderController.focusChanged(to: target)
+        controller.frontmostPidProviderForTests = { 99_999 }
+
+        controller.reconcileFocusBeforeCommand()
+
+        #expect(frontedPids == [borderPid], "Should activate the border target's app when PID mismatches")
+    }
+
+    @Test @MainActor func reconcileFocusBeforeCommandNoOpWhenPidsMatch() async {
+        var frontedPids: [pid_t] = []
+        let ops = WindowFocusOperations(
+            activateApp: { frontedPids.append($0) },
+            focusSpecificWindow: { _, _, _ in },
+            raiseWindow: { _ in }
+        )
+        let controller = makeAXEventTestController(windowFocusOperations: ops)
+        guard let workspaceId = controller.activeWorkspace()?.id else {
+            Issue.record("Missing workspace")
+            return
+        }
+
+        let borderPid: pid_t = 99_002
+        let token = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 9902),
+            pid: borderPid,
+            windowId: 9902,
+            to: workspaceId
+        )
+        let target = KeyboardFocusTarget(
+            token: token,
+            axRef: AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 9902),
+            workspaceId: workspaceId,
+            isManaged: true
+        )
+        controller.focusBorderController.focusChanged(to: target)
+        controller.frontmostPidProviderForTests = { borderPid }
+
+        controller.reconcileFocusBeforeCommand()
+
+        #expect(frontedPids.isEmpty, "Should not activate when PIDs already match")
+    }
+
+    @Test @MainActor func reconcileFocusBeforeCommandNoOpWithoutBorderTarget() async {
+        var frontedPids: [pid_t] = []
+        let ops = WindowFocusOperations(
+            activateApp: { frontedPids.append($0) },
+            focusSpecificWindow: { _, _, _ in },
+            raiseWindow: { _ in }
+        )
+        let controller = makeAXEventTestController(windowFocusOperations: ops)
+        controller.frontmostPidProviderForTests = { 99_999 }
+
+        controller.reconcileFocusBeforeCommand()
+
+        #expect(frontedPids.isEmpty, "Should not activate when no border target exists")
     }
 }

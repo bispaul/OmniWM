@@ -2671,9 +2671,14 @@ final class WorkspaceManager {
         WMLog.workspace.info("Windows removed for app")
         var affectedWorkspaces: Set<WorkspaceDescriptor.ID> = []
         let entriesToRemove = entries(forPid: pid)
+        let appBundleId = NSRunningApplication(processIdentifier: pid)?.bundleIdentifier
 
         for entry in entriesToRemove {
             affectedWorkspaces.insert(entry.workspaceId)
+            let bundleId = entry.managedReplacementMetadata?.bundleId ?? appBundleId
+            assignmentManager.recordRemoval(
+                token: entry.token, workspaceId: entry.workspaceId, bundleId: bundleId
+            )
             _ = removeTrackedWindow(entry)
         }
 

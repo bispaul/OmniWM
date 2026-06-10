@@ -540,7 +540,7 @@ final class ServiceLifecycleManager {
             guard isMonitorPresent(for: record, snapshot: snapshot, currentMonitors: currentMonitors) else { continue }
 
             if wm.workspace(for: resolvedToken) != record.workspaceId {
-                wm.setWorkspace(for: resolvedToken, to: record.workspaceId)
+                wm.assignmentManager.setWorkspace(for: resolvedToken, to: record.workspaceId)
                 reassignedCount += 1
                 affectedWorkspaceIds.insert(record.workspaceId)
             }
@@ -629,7 +629,7 @@ final class ServiceLifecycleManager {
             }
 
             if wm.workspace(for: resolvedToken) != targetWsId {
-                wm.setWorkspace(for: resolvedToken, to: targetWsId)
+                wm.assignmentManager.setWorkspace(for: resolvedToken, to: targetWsId)
                 reassignedCount += 1
             }
             if record.mode == .floating, let floatingFrame = record.floatingFrame {
@@ -975,6 +975,8 @@ final class ServiceLifecycleManager {
         isSecureInputActive = false
         SecureInputIndicatorController.shared.hide()
         controller.lockScreenObserver.stop()
+        pendingTopologyTask?.cancel()
+        pendingTopologyTask = nil
         permissionCheckerTask?.cancel()
         permissionCheckerTask = nil
         controller.reconcileEnabledAndHotkeysState()
