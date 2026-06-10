@@ -187,17 +187,26 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 5. **RefreshMergeMatrixTests** (test-only, ~300 lines) — Fix D safety net
 **Not touched:** WorkspaceManager (all LOW), WMController forwarding (stable API), ForTests providers, LRC buildFullRefreshExecutionPlan.
 
-### Bug Status (build 97, 2026-06-10)
-- **Bug #7/27** (column gap after moveToWorkspace): **REPRODUCED** (build 97). VSCode ws1→ws8 (landscape 2560px). IPC frames show correct positions (x=2, x=1281, each 1277px) but visual rendering has left-side gap. Two requestImmediateRelayout passes (102ms + 208ms). atomicTransfer preserved source width (861→1277 via relayout). Logs: `.claude/bug27_ws_transfer_logs.txt`. Memorygraph `0486d6ce`.
-- **Bug #6/22** (Chrome verificationMismatch retry loop): OPEN — cannot reproduce in normal operation. 0 mismatches in 42 frame writes (30min sample). Original 13-retry loop was amplified by bug #19 re-admission storm (now fixed). Wake-only: 4 events in 15s, self-resolving. Expert panel design ready if resurfaces. Memorygraph `e4ad0d6b`.
-- **Bug #19** (Chrome re-admission storm): FIXED (build 85). 0 .pid reevaluation triggers in 8h. Was the amplifier for bugs #6/#7.
-- **Bug #20** (Ghostty tab phantom columns): OPEN — needs design. Memorygraph `a816fa8e`.
-- **Bug #21** (Dwindle wake wrong-monitor coordinates): OPEN — pre-existing. Memorygraph `dd0141b7`.
-- **Bug #23** (native fullscreen wrong workspace): REPRODUCED (build 90). Slack on WS6 portrait → green button → placeholder assigned to WS1 (main display) instead of WS6. On exit, Slack returns to WS1. Cross-display workspace assignment bug. Memorygraph `49720f51`.
-- **Bug #24** (focus desync portrait Dwindle): USER-REPORTED (build 90). Border on Slack but Caps+F went to Chrome. FocusPolicyLease(nativeAppSwitch) may suppress focusFollowsMouse. Needs independent reproduction. Memorygraph `f4abd2b4`.
-- **Flutter during moveToWorkspace**: REPRODUCED. 5 fix attempts failed (Phase 4.5 STOP). Root cause: scroll animation itself (30+ LayoutDiffExecutor writes/1.5s). cancelActiveTask removal kept (build 88). Needs architectural approach: study upstream with debugger, not more patching. Memorygraph `91ce7d92`.
-- **Portrait display window loss after sleep/wake**: REPRODUCED (build 88). WS 6 Chrome+Slack removed during wake, not recovered on restart. willSleep may not fire for debug binary (BackgroundOnly). Memorygraph `33b4d04f`.
-- **Evidence**: 8h log analysis (memorygraph `a2964876`). 42 frame writes / 0 mismatches in normal operation. Wake: 4 mismatches, self-resolving.
+### Bug Status (build 98, runtime-verified 2026-06-11)
+
+**CLOSED (runtime-verified):**
+- **Bug #6/22** (Chrome verificationMismatch): CLOSED — 0 mismatches in 17 tab-switch events. All 3 preconditions fixed (retry disabled, bug #19 amplifier gone, display coalescing). Memorygraph `e4ad0d6b`.
+- **Bug #19** (Chrome re-admission storm): FIXED (build 85). Was the amplifier.
+- **Bug #20** (Ghostty tab phantom columns): CLOSED — tab open/close clean, CGS destroy not suppressed. SkyLight guard correctly scoped to wake/reconfig only. Memorygraph `a816fa8e`.
+- **Bug #21** (Dwindle wake wrong-monitor coordinates): CLOSED — portrait frames identical pre/post sleep/wake test. Implicit geometry recalc + build 92 debounce. Memorygraph `dd0141b7`.
+- **Bug #23** (native fullscreen wrong workspace): FIXED (build 95). Central assignment gate.
+- **Bug #24** (focus desync portrait Dwindle): FIXED (build 95b). reconcileFocusBeforeCommand.
+- **Bug #25** (Zoom startup tiling): FIXED (build 90). Float rule.
+- **Bug #26** (Focus feedback loop): FIXED (build 96). Passive reconciliation removed.
+
+**OPEN (runtime-verified):**
+- **Bug #7/27** (column gap after moveToWorkspace): REPRODUCED. Graphify: NO path atomicTransfer→applyOverspread. 0 viewport centering events during transfer. Visual gaps confirmed by user. Memorygraph `0486d6ce`.
+- **Bug #7/27/15** (Niri viewport gap — column gap, navigation gap, cross-monitor disruption): ALL OPEN. Shared root cause: Niri layout engine doesn't call `applyOverspread`/`ensureSelectionVisible` after `atomicTransferWindow` or column navigation. Graphify: NO path from transfer→centering. Affects ALL Niri displays (Retina, 32", any). CADisplayLink animation path also global (not per-display). Memorygraph `0486d6ce`, `8416a7ba`.
+- **Bug #28** (WhatsApp floating→tiling on wake): REPRODUCED (build 98). Mode lost during wake — willSleep not firing, no snapshot. Memorygraph `40a444c8`.
+- **Bug #29** (column reorder on Retina after wake): REPRODUCED (build 98). Columns shuffled — no snapshot for column placement. Memorygraph `b8ee5a66`.
+- **Portrait wake window loss**: OPEN (improved — 0 removals in build 98 vs 15+ before). willSleep still not firing for debug binary. Memorygraph `33b4d04f`.
+- **Ghost border** during Chrome tabs: OBSERVED. isOwnedWindow missing in destroy handler. <1ms visual impact. Memorygraph `0336d9a4`.
+- **Flutter during moveToWorkspace**: Phase 4.5 STOP. 5 attempts failed. Needs debugger/upstream study. Memorygraph `91ce7d92`.
 
 ## Cross-References
 
