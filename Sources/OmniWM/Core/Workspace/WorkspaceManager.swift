@@ -2653,6 +2653,14 @@ final class WorkspaceManager {
     func removeWindow(pid: pid_t, windowId: Int) -> WindowModel.Entry? {
         guard let entry = windows.entry(forPid: pid, windowId: windowId) else { return nil }
         WMLog.workspace.info("Removing window: windowId=\(windowId, privacy: .public)")
+
+        // Cache workspace before removal for recently-removed lookup
+        let bundleId = entry.managedReplacementMetadata?.bundleId
+            ?? NSRunningApplication(processIdentifier: pid)?.bundleIdentifier
+        assignmentManager.recordRemoval(
+            token: entry.token, workspaceId: entry.workspaceId, bundleId: bundleId
+        )
+
         let removedEntry = removeTrackedWindow(entry)
         schedulePersistedWindowRestoreCatalogSave()
         return removedEntry

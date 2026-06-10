@@ -700,6 +700,8 @@ final class AXEventHandler: CGSEventDelegate {
             return
         }
 
+        // Dedup check: central gate handles skipping addWindow, but we also
+        // skip post-admission setup for already-tracked windows.
         if controller.workspaceManager.entry(for: candidate.token) != nil {
             WMLog.ax
                 .info(
@@ -712,11 +714,12 @@ final class AXEventHandler: CGSEventDelegate {
             .info(
                 "trackPreparedCreate: windowId=\(candidate.windowId, privacy: .public) pid=\(candidate.token.pid, privacy: .public) mode=\(String(describing: candidate.mode), privacy: .public) workspaceId=\(candidate.workspaceId.uuidString, privacy: .public)"
             )
-        let trackedToken = controller.workspaceManager.addWindow(
+        let trackedToken = controller.workspaceManager.assignmentManager.assignWindowToWorkspace(
             candidate.axRef,
             pid: candidate.token.pid,
             windowId: candidate.token.windowId,
             to: candidate.workspaceId,
+            reason: .admission,
             mode: candidate.mode,
             ruleEffects: candidate.ruleEffects,
             managedReplacementMetadata: candidate.replacementMetadata
