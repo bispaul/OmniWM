@@ -789,4 +789,36 @@ private func waitUntilServiceLifecycleTest(
 
         #expect(applyCount == 1, "Expected 5 rapid events to coalesce into 1 apply, got \(applyCount)")
     }
+
+    @Test @MainActor func displayEventsSpacedBeyondDebounceWindowFireIndependently() async {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main)
+        ]
+
+        let controller = WMController(settings: settings)
+        let lifecycleManager = controller.serviceLifecycleManager
+        let monitor = makeLifecycleMonitor(displayId: 100, name: "Main", x: 0, y: 0)
+        controller.workspaceManager.applyMonitorConfigurationChange([monitor])
+
+        var applyCount = 0
+        lifecycleManager.applyMonitorConfigurationChangedCountForTests = {
+            applyCount += 1
+        }
+
+        lifecycleManager.handleDisplayEventForTests(.connected(monitor))
+
+        await waitUntilServiceLifecycleTest(iterations: 500) {
+            applyCount >= 1
+        }
+        #expect(applyCount == 1)
+
+        lifecycleManager.handleDisplayEventForTests(.connected(monitor))
+
+        await waitUntilServiceLifecycleTest(iterations: 500) {
+            applyCount >= 2
+        }
+        #expect(applyCount == 2, "Events spaced beyond debounce window should fire independently, got \(applyCount)")
+    }
 }
