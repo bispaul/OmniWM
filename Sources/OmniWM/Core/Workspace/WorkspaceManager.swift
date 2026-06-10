@@ -318,7 +318,14 @@ final class WorkspaceManager {
             )
         )
         let entry = event.token.flatMap { windows.entry(for: $0) }
-        let persistedHydration = event.token.flatMap { plannedPersistedHydrationMutation(for: $0) }
+        let persistedHydration: PersistedHydrationMutation?
+        switch event {
+        case .windowAdmitted,
+             .windowRekeyed:
+            persistedHydration = event.token.flatMap { plannedPersistedHydrationMutation(for: $0) }
+        default:
+            persistedHydration = nil
+        }
         let restoreRefresh = plannedRestoreRefresh(
             from: restoreEventPlan,
             snapshot: snapshot
