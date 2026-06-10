@@ -2040,12 +2040,12 @@ final class AXEventHandler: CGSEventDelegate {
                 bundleId: resolvedBundleId,
                 workspaceId: workspaceId,
                 mode: trackedMode,
-                role: nil,
-                subrole: nil,
-                title: nil,
-                windowLevel: nil,
-                parentWindowId: nil,
-                frame: nil
+                role: evaluation.facts.ax.role,
+                subrole: evaluation.facts.ax.subrole,
+                title: evaluation.facts.ax.title,
+                windowLevel: evaluation.facts.windowServer?.level,
+                parentWindowId: evaluation.facts.windowServer?.parentId,
+                frame: evaluation.facts.windowServer?.frame
             ),
             hasStructuralReplacementWorkspaceMatch: structuralReplacementWorkspaceId != nil,
             requiresPostCreateLifecycleVerification: requiresPostCreateLifecycleVerification(
