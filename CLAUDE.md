@@ -4,14 +4,14 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) is no longer maintained.** This fork is the primary codebase. Last upstream: v0.4.9.6 build 53.
-Branch: `fix/scope-relayout-to-workspace`. Build 91. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 92. PID check: `pgrep -x OmniWM`.
 
 ### Architecture Status
 Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god node extractions done.
 **5 SSOT invariants missing** (memorygraph `6ab03ce1`): ALL investigated, ALL upstream behavior.
 1. **Window identity**: `bootPersistedWindowRestoreCatalog` loaded once at boot, never reloaded → noMatch always (RestorePlanner.swift:255, WorkspaceManager.swift:237)
 2. **Workspace assignment**: 5 ungated paths (AXEventHandler:327, LRC:2955, SLM:245, WNH:435, WM:1102). Bug #23 root cause: native fullscreen placeholder uses layout plan workspace, not original.
-3. **Display coalescing**: DisplayConfigurationObserver 100ms debounce delays but doesn't coalesce per-monitor callbacks → 7 rescans (SLM:224-289)
+3. **Display coalescing**: FIXED (build 92). 300ms trailing-edge debounce in handleMonitorConfigurationChanged. 15 SLM tests pass.
 4. **Admission dedup**: FIXED (build 91). Guard in trackPreparedCreate skips already-tracked windows. 165 tests pass.
 5. **Focus reconciliation**: FocusPolicyLease expiry doesn't reconcile with macOS keyboard focus. Needs investigation.
 Architecture ~30% toward clean.
