@@ -125,6 +125,20 @@ final class FocusPolicyEngine {
         return nil
     }
 
+    /// Whether a non-nativeAppSwitch lease is currently suppressing focus-follows-mouse.
+    /// Used by focus reconciliation to decide whether to sync macOS keyboard focus.
+    /// The nativeAppSwitch lease is excluded because reconciliation IS the completion
+    /// of a native app switch — it should not block itself.
+    var hasNonAppSwitchFocusSuppression: Bool {
+        pruneExpiredLeasesIfNeeded()
+        for owner in Self.effectiveLeasePriority where owner != .nativeAppSwitch {
+            if let lease = leasesByOwner[owner], lease.suppressesFocusFollowsMouse {
+                return true
+            }
+        }
+        return false
+    }
+
     private func suppressingFocusFollowsMouseLease(onMonitor monitorId: Monitor.ID? = nil) -> FocusPolicyLease? {
         for owner in Self.effectiveLeasePriority {
             if let lease = leasesByOwner[owner], lease.suppressesFocusFollowsMouse {

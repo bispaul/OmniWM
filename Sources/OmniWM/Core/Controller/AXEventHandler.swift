@@ -1435,6 +1435,10 @@ final class AXEventHandler: CGSEventDelegate {
             _ = controller.focusBorderController.focusChanged(to: target, forceOrdering: true)
         }
 
+        if shouldConfirmRequest {
+            controller.reconcileMacOSFocus(to: entry.token)
+        }
+
         controller.niriLayoutHandler.updateTabbedColumnOverlays(forceOrdering: true)
         if shouldActivateWorkspace, shouldConfirmRequest {
             controller.syncMonitorsToNiriEngine()

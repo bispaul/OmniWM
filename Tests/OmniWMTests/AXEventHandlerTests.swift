@@ -11084,4 +11084,113 @@ private func waitUntilAXEventTest(
             "Untracked window destroy should not trigger relayout via .pid reevaluation"
         )
     }
+
+    // MARK: - Focus Reconciliation (Build 93)
+
+    @Test @MainActor func focusReconciliationFiresAfterNativeAppSwitchFocusChange() async {
+        var reconciledTokens: [WindowToken] = []
+        let controller = makeAXEventTestController()
+        controller.hasStartedServices = true
+        controller.focusReconciliationHookForTests = { token in
+            reconciledTokens.append(token)
+        }
+        guard let workspaceId = controller.activeWorkspace()?.id,
+              let monitor = controller.workspaceManager.monitors.first
+        else {
+            Issue.record("Missing workspace or monitor for focus reconciliation test")
+            return
+        }
+
+        let existingToken = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 2401),
+            pid: 24_001,
+            windowId: 2401,
+            to: workspaceId
+        )
+        _ = controller.workspaceManager.setManagedFocus(
+            existingToken,
+            in: workspaceId,
+            onMonitor: monitor.id
+        )
+
+        let targetPid: pid_t = 24_002
+        let targetToken = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 2402),
+            pid: targetPid,
+            windowId: 2402,
+            to: workspaceId
+        )
+        controller.axEventHandler.isFullscreenProvider = { _ in false }
+        controller.axEventHandler.focusedWindowRefProvider = { pid in
+            guard pid == targetPid else { return nil }
+            return AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: targetToken.windowId)
+        }
+
+        controller.axEventHandler.handleAppActivation(
+            pid: targetPid,
+            source: .cgsFrontAppChanged
+        )
+
+        #expect(controller.workspaceManager.focusedToken == targetToken)
+        #expect(reconciledTokens == [targetToken])
+    }
+
+    @Test @MainActor func focusReconciliationSkippedWhenFocusPolicyLeaseIsSuppressing() async {
+        var reconciledTokens: [WindowToken] = []
+        let controller = makeAXEventTestController()
+        controller.hasStartedServices = true
+        controller.focusReconciliationHookForTests = { token in
+            reconciledTokens.append(token)
+        }
+        guard let workspaceId = controller.activeWorkspace()?.id,
+              let monitor = controller.workspaceManager.monitors.first
+        else {
+            Issue.record("Missing workspace or monitor for focus reconciliation lease test")
+            return
+        }
+
+        let existingToken = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 2411),
+            pid: 24_011,
+            windowId: 2411,
+            to: workspaceId
+        )
+        _ = controller.workspaceManager.setManagedFocus(
+            existingToken,
+            in: workspaceId,
+            onMonitor: monitor.id
+        )
+
+        let targetPid: pid_t = 24_012
+        let targetToken = controller.workspaceManager.addWindow(
+            AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: 2412),
+            pid: targetPid,
+            windowId: 2412,
+            to: workspaceId
+        )
+        controller.axEventHandler.isFullscreenProvider = { _ in false }
+        controller.axEventHandler.focusedWindowRefProvider = { pid in
+            guard pid == targetPid else { return nil }
+            return AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: targetToken.windowId)
+        }
+
+        // Begin a lease that suppresses focus follows mouse — should block reconciliation
+        controller.focusPolicyEngine.beginLease(
+            owner: .ruleCreatedFloatingWindow,
+            reason: "test-floating-window",
+            suppressesFocusFollowsMouse: true,
+            duration: nil
+        )
+
+        controller.axEventHandler.handleAppActivation(
+            pid: targetPid,
+            source: .cgsFrontAppChanged
+        )
+
+        #expect(controller.workspaceManager.focusedToken == targetToken)
+        #expect(
+            reconciledTokens.isEmpty,
+            "Reconciliation should be skipped when FocusPolicyLease suppresses focus follows mouse"
+        )
+    }
 }

@@ -200,6 +200,8 @@ final class WMController {
     @ObservationIgnored
     var liveFrameProviderForTests: ((WindowModel.Entry) -> CGRect?)?
     @ObservationIgnored
+    var focusReconciliationHookForTests: ((WindowToken) -> Void)?
+    @ObservationIgnored
     var warpMouseCursorPosition: (CGPoint) -> Void = { CGWarpMouseCursorPosition($0) }
     @ObservationIgnored
     weak var ipcApplicationBridge: IPCApplicationBridge?
@@ -2836,6 +2838,28 @@ extension WMController {
         windowFocusOperations.activateApp(pid)
         windowFocusOperations.focusSpecificWindow(pid, UInt32(windowId), axRef.element)
         windowFocusOperations.raiseWindow(axRef.element)
+    }
+
+    private func isSystemUIActive() -> Bool {
+        if isLockScreenActive { return true }
+        guard let frontBundle = NSWorkspace.shared.frontmostApplication?.bundleIdentifier else { return false }
+        let systemBundleIds = [
+            "com.apple.Spotlight",
+            "com.apple.SecurityAgent",
+            "com.apple.notificationcenterui",
+            "com.apple.dock"
+        ]
+        return systemBundleIds.contains(frontBundle)
+    }
+
+    func reconcileMacOSFocus(to token: WindowToken) {
+        guard let entry = workspaceManager.entry(for: token),
+              !isSystemUIActive(),
+              !focusPolicyEngine.hasNonAppSwitchFocusSuppression
+        else { return }
+
+        focusReconciliationHookForTests?(token)
+        performWindowFronting(pid: entry.pid, windowId: entry.windowId, axRef: entry.axRef)
     }
 
     func activateNativeFullscreenPlaceholder(_ token: WindowToken) {
