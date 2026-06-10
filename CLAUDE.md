@@ -4,7 +4,7 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) is no longer maintained.** This fork is the primary codebase. Last upstream: v0.4.9.6 build 53.
-Branch: `fix/scope-relayout-to-workspace`. Build 92. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 93. PID check: `pgrep -x OmniWM`.
 
 ### Architecture Status
 Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god node extractions done.
@@ -13,7 +13,7 @@ Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god n
 2. **Workspace assignment**: 5 ungated paths (AXEventHandler:327, LRC:2955, SLM:245, WNH:435, WM:1102). Bug #23 root cause: native fullscreen placeholder uses layout plan workspace, not original.
 3. **Display coalescing**: FIXED (build 92). 300ms trailing-edge debounce in handleMonitorConfigurationChanged. 15 SLM tests pass.
 4. **Admission dedup**: FIXED (build 91). Guard in trackPreparedCreate skips already-tracked windows. 165 tests pass.
-5. **Focus reconciliation**: FocusPolicyLease expiry doesn't reconcile with macOS keyboard focus. Needs investigation.
+5. **Focus reconciliation**: FIXED (build 93). reconcileMacOSFocus calls performWindowFronting after managedFocusConfirmed. Guards: isSystemUIActive + hasNonAppSwitchFocusSuppression. 167 AXEventHandler tests pass.
 Architecture ~30% toward clean.
 
 ## Constitution — MANDATORY Process Gates
