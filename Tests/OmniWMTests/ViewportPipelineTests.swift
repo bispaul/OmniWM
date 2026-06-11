@@ -102,6 +102,53 @@ import Testing
         )
     }
 
+    @Test func viewportClampPreventsGapAfterColumnRemoval() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        let token1 = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9001)
+        let token2 = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9002)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9003)
+        _ = controller.workspaceManager.setManagedFocus(token1, in: workspaceId, onMonitor: monitor.id)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        // Remove middle window — simulates transfer
+        engine.removeWindow(token: token2)
+        var state = controller.workspaceManager.niriViewportState(for: workspaceId)
+        state.requiresViewportRecalc = true
+        controller.workspaceManager.updateNiriViewportState(state, for: workspaceId)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let postState = controller.workspaceManager.niriViewportState(for: workspaceId)
+        let columns = engine.columns(in: workspaceId)
+        let totalW = postState.totalSpan(containers: columns, gap: 2, sizeKeyPath: \.cachedWidth)
+        let viewportSpan = monitor.frame.width
+
+        if totalW > viewportSpan {
+            let viewStart = postState.viewPosPixels(columns: columns, gap: 2)
+            let viewEnd = viewStart + viewportSpan
+            let contentEnd = totalW
+            #expect(
+                viewEnd <= contentEnd + 2,
+                "Viewport should not extend past content bounds (gap=\(viewEnd - contentEnd)px)"
+            )
+        }
+    }
+
     @Test func applyOverspreadIfNeededNoLongerExists() {
         let controller = makeLayoutPlanTestController()
         let mirror = Mirror(reflecting: controller.niriLayoutHandler as Any)

@@ -81,7 +81,13 @@ enum NiriWindowMoveResult {
 
         let viewportSpan = orientation == .horizontal
             ? pass.insetFrame.width : pass.insetFrame.height
-        guard applyPolicies else { return }
+        guard applyPolicies else {
+            WMLog.layout
+                .debug(
+                    "applyViewportPipeline: SKIPPED applyPolicies=false wsColumns=\(columns.count, privacy: .public)"
+                )
+            return
+        }
 
         // applyOverspread is the SSOT for "do columns fit?" — no duplicate guard here.
         // When it returns true, all columns are centered and visible (active column included).
@@ -93,6 +99,10 @@ enum NiriWindowMoveResult {
             motion: motion,
             animate: false
         )
+        WMLog.layout
+            .debug(
+                "applyViewportPipeline: applyOverspread=\(didOverspread, privacy: .public) columns=\(columns.count, privacy: .public) viewportSpan=\(viewportSpan, privacy: .public)"
+            )
         if !didOverspread {
             let settings = engine.effectiveSettings(for: pass.monitor.id)
             state.ensureContainerVisible(
@@ -105,6 +115,12 @@ enum NiriWindowMoveResult {
                 animate: false,
                 centerMode: settings.centerFocusedColumn,
                 alwaysCenterSingleColumn: settings.alwaysCenterSingleColumn
+            )
+            state.clampViewportOffset(
+                containers: columns,
+                gap: pass.gap,
+                viewportSpan: viewportSpan,
+                sizeKeyPath: sizeKeyPath
             )
         }
     }
@@ -680,6 +696,10 @@ enum NiriWindowMoveResult {
             }
         }
 
+        WMLog.layout
+            .debug(
+                "removalHandling: wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public) isActive=\(snapshot.isActiveWorkspace, privacy: .public) removedTokens=\(removal.removalResult.removedTokens.count, privacy: .public) visibilityCorrected=\(removal.removalResult.visibilityWasCorrected, privacy: .public) isGesture=\(isGestureOrAnimation, privacy: .public)"
+            )
         if !usesSingleWindowAspectRatio,
            !isGestureOrAnimation,
            snapshot.isActiveWorkspace,
@@ -688,6 +708,10 @@ enum NiriWindowMoveResult {
            !removal.removalResult.visibilityWasCorrected,
            removal.removalResult.removedTokens.isEmpty || removal.removalResult.fromIndexForVisibility != nil
         {
+            WMLog.layout
+                .debug(
+                    "removalHandling: RUNNING ensureSelectionVisible for wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public)"
+                )
             pass.engine.ensureSelectionVisible(
                 node: selectedNode,
                 in: pass.wsId,
@@ -853,6 +877,11 @@ enum NiriWindowMoveResult {
         if requiresRecalc {
             state.requiresViewportRecalc = false
         }
+
+        WMLog.layout
+            .debug(
+                "computeLayoutPlan: wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public) viewportNeedsRecalc=\(viewportNeedsRecalc, privacy: .public) requiresRecalc=\(requiresRecalc, privacy: .public) newWindowToken=\(newWindowToken != nil, privacy: .public) applyPolicies=\(viewportNeedsRecalc || newWindowToken != nil || requiresRecalc, privacy: .public)"
+            )
 
         applyViewportPipeline(
             pass: pass,
