@@ -1,4 +1,4 @@
-import CoreGraphics
+import AppKit
 
 extension NiriLayoutEngine {
     func ensureSelectionVisibleAfterUserNavigation(

@@ -1,14 +1,14 @@
 import ApplicationServices
 import CoreGraphics
 import Foundation
-import Testing
 @testable import OmniWM
+import Testing
 
 @Suite @MainActor
 struct SelectiveAnimationTests {
     private func makeTestHandle(pid: pid_t = 1) -> WindowHandle {
         WindowHandle(
-            id: WindowToken(pid: pid, windowId: Int.random(in: 1...1_000_000)),
+            id: WindowToken(pid: pid, windowId: Int.random(in: 1 ... 1_000_000)),
             pid: pid,
             axElement: AXUIElementCreateSystemWide()
         )
@@ -63,7 +63,7 @@ struct SelectiveAnimationTests {
 
         let w1 = engine.addWindow(handle: h1, to: wsId, afterSelection: nil)
         let w2 = engine.addWindow(handle: h2, to: wsId, afterSelection: w1.id)
-        _ = engine.addWindow(handle: h3, to: wsId, afterSelection: w2.id)
+        let w3 = engine.addWindow(handle: h3, to: wsId, afterSelection: w2.id)
 
         let workingFrame = CGRect(x: 0, y: 0, width: 500, height: 900)
         let gap: CGFloat = 8
@@ -76,7 +76,7 @@ struct SelectiveAnimationTests {
         state.viewOffsetPixels = .static(0)
 
         engine.ensureSelectionVisible(
-            node: w2,
+            node: w3,
             in: wsId,
             motion: .enabled,
             state: &state,
@@ -85,9 +85,13 @@ struct SelectiveAnimationTests {
             animate: true
         )
 
-        #expect(state.activeColumnIndex == 1)
-        let target = state.viewOffsetPixels.target()
-        #expect(target != 0 || state.viewOffsetPixels.current() != 0 || state.activeColumnIndex == 1)
+        #expect(state.activeColumnIndex == 2)
+        switch state.viewOffsetPixels {
+        case .spring:
+            break
+        default:
+            Issue.record("Expected .spring animation but got non-animating offset")
+        }
     }
 
     @Test func userNavigationWrapperAnimates() {
@@ -96,9 +100,11 @@ struct SelectiveAnimationTests {
 
         let h1 = makeTestHandle()
         let h2 = makeTestHandle()
+        let h3 = makeTestHandle()
 
         let w1 = engine.addWindow(handle: h1, to: wsId, afterSelection: nil)
         let w2 = engine.addWindow(handle: h2, to: wsId, afterSelection: w1.id)
+        let w3 = engine.addWindow(handle: h3, to: wsId, afterSelection: w2.id)
 
         let workingFrame = CGRect(x: 0, y: 0, width: 500, height: 900)
         let gap: CGFloat = 8
@@ -111,7 +117,7 @@ struct SelectiveAnimationTests {
         state.viewOffsetPixels = .static(0)
 
         engine.ensureSelectionVisibleAfterUserNavigation(
-            node: w2,
+            node: w3,
             in: wsId,
             motion: .enabled,
             state: &state,
@@ -119,7 +125,13 @@ struct SelectiveAnimationTests {
             gaps: gap
         )
 
-        #expect(state.activeColumnIndex == 1)
+        #expect(state.activeColumnIndex == 2)
+        switch state.viewOffsetPixels {
+        case .static:
+            Issue.record("Expected animating offset from user navigation wrapper but got .static")
+        default:
+            break
+        }
     }
 
     @Test func layoutChangeWrapperDoesNotAnimate() {
