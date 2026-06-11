@@ -539,18 +539,6 @@ final class WorkspaceNavigationHandler {
             targetFocusedToken: nil
         )
 
-        controller.layoutRefreshController.commitWorkspaceTransition(
-            affectedWorkspaces: affectedWorkspaceIds(
-                sourceWorkspaceId: sourceWorkspaceId,
-                targetWorkspaceId: targetWorkspaceId
-            ),
-            reason: .workspaceTransition
-        ) { [weak controller] in
-            if let newSourceFocusToken {
-                controller?.focusWindow(newSourceFocusToken)
-            }
-        }
-
         return true
     }
 

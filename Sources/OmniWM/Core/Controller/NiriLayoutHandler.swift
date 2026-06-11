@@ -669,7 +669,7 @@ enum NiriWindowMoveResult {
             resetViewportForSingleWindowAspectRatio(state: &state)
         }
 
-        let offsetBefore = state.viewOffsetPixels.current()
+        let offsetBefore = state.viewOffsetPixels.target()
         var viewportNeedsRecalc = removal.removalResult.viewportNeedsRecalc
 
         let isGestureOrAnimation = state.viewOffsetPixels.isGesture || state.viewOffsetPixels.isAnimating
@@ -698,7 +698,7 @@ enum NiriWindowMoveResult {
                 animate: false,
                 fromContainerIndex: removal.removalResult.fromIndexForVisibility
             )
-            if abs(state.viewOffsetPixels.current() - offsetBefore) > 1 {
+            if abs(state.viewOffsetPixels.target() - offsetBefore) > 1 {
                 viewportNeedsRecalc = true
             }
         }
