@@ -202,8 +202,8 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 **OPEN (runtime-verified):**
 - **Bug #7/27** (column gap after moveToWorkspace): FIX D LAYER 1 DONE (build 100). commitWorkspaceTransition + requiresViewportRecalc flag. Viewport centers but gaps persist from app min-width rejection (WhatsApp w=1258 not 1277). Fix D Layer 2 (frame observation feedback) needed. Memorygraph `0486d6ce`, `7511d69e`.
 - **Bug #7/27/15** (Niri viewport gap — column gap, navigation gap, cross-monitor disruption): ALL OPEN. Shared root cause: Niri layout engine doesn't call `applyOverspread`/`ensureSelectionVisible` after `atomicTransferWindow` or column navigation. Graphify: NO path from transfer→centering. Affects ALL Niri displays (Retina, 32", any). CADisplayLink animation path also global (not per-display). Memorygraph `0486d6ce`, `8416a7ba`.
-- **Bug #28** (WhatsApp floating→tiling on wake): REPRODUCED (build 98). Mode lost during wake — willSleep not firing, no snapshot. Memorygraph `40a444c8`.
-- **Bug #29** (column reorder on Retina after wake): REPRODUCED (build 98). Columns shuffled — no snapshot for column placement. Memorygraph `b8ee5a66`.
+- **Bug #28** (WhatsApp floating→tiling on wake): PARTIALLY FIXED (build 101). Dev signing enables willSleep → snapshot captured. But floating mode not preserved through executeFinalRestore. Memorygraph `40a444c8`.
+- **Bug #29** (column reorder on Retina after wake): NEEDS RE-TEST with signed binary. willSleep now fires → snapshot available. Memorygraph `b8ee5a66`.
 - **Portrait wake window loss**: OPEN (improved — 0 removals in build 98 vs 15+ before). willSleep still not firing for debug binary. Memorygraph `33b4d04f`.
 - **Bug #30** (cross-display transfer wrong frame geometry): FIXED (build 100). commitWorkspaceTransition ensures relayout uses correct destination monitor. Remaining y-offset (2-4px) is Chrome-specific rejection, not wrong display. Memorygraph `e8a27ef5`.
 - **Ghost border** during Chrome tabs: FIXED (build 101). isOwnedWindow guard added to handleCGSWindowDestroyed. 0 own-window removals verified. Memorygraph `0336d9a4`.
