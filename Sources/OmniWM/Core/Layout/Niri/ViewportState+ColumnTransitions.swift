@@ -243,7 +243,7 @@ extension ViewportState {
             return sum + width + (pair.offset < containers.count - 1 ? gap : 0)
         }
 
-        guard totalWidth < viewportSpan else { return }
+        guard totalWidth <= viewportSpan + gap else { return }
 
         let excessSpace = viewportSpan - totalWidth
         let targetOffset = -(excessSpace / 2)
