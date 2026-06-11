@@ -1,4 +1,4 @@
-.PHONY: format format-check lint lint-fix no-zig-audit build test release-check verify check check-tool-versions check-swiftformat-version check-swiftlint-version
+.PHONY: format format-check lint lint-fix no-zig-audit build build-sign test release-check verify check check-tool-versions check-swiftformat-version check-swiftlint-version sign
 
 SWIFTFORMAT_VERSION = 0.61.1
 SWIFTLINT_VERSION = 0.63.2
@@ -33,9 +33,21 @@ no-zig-audit:
 	./Scripts/audit-no-zig.sh --staged
 	./Scripts/audit-no-zig.sh --worktree
 
+CODESIGN_IDENTITY ?= $(shell security find-identity -v -p codesigning 2>/dev/null | head -1 | sed 's/.*"\(.*\)"/\1/')
+
+sign:
+	@if [ -n "$(CODESIGN_IDENTITY)" ]; then \
+		codesign -f -s "$(CODESIGN_IDENTITY)" .build/debug/OmniWM 2>/dev/null && \
+		echo "Signed with: $(CODESIGN_IDENTITY)"; \
+	else \
+		echo "No codesigning identity found — binary is adhoc"; \
+	fi
+
 build:
 	./Scripts/ghostty-preflight.sh verify
 	$(SWIFT_WITH_GHOSTTY) swift build
+
+build-sign: build sign
 
 test:
 	./Scripts/ghostty-preflight.sh verify
