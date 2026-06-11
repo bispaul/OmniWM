@@ -82,10 +82,6 @@ enum NiriWindowMoveResult {
         let viewportSpan = orientation == .horizontal
             ? pass.insetFrame.width : pass.insetFrame.height
         guard applyPolicies else {
-            WMLog.layout
-                .debug(
-                    "applyViewportPipeline: SKIPPED applyPolicies=false wsColumns=\(columns.count, privacy: .public)"
-                )
             return
         }
 
@@ -99,10 +95,6 @@ enum NiriWindowMoveResult {
             motion: motion,
             animate: false
         )
-        WMLog.layout
-            .debug(
-                "applyViewportPipeline: applyOverspread=\(didOverspread, privacy: .public) columns=\(columns.count, privacy: .public) viewportSpan=\(viewportSpan, privacy: .public)"
-            )
         if !didOverspread {
             let settings = engine.effectiveSettings(for: pass.monitor.id)
             state.ensureContainerVisible(

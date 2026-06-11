@@ -244,16 +244,6 @@ extension ViewportState {
             return sum + width + (pair.offset < containers.count - 1 ? gap : 0)
         }
 
-        for (i, c) in containers.enumerated() {
-            WMLog.layout
-                .debug(
-                    "applyOverspread: col[\(i, privacy: .public)] cachedWidth=\(c[keyPath: sizeKeyPath], privacy: .public) isFullWidth=\(c.isFullWidth, privacy: .public)"
-                )
-        }
-        WMLog.layout
-            .debug(
-                "applyOverspread: totalWidth=\(totalWidth, privacy: .public) viewportSpan=\(viewportSpan, privacy: .public) gap=\(gap, privacy: .public) fits=\(totalWidth <= viewportSpan + gap, privacy: .public)"
-            )
         guard totalWidth <= viewportSpan + gap else { return false }
 
         let excessSpace = viewportSpan - totalWidth
