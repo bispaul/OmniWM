@@ -294,6 +294,7 @@ extension NiriLayoutEngine {
                 state: &state,
                 workingFrame: workingFrame,
                 gaps: gaps,
+                animate: false,
                 fromContainerIndex: fromIndexForVisibility
             )
             visibilityWasCorrected = true
@@ -476,6 +477,7 @@ extension NiriLayoutEngine {
                     state: &state,
                     workingFrame: workingFrame,
                     gaps: gaps,
+                    animate: false,
                     fromContainerIndex: state.activeColumnIndex
                 )
                 visibilityWasCorrected = true

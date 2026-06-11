@@ -1,10 +1,17 @@
+import ApplicationServices
+import CoreGraphics
+import Foundation
 import Testing
 @testable import OmniWM
 
 @Suite @MainActor
 struct SelectiveAnimationTests {
-    private func makeTestHandle() -> WindowHandle {
-        WindowHandle(pid: 1, windowId: Int.random(in: 1000...9999))
+    private func makeTestHandle(pid: pid_t = 1) -> WindowHandle {
+        WindowHandle(
+            id: WindowToken(pid: pid, windowId: Int.random(in: 1...1_000_000)),
+            pid: pid,
+            axElement: AXUIElementCreateSystemWide()
+        )
     }
 
     @Test func ensureSelectionVisibleWithAnimateFalseProducesStaticOffset() {

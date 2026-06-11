@@ -93,6 +93,7 @@ extension NiriLayoutEngine {
             state: &state,
             workingFrame: workingFrame,
             gaps: gaps,
+            animate: true,
             orientation: orientation
         )
 
@@ -284,6 +285,7 @@ extension NiriLayoutEngine {
                 state: &state,
                 workingFrame: workingFrame,
                 gaps: gaps,
+                animate: true,
                 orientation: orientation
             )
         }
@@ -308,7 +310,8 @@ extension NiriLayoutEngine {
                 motion: motion,
                 state: &state,
                 workingFrame: workingFrame,
-                gaps: gaps
+                gaps: gaps,
+                animate: true
             )
             return target
         }
@@ -395,7 +398,8 @@ extension NiriLayoutEngine {
             motion: motion,
             state: &state,
             workingFrame: workingFrame,
-            gaps: gaps
+            gaps: gaps,
+            animate: true
         )
         return target
     }
@@ -533,7 +537,8 @@ extension NiriLayoutEngine {
                 motion: motion,
                 state: &state,
                 workingFrame: workingFrame,
-                gaps: gaps
+                gaps: gaps,
+                animate: true
             )
             return target
         }
@@ -563,7 +568,8 @@ extension NiriLayoutEngine {
                 motion: motion,
                 state: &state,
                 workingFrame: workingFrame,
-                gaps: gaps
+                gaps: gaps,
+                animate: true
             )
             return target
         }
@@ -627,7 +633,8 @@ extension NiriLayoutEngine {
             motion: motion,
             state: &state,
             workingFrame: workingFrame,
-            gaps: gaps
+            gaps: gaps,
+            animate: true
         )
         return target
     }
@@ -657,7 +664,8 @@ extension NiriLayoutEngine {
             motion: motion,
             state: &state,
             workingFrame: workingFrame,
-            gaps: gaps
+            gaps: gaps,
+            animate: true
         )
 
         return previousWindow

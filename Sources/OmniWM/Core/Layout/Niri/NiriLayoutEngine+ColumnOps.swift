@@ -200,7 +200,8 @@ extension NiriLayoutEngine {
             motion: motion,
             state: &state,
             workingFrame: workingFrame,
-            gaps: gaps
+            gaps: gaps,
+            animate: false
         )
 
         return true
@@ -594,6 +595,7 @@ extension NiriLayoutEngine {
             state: &state,
             workingFrame: workingFrame,
             gaps: gaps,
+            animate: false,
             fromContainerIndex: previousActiveColumnIndex,
             previousActiveContainerPosition: previousActiveColumnPosition
         )
@@ -836,7 +838,8 @@ extension NiriLayoutEngine {
             motion: motion,
             state: &state,
             workingFrame: workingFrame,
-            gaps: gaps
+            gaps: gaps,
+            animate: false
         )
 
         return true
@@ -860,6 +863,7 @@ extension NiriLayoutEngine {
                 state: &state,
                 workingFrame: workingFrame,
                 gaps: gaps,
+                animate: false,
                 animationConfig: animationConfig,
                 fromContainerIndex: fromContainerIndex
             )

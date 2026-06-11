@@ -696,6 +696,7 @@ enum NiriWindowMoveResult {
                 state: &state,
                 workingFrame: pass.insetFrame,
                 gaps: pass.gap,
+                animate: false,
                 fromContainerIndex: removal.removalResult.fromIndexForVisibility
             )
             if abs(state.viewOffsetPixels.current() - offsetBefore) > 1 {
@@ -771,6 +772,7 @@ enum NiriWindowMoveResult {
                     state: &state,
                     workingFrame: pass.insetFrame,
                     gaps: pass.gap,
+                    animate: false,
                     fromContainerIndex: state.activeColumnIndex
                 )
 
@@ -1171,7 +1173,8 @@ enum NiriWindowMoveResult {
                 motion: controller.motionPolicy.snapshot(),
                 state: &state,
                 workingFrame: monitor.visibleFrame,
-                gaps: gap
+                gaps: gap,
+                animate: true
             )
         }
         activateNode(
@@ -1661,7 +1664,8 @@ enum NiriWindowMoveResult {
                 motion: controller.motionPolicy.snapshot(),
                 state: &state,
                 workingFrame: workingFrame,
-                gaps: gap
+                gaps: gap,
+                animate: options.startAnimation
             )
         }
 

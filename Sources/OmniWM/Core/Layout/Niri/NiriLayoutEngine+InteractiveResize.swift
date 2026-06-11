@@ -256,7 +256,8 @@ extension NiriLayoutEngine {
                 motion: motion,
                 state: &state,
                 workingFrame: workingFrame,
-                gaps: gaps
+                gaps: gaps,
+                animate: true
             )
         }
 
