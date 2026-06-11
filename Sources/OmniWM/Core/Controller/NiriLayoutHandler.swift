@@ -93,7 +93,8 @@ enum NiriWindowMoveResult {
                 gap: pass.gap,
                 viewportSpan: viewportSpan,
                 sizeKeyPath: sizeKeyPath,
-                motion: motion
+                motion: motion,
+                animate: false
             )
         } else {
             let settings = engine.effectiveSettings(for: pass.monitor.id)
@@ -104,6 +105,7 @@ enum NiriWindowMoveResult {
                 viewportSpan: viewportSpan,
                 motion: motion,
                 sizeKeyPath: sizeKeyPath,
+                animate: false,
                 centerMode: settings.centerFocusedColumn,
                 alwaysCenterSingleColumn: settings.alwaysCenterSingleColumn
             )
