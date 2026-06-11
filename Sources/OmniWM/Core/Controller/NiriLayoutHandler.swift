@@ -82,6 +82,12 @@ enum NiriWindowMoveResult {
         let viewportSpan = orientation == .horizontal
             ? pass.insetFrame.width : pass.insetFrame.height
         guard applyPolicies else {
+            state.clampViewportOffset(
+                containers: columns,
+                gap: pass.gap,
+                viewportSpan: viewportSpan,
+                sizeKeyPath: sizeKeyPath
+            )
             return
         }
 
