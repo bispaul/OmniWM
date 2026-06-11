@@ -244,6 +244,16 @@ extension ViewportState {
             return sum + width + (pair.offset < containers.count - 1 ? gap : 0)
         }
 
+        for (i, c) in containers.enumerated() {
+            WMLog.layout
+                .debug(
+                    "applyOverspread: col[\(i, privacy: .public)] cachedWidth=\(c[keyPath: sizeKeyPath], privacy: .public) isFullWidth=\(c.isFullWidth, privacy: .public)"
+                )
+        }
+        WMLog.layout
+            .debug(
+                "applyOverspread: totalWidth=\(totalWidth, privacy: .public) viewportSpan=\(viewportSpan, privacy: .public) gap=\(gap, privacy: .public) fits=\(totalWidth <= viewportSpan + gap, privacy: .public)"
+            )
         guard totalWidth <= viewportSpan + gap else { return false }
 
         let excessSpace = viewportSpan - totalWidth
@@ -258,6 +268,34 @@ extension ViewportState {
         } else {
             viewOffsetPixels = .static(targetOffset)
         }
+        return true
+    }
+
+    @discardableResult
+    mutating func clampViewportOffset(
+        containers: [NiriContainer],
+        gap: CGFloat,
+        viewportSpan: CGFloat,
+        sizeKeyPath: KeyPath<NiriContainer, CGFloat>,
+        scale: CGFloat = 2.0
+    ) -> Bool {
+        guard !containers.isEmpty else { return false }
+        guard !viewOffsetPixels.isAnimating, !viewOffsetPixels.isGesture else { return false }
+
+        let totalW = totalSpan(containers: containers, gap: gap, sizeKeyPath: sizeKeyPath)
+
+        let maxOffset: CGFloat = 0
+        let minOffset = viewportSpan - totalW
+        guard minOffset < maxOffset else { return false }
+
+        let current = stationary()
+        let safeMin = min(minOffset, maxOffset)
+        let safeMax = max(minOffset, maxOffset)
+        let clamped = current.clamped(to: safeMin ... safeMax)
+        let pixelEpsilon: CGFloat = 1.0 / max(scale, 1.0)
+        guard abs(clamped - current) > pixelEpsilon else { return false }
+
+        viewOffsetPixels = .static(clamped)
         return true
     }
 }

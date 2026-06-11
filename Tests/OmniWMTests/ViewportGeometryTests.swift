@@ -1,5 +1,6 @@
 import Foundation
 @testable import OmniWM
+import QuartzCore
 import Testing
 
 private func makeViewportGestureContainers(
@@ -734,5 +735,99 @@ private func makeViewportGestureContainers(
 
         #expect(result == false)
         #expect(abs(Double(state.viewOffsetPixels.target())) < 0.001)
+    }
+
+    // MARK: - Viewport Clamping Tests
+
+    @Test func clampViewportOffsetClampsOverscrolledOffset() {
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(100) // past maxOffset=0
+        let columns = makeViewportGestureContainers(widths: [1277, 1277, 1277])
+        let result = state.clampViewportOffset(
+            containers: columns, gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth
+        )
+        #expect(result == true)
+        #expect(state.stationary() == 0, "Should clamp to maxOffset=0")
+    }
+
+    @Test func clampViewportOffsetClampsUnderscrolledOffset() {
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(-1500) // past minOffset
+        let columns = makeViewportGestureContainers(widths: [1277, 1277, 1277])
+        let result = state.clampViewportOffset(
+            containers: columns, gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth
+        )
+        #expect(result == true)
+        let expected: CGFloat = 2560 - (1277 * 3 + 2 * 2) // -1275
+        #expect(abs(state.stationary() - expected) < 1, "Should clamp to minOffset")
+    }
+
+    @Test func clampViewportOffsetSkipsWhenColumnsFit() {
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(0)
+        let columns = makeViewportGestureContainers(widths: [1277, 1277])
+        let result = state.clampViewportOffset(
+            containers: columns, gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth
+        )
+        #expect(result == false, "Should skip when columns fit (minOffset >= maxOffset)")
+    }
+
+    @Test func clampViewportOffsetSkipsDuringAnimation() {
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .spring(
+            SpringAnimation(from: 100, to: 0, startTime: CACurrentMediaTime(), config: .default)
+        )
+        let columns = makeViewportGestureContainers(widths: [1277, 1277, 1277])
+        let result = state.clampViewportOffset(
+            containers: columns, gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth
+        )
+        #expect(result == false, "Should skip during spring animation")
+    }
+
+    @Test func clampViewportOffsetSkipsEmptyWorkspace() {
+        var state = ViewportState()
+        state.viewOffsetPixels = .static(100)
+        let result = state.clampViewportOffset(
+            containers: [], gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth
+        )
+        #expect(result == false, "Should skip for empty workspace")
+    }
+
+    @Test func clampViewportOffsetExactFitBoundary() {
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(0)
+        let columns = makeViewportGestureContainers(widths: [1278, 1278])
+        let result = state.clampViewportOffset(
+            containers: columns, gap: 2, viewportSpan: 2558, // 1278+2+1278 = 2558
+            sizeKeyPath: \.cachedWidth
+        )
+        #expect(result == false, "Should skip when totalW == viewportSpan exactly")
+    }
+
+    @Test func clampViewportOffsetFloatPrecisionSafety() {
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(0)
+        let columns = makeViewportGestureContainers(widths: [1278.0005, 1278.0005])
+        let result = state.clampViewportOffset(
+            containers: columns, gap: 2, viewportSpan: 2558, sizeKeyPath: \.cachedWidth
+        )
+        #expect(result == false, "Sub-pixel difference should be within epsilon")
+    }
+
+    @Test func clampViewportOffsetRespectsPixelEpsilon() {
+        var state = ViewportState()
+        state.activeColumnIndex = 0
+        state.viewOffsetPixels = .static(0.3) // 0.3px past maxOffset=0
+        let columns = makeViewportGestureContainers(widths: [1277, 1277, 1277])
+        let result = state.clampViewportOffset(
+            containers: columns, gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth, scale: 2.0
+        )
+        #expect(result == false, "0.3px within 0.5px epsilon → no clamp")
     }
 }
