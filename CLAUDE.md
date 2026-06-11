@@ -259,15 +259,29 @@ Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is co
 | 4 | ManagedReplacementCorrelator | DONE | 90-101 |
 | 5 | RefreshMergeMatrixTests | Deferred | — |
 
+#### Scattered Critical Pathways (Graphify audit, 2026-06-11)
+
+| Method | Call Sites | Status |
+|--------|-----------|--------|
+| `requestImmediateRelayout` | 44 | Unaudited — no animation/workspace policy threading |
+| `focusWindow` | 30 | Unaudited — multiple racing paths |
+| `ensureSelectionVisible` | 28 | **F7 FIXED** — `animate: Bool` + typed wrappers |
+| `startScrollAnimation` | 16 | Unaudited — inconsistent start conditions |
+| `commitWorkspaceTransition` | 13 | **BUG B** — inconsistent `affectedWorkspaces` |
+| `commitWorkspaceSelection` | 9 | Unaudited |
+
+Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% AX reduction).
+
 #### Summary
 
 | Category | Done | Open |
 |----------|------|------|
 | Bugs | 12 | 3 (Bug #7/27 two fixes needed, Bug #28 floating mode) |
 | Features | 3 done + 2 N/A | 1 (F5 focus request tracking) |
-| Fixes | 5 | 1 (Fix D L2 — 2 targeted bugs, not architecture problem) |
+| Fixes | 5 | 1 (Fix D L2 — Bug A fixed, Bug B needs caller guards) |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 (Fix D L2 safety net) |
+| Scattered pathways | 1 fixed (F7) | 4 unaudited (44+30+16+13 call sites) |
 
 ## Cross-References
 
