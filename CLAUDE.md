@@ -206,8 +206,8 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 26 | Focus feedback loop | CLOSED | 96 | — |
 | 30 | Cross-display transfer wrong frame | CLOSED | 100 | — |
 | — | Ghost border during Chrome tabs | CLOSED | 101 | — |
-| 7/27 | Column gap after moveToWorkspace | CLOSED | 103 | applyViewportPipeline animate:false + applyOverspread gap tolerance. 862px→2px. |
-| 7/27/15 | Niri viewport gap (cross-monitor) | CLOSED | 103 | Same fixes. Viewport centers when columns barely exceed viewport (tolerance = gap width). |
+| 7/27 | Column gap after moveToWorkspace | **OPEN** | — | TWO bugs (CodeRabbit bisect). Bug A: .current()→.target() line 672 (commit 10cf53a). Bug B: duplicate commitWorkspaceTransition (commit 652057f). Memorygraph `5ff899c7`. |
+| 7/27/15 | Niri viewport gap (cross-monitor) | **OPEN** | — | Same two bugs. Fix D L2 commits are CORRECT and KEPT. |
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
 | 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
@@ -263,9 +263,9 @@ Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is co
 
 | Category | Done | Open |
 |----------|------|------|
-| Bugs | 14 | 1 (Bug #28 re-test floating mode) |
+| Bugs | 12 | 3 (Bug #7/27 two fixes needed, Bug #28 floating mode) |
 | Features | 3 done + 2 N/A | 1 (F5 focus request tracking) |
-| Fixes | 6 | 0 |
+| Fixes | 5 | 1 (Fix D L2 — 2 targeted bugs, not architecture problem) |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 (Fix D L2 safety net) |
 
