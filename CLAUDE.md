@@ -206,9 +206,10 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 26 | Focus feedback loop | CLOSED | 96 | — |
 | 30 | Cross-display transfer wrong frame | CLOSED | 100 | — |
 | — | Ghost border during Chrome tabs | CLOSED | 101 | — |
-| 7/27 | Column gap after moveToWorkspace | **OPEN** | 100 | Fix D Layer 2 (app min-width rejection) |
-| 7/27/15 | Niri viewport gap (cross-monitor) | **OPEN** | 103 | applyViewportPipeline animation FIXED (build 103). Remaining gap from app min-width rejection (Fix D L2). |
+| 7/27 | Column gap after moveToWorkspace | CLOSED | 103 | applyViewportPipeline animate:false + applyOverspread gap tolerance. 862px→2px. |
+| 7/27/15 | Niri viewport gap (cross-monitor) | CLOSED | 103 | Same fixes. Viewport centers when columns barely exceed viewport (tolerance = gap width). |
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
+| 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
 | — | Portrait wake window loss | CLOSED | 102 | 0 removals, 10/10 windows survived, willSleep+snapshot fired |
 
@@ -234,7 +235,7 @@ Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is co
 | Fix B | SkyLight guard scoping | DONE | 81 |
 | Fix C | Wake restore (settle-then-correct) | DONE | 80 |
 | Fix D L1 | Viewport centering | DONE | 100 |
-| Fix D L2 | Frame observation feedback | **OPEN** | — |
+| Fix D L2 | Frame observation feedback | CLOSED | 103 |
 | Fix E | WindowLifecycleCoordinator | DONE | 86 |
 
 #### SSOT Invariants
@@ -256,15 +257,15 @@ Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is co
 | 2 | RefreshQueueManager | DONE | 88 |
 | 3 | DisplayLinkManager | DONE | 89 |
 | 4 | ManagedReplacementCorrelator | DONE | 90-101 |
-| 5 | RefreshMergeMatrixTests | Fix D L2 safety net | — |
+| 5 | RefreshMergeMatrixTests | Deferred | — |
 
 #### Summary
 
 | Category | Done | Open |
 |----------|------|------|
-| Bugs | 12 | 3 (1 re-test floating mode, 2 Fix D L2) |
-| Features | 3 done + 2 N/A | 2 (F5, Fix D L2) |
-| Fixes | 5 | 1 (Fix D L2) |
+| Bugs | 14 | 1 (Bug #28 re-test floating mode) |
+| Features | 3 done + 2 N/A | 1 (F5 focus request tracking) |
+| Fixes | 6 | 0 |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 (Fix D L2 safety net) |
 
