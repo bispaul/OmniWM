@@ -4,7 +4,7 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) released v0.4.9.7 (2026-06-10).** Fork is the primary codebase. GhosttyKit updated to v0.4.9.7. Upstream analysis: 4 adoptable ideas (AXFrameApplicationLedger, AX rekey, Hyper key, bezier motion). Memorygraph `64426c1b`.
-Branch: `fix/scope-relayout-to-workspace`. Build 100. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 101. PID check: `pgrep -x OmniWM`.
 
 ### Architecture Status
 Phase 1-5 + Fix A/B/C/E done. Fix D blocked. Flutter Phase 4.5 STOP. All 5 god node extractions done.
@@ -206,7 +206,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 - **Bug #29** (column reorder on Retina after wake): REPRODUCED (build 98). Columns shuffled — no snapshot for column placement. Memorygraph `b8ee5a66`.
 - **Portrait wake window loss**: OPEN (improved — 0 removals in build 98 vs 15+ before). willSleep still not firing for debug binary. Memorygraph `33b4d04f`.
 - **Bug #30** (cross-display transfer wrong frame geometry): FIXED (build 100). commitWorkspaceTransition ensures relayout uses correct destination monitor. Remaining y-offset (2-4px) is Chrome-specific rejection, not wrong display. Memorygraph `e8a27ef5`.
-- **Ghost border** during Chrome tabs: OBSERVED. isOwnedWindow missing in destroy handler. <1ms visual impact. Memorygraph `0336d9a4`.
+- **Ghost border** during Chrome tabs: FIXED (build 101). isOwnedWindow guard added to handleCGSWindowDestroyed. 0 own-window removals verified. Memorygraph `0336d9a4`.
 - **Flutter during moveToWorkspace**: Phase 4.5 STOP. 5 attempts failed. Needs debugger/upstream study. Memorygraph `91ce7d92`.
 
 ## Cross-References
