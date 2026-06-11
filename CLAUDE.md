@@ -4,7 +4,7 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) released v0.4.9.7 (2026-06-10).** Fork is the primary codebase. GhosttyKit updated to v0.4.9.7. Upstream analysis: 4 adoptable ideas (AXFrameApplicationLedger, AX rekey, Hyper key, bezier motion). Memorygraph `64426c1b`.
-Branch: `fix/scope-relayout-to-workspace`. Build 101. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 103. PID check: `pgrep -x OmniWM`.
 **Build:** `make build-sign` (auto-signs with dev cert). `make sign` to re-sign existing binary.
 
 ### Architecture Status
@@ -188,27 +188,85 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 5. **RefreshMergeMatrixTests** (test-only, ~300 lines) — Fix D safety net
 **Not touched:** WorkspaceManager (all LOW), WMController forwarding (stable API), ForTests providers, LRC buildFullRefreshExecutionPlan.
 
-### Bug Status (build 98, runtime-verified 2026-06-11)
+### Status Dashboard (build 103, 2026-06-11) — SINGLE SOURCE OF TRUTH
 
-**CLOSED (runtime-verified):**
-- **Bug #6/22** (Chrome verificationMismatch): CLOSED — 0 mismatches in 17 tab-switch events. All 3 preconditions fixed (retry disabled, bug #19 amplifier gone, display coalescing). Memorygraph `e4ad0d6b`.
-- **Bug #19** (Chrome re-admission storm): FIXED (build 85). Was the amplifier.
-- **Bug #20** (Ghostty tab phantom columns): CLOSED — tab open/close clean, CGS destroy not suppressed. SkyLight guard correctly scoped to wake/reconfig only. Memorygraph `a816fa8e`.
-- **Bug #21** (Dwindle wake wrong-monitor coordinates): CLOSED — portrait frames identical pre/post sleep/wake test. Implicit geometry recalc + build 92 debounce. Memorygraph `dd0141b7`.
-- **Bug #23** (native fullscreen wrong workspace): FIXED (build 95). Central assignment gate.
-- **Bug #24** (focus desync portrait Dwindle): FIXED (build 95b). reconcileFocusBeforeCommand.
-- **Bug #25** (Zoom startup tiling): FIXED (build 90). Float rule.
-- **Bug #26** (Focus feedback loop): FIXED (build 96). Passive reconciliation removed.
+**This table is the SSOT.** All other systems (Serena, memorygraph, Memory MCP, dotfiles) point here. Update this table FIRST, then sync outward.
 
-**OPEN (runtime-verified):**
-- **Bug #7/27** (column gap after moveToWorkspace): FIX D LAYER 1 DONE (build 100). commitWorkspaceTransition + requiresViewportRecalc flag. Viewport centers but gaps persist from app min-width rejection (WhatsApp w=1258 not 1277). Fix D Layer 2 (frame observation feedback) needed. Memorygraph `0486d6ce`, `7511d69e`.
-- **Bug #7/27/15** (Niri viewport gap — column gap, navigation gap, cross-monitor disruption): ALL OPEN. Shared root cause: Niri layout engine doesn't call `applyOverspread`/`ensureSelectionVisible` after `atomicTransferWindow` or column navigation. Graphify: NO path from transfer→centering. Affects ALL Niri displays (Retina, 32", any). CADisplayLink animation path also global (not per-display). Memorygraph `0486d6ce`, `8416a7ba`.
-- **Bug #28** (WhatsApp floating→tiling on wake): PARTIALLY FIXED (build 101). Dev signing enables willSleep → snapshot captured. But floating mode not preserved through executeFinalRestore. Memorygraph `40a444c8`.
-- **Bug #29** (column reorder on Retina after wake): NEEDS RE-TEST with signed binary. willSleep now fires → snapshot available. Memorygraph `b8ee5a66`.
-- **Portrait wake window loss**: OPEN (improved — 0 removals in build 98 vs 15+ before). willSleep still not firing for debug binary. Memorygraph `33b4d04f`.
-- **Bug #30** (cross-display transfer wrong frame geometry): FIXED (build 100). commitWorkspaceTransition ensures relayout uses correct destination monitor. Remaining y-offset (2-4px) is Chrome-specific rejection, not wrong display. Memorygraph `e8a27ef5`.
-- **Ghost border** during Chrome tabs: FIXED (build 101). isOwnedWindow guard added to handleCGSWindowDestroyed. 0 own-window removals verified. Memorygraph `0336d9a4`.
-- **Flutter during moveToWorkspace**: Phase 4.5 STOP. 5 attempts failed. Needs debugger/upstream study. Memorygraph `91ce7d92`.
+#### Bugs
+
+| # | Description | Status | Build | Next Action |
+|---|------------|--------|-------|-------------|
+| 6/22 | Chrome verificationMismatch | CLOSED | 92 | — |
+| 19 | Chrome re-admission storm | CLOSED | 85 | — |
+| 20 | Ghostty tab phantom columns | CLOSED | 81 | — |
+| 21 | Dwindle wake wrong-monitor coords | CLOSED | 92 | — |
+| 23 | Native fullscreen wrong workspace | CLOSED | 95 | — |
+| 24 | Focus desync portrait Dwindle | CLOSED | 95b | — |
+| 25 | Zoom startup tiling | CLOSED | 90 | — |
+| 26 | Focus feedback loop | CLOSED | 96 | — |
+| 30 | Cross-display transfer wrong frame | CLOSED | 100 | — |
+| — | Ghost border during Chrome tabs | CLOSED | 101 | — |
+| 7/27 | Column gap after moveToWorkspace | **OPEN** | 100 | Fix D Layer 2 (app min-width rejection) |
+| 7/27/15 | Niri viewport gap (cross-monitor) | **OPEN** | 103 | applyViewportPipeline animation FIXED (build 103). Remaining gap from app min-width rejection (Fix D L2). |
+| 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
+| 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
+| — | Portrait wake window loss | CLOSED | 102 | 0 removals, 10/10 windows survived, willSleep+snapshot fired |
+
+#### Features (from upstream v0.4.9.7 analysis + fork work)
+
+| # | Description | Status | Build | Source | Details |
+|---|------------|--------|-------|--------|---------|
+| F1 | AXFrameApplicationLedger | N/A | — | Upstream | Fork's AXManager already has `lastAppliedFrames` dedup + `shouldSuppressFrameChangeRelayout`. Full 525-line Ledger not needed (retry budgets, rekey, observers are over-engineering). Pre-existing, not fork work. |
+| F2 | Ghost border guard | DONE | 101 | Runtime | isOwnedWindow in handleCGSWindowDestroyed |
+| F3 | Invariant checks | DONE | 101 | Upstream Reconcile | duplicate_window_token, focused_destroyed, pending_dead |
+| F4 | AX rekey for tabbing | N/A | — | Upstream | Fork already has `AXManager.rekeyWindowState` + `rekeyedWindowIdsByPreviousId` + `StateReducer.rekeyedFocusSession`. Pre-existing, not fork work. |
+| F5 | Focus request tracking | **OPEN** | — | Upstream | Fork MISSING: `requestId: UInt64` on focus events (prevents stale confirmations) + `setFocusSession` helper. No blocking bug currently. |
+| F6 | Dev signing | DONE | 101 | Fork infra | `make build-sign`, willSleep now fires |
+| F7 | Frame coalescing | DONE | 102-103 | Fork + upstream | animate: Bool on ESV (build 102) + applyViewportPipeline animate:false (build 103). 85% AX write reduction. Click focus: 1-2 batches (was 17). Spec: `docs/superpowers/specs/2026-06-11-f7-frame-coalescing-design.md` |
+
+Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is correct for WM).
+
+#### Fix Pipeline
+
+| Fix | Description | Status | Build |
+|-----|------------|--------|-------|
+| Fix A | Atomic window transfer | DONE | 77 |
+| Fix B | SkyLight guard scoping | DONE | 81 |
+| Fix C | Wake restore (settle-then-correct) | DONE | 80 |
+| Fix D L1 | Viewport centering | DONE | 100 |
+| Fix D L2 | Frame observation feedback | **OPEN** | — |
+| Fix E | WindowLifecycleCoordinator | DONE | 86 |
+
+#### SSOT Invariants
+
+| # | Invariant | Status | Build |
+|---|-----------|--------|-------|
+| 1 | Window identity persistence | DONE | 95 |
+| 2 | Single workspace assignment | DONE | 95-97 |
+| 3 | Display event coalescing | DONE | 92 |
+| 4 | Admission dedup | DONE | 91 |
+| 5 | Focus reconciliation | DONE | 95b-96 |
+| 6 | Hydration matching | DONE | 98 |
+
+#### God Node Extractions
+
+| # | Extraction | Status | Build |
+|---|-----------|--------|-------|
+| 1 | reevaluateWindowRules decomposition | DONE | 85 |
+| 2 | RefreshQueueManager | DONE | 88 |
+| 3 | DisplayLinkManager | DONE | 89 |
+| 4 | ManagedReplacementCorrelator | DONE | 90-101 |
+| 5 | RefreshMergeMatrixTests | Fix D L2 safety net | — |
+
+#### Summary
+
+| Category | Done | Open |
+|----------|------|------|
+| Bugs | 12 | 3 (1 re-test floating mode, 2 Fix D L2) |
+| Features | 3 done + 2 N/A | 2 (F5, Fix D L2) |
+| Fixes | 5 | 1 (Fix D L2) |
+| SSOT | 6/6 | — |
+| Extractions | 4/5 | 1 (Fix D L2 safety net) |
 
 ## Cross-References
 
