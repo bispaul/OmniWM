@@ -164,4 +164,6 @@ struct ViewportState {
     var animationClock: AnimationClock?
 
     var displayRefreshRate: Double = 60.0
+
+    var requiresViewportRecalc: Bool = false
 }

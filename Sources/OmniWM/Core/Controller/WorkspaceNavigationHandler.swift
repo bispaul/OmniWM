@@ -526,6 +526,9 @@ final class WorkspaceNavigationHandler {
             newSourceFocusToken = newFocusNode.token
         }
 
+        sourceState.requiresViewportRecalc = true
+        targetState.requiresViewportRecalc = true
+
         applySessionTransfer(
             sourceWorkspaceId: sourceWorkspaceId,
             sourceState: sourceState,

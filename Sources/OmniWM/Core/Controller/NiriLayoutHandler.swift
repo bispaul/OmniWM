@@ -848,11 +848,16 @@ enum NiriWindowMoveResult {
             animationTime: nil
         )
 
+        let requiresRecalc = state.requiresViewportRecalc
+        if requiresRecalc {
+            state.requiresViewportRecalc = false
+        }
+
         applyViewportPipeline(
             pass: pass,
             state: &state,
             priorFocusedColumnPosition: priorFocusedColumnPosition,
-            applyPolicies: viewportNeedsRecalc || newWindowToken != nil
+            applyPolicies: viewportNeedsRecalc || newWindowToken != nil || requiresRecalc
         )
 
         let hasColumnAnimations = pass.engine.hasAnyColumnAnimationsRunning(in: pass.wsId)
