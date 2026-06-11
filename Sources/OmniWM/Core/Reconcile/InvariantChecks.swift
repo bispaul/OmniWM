@@ -17,6 +17,39 @@ enum InvariantChecks {
             )
         }
 
+        // Duplicate token detection
+        var tokenCounts: [WindowToken: Int] = [:]
+        for window in snapshot.windows {
+            tokenCounts[window.token, default: 0] += 1
+        }
+        for (token, count) in tokenCounts where count > 1 {
+            violations.append(.init(
+                code: "duplicate_window_token",
+                message: "Window token \(token) appears \(count) times in the runtime snapshot."
+            ))
+        }
+
+        // Focused token points to destroyed window
+        if let focusedToken = snapshot.focusedToken,
+           let focusedWindow = snapshot.windows.first(where: { $0.token == focusedToken }),
+           focusedWindow.lifecyclePhase == .destroyed
+        {
+            violations.append(.init(
+                code: "focused_token_destroyed",
+                message: "Focused token \(focusedToken) points to a destroyed window."
+            ))
+        }
+
+        // Pending managed focus references dead token
+        if let pendingToken = snapshot.focusSession.pendingManagedFocus.token,
+           !liveTokens.contains(pendingToken)
+        {
+            violations.append(.init(
+                code: "pending_focus_dead",
+                message: "Pending managed focus token \(pendingToken) is not in the runtime snapshot."
+            ))
+        }
+
         for window in snapshot.windows {
             if let observedWorkspaceId = window.observedState.workspaceId,
                observedWorkspaceId != window.workspaceId

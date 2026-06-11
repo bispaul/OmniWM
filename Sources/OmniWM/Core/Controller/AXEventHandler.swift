@@ -591,6 +591,7 @@ final class AXEventHandler: CGSEventDelegate {
 
     private func handleCGSWindowDestroyed(windowId: UInt32) {
         WMLog.ax.info("Window destroyed: windowId=\(windowId, privacy: .public)")
+        if controller?.isOwnedWindow(windowNumber: Int(windowId)) == true { return }
         let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
             controller?.serviceLifecycleManager.isAwaitingRestore == true
         if isInProtectedWindow, windowExistsInWindowServer(windowId) {
