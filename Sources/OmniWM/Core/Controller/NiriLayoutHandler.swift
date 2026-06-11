@@ -81,22 +81,19 @@ enum NiriWindowMoveResult {
 
         let viewportSpan = orientation == .horizontal
             ? pass.insetFrame.width : pass.insetFrame.height
-        let totalWidth = columns.enumerated().reduce(CGFloat(0)) { sum, pair in
-            sum + pair.element[keyPath: sizeKeyPath] + (pair.offset < columns.count - 1 ? pass.gap : 0)
-        }
-
         guard applyPolicies else { return }
 
-        if totalWidth < viewportSpan {
-            state.applyOverspread(
-                containers: columns,
-                gap: pass.gap,
-                viewportSpan: viewportSpan,
-                sizeKeyPath: sizeKeyPath,
-                motion: motion,
-                animate: false
-            )
-        } else {
+        // applyOverspread is the SSOT for "do columns fit?" — no duplicate guard here.
+        // When it returns true, all columns are centered and visible (active column included).
+        let didOverspread = state.applyOverspread(
+            containers: columns,
+            gap: pass.gap,
+            viewportSpan: viewportSpan,
+            sizeKeyPath: sizeKeyPath,
+            motion: motion,
+            animate: false
+        )
+        if !didOverspread {
             let settings = engine.effectiveSettings(for: pass.monitor.id)
             state.ensureContainerVisible(
                 containerIndex: state.activeColumnIndex,

@@ -657,7 +657,7 @@ private func makeViewportGestureContainers(
         let viewportWidth: CGFloat = 1_000
 
         // totalWidth = 500 + 8 + 500 + 8 + 500 = 1516 > 1000
-        state.applyOverspread(
+        let result = state.applyOverspread(
             containers: columns,
             gap: gap,
             viewportSpan: viewportWidth,
@@ -665,6 +665,74 @@ private func makeViewportGestureContainers(
             animate: false
         )
 
+        #expect(result == false)
+        #expect(abs(Double(state.viewOffsetPixels.target())) < 0.001)
+    }
+
+    @Test func overspreadReturnsTrueWhenColumnsCenter() {
+        var state = ViewportState()
+        let columns = makeViewportGestureContainers(widths: [300, 300])
+        let gap: CGFloat = 8
+        let viewportWidth: CGFloat = 1_000
+
+        let result = state.applyOverspread(
+            containers: columns,
+            gap: gap,
+            viewportSpan: viewportWidth,
+            sizeKeyPath: \.cachedWidth,
+            animate: false
+        )
+
+        #expect(result == true)
+    }
+
+    @Test func overspreadCentersWhenColumnsBarelyExceedViewportWithinGapTolerance() {
+        var state = ViewportState()
+        // 2 columns of 861 + 8 gap = 1730, viewport = 1728, excess = 2px (< gap)
+        let columns = makeViewportGestureContainers(widths: [861, 861])
+        let gap: CGFloat = 8
+        let viewportWidth: CGFloat = 1_728
+
+        // totalWidth = 861 + 8 + 861 = 1730
+        // 1730 <= 1728 + 8 = 1736 → tolerance passes
+        // excessSpace = 1728 - 1730 = -2
+        // targetOffset = -(-2/2) = 1
+        let result = state.applyOverspread(
+            containers: columns,
+            gap: gap,
+            viewportSpan: viewportWidth,
+            sizeKeyPath: \.cachedWidth,
+            animate: false
+        )
+
+        #expect(result == true)
+        #expect(abs(Double(state.viewOffsetPixels.target()) - 1) < 0.001)
+
+        switch state.viewOffsetPixels {
+        case .static:
+            break
+        default:
+            Issue.record("Expected .static offset from non-animated overspread")
+        }
+    }
+
+    @Test func overspreadReturnsFalseWhenColumnsExceedToleranceBoundary() {
+        var state = ViewportState()
+        // 3 columns of 600 + 2*8 gap = 1816, viewport = 1728
+        // 1816 > 1728 + 8 = 1736 → tolerance fails
+        let columns = makeViewportGestureContainers(widths: [600, 600, 600])
+        let gap: CGFloat = 8
+        let viewportWidth: CGFloat = 1_728
+
+        let result = state.applyOverspread(
+            containers: columns,
+            gap: gap,
+            viewportSpan: viewportWidth,
+            sizeKeyPath: \.cachedWidth,
+            animate: false
+        )
+
+        #expect(result == false)
         #expect(abs(Double(state.viewOffsetPixels.target())) < 0.001)
     }
 }

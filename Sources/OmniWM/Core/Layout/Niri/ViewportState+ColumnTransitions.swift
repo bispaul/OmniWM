@@ -227,6 +227,7 @@ extension ViewportState {
     /// Centers the column group in the viewport when the total width of all
     /// columns (plus gaps) is smaller than the viewport span.  This is a
     /// pure viewport display concern — no column widths change.
+    @discardableResult
     mutating func applyOverspread(
         containers: [NiriContainer],
         gap: CGFloat,
@@ -235,27 +236,28 @@ extension ViewportState {
         motion: MotionSnapshot = .enabled,
         animate: Bool = true,
         scale: CGFloat = 2.0
-    ) {
-        guard !containers.isEmpty else { return }
+    ) -> Bool {
+        guard !containers.isEmpty else { return false }
 
         let totalWidth = containers.enumerated().reduce(CGFloat(0)) { sum, pair in
             let width = pair.element[keyPath: sizeKeyPath]
             return sum + width + (pair.offset < containers.count - 1 ? gap : 0)
         }
 
-        guard totalWidth <= viewportSpan + gap else { return }
+        guard totalWidth <= viewportSpan + gap else { return false }
 
         let excessSpace = viewportSpan - totalWidth
         let targetOffset = -(excessSpace / 2)
 
         let pixelEpsilon: CGFloat = 1.0 / max(scale, 1.0)
         let currentOffset = stationary()
-        if abs(targetOffset - currentOffset) <= pixelEpsilon { return }
+        if abs(targetOffset - currentOffset) <= pixelEpsilon { return true }
 
         if animate {
             animateToOffset(targetOffset, motion: motion, scale: scale)
         } else {
             viewOffsetPixels = .static(targetOffset)
         }
+        return true
     }
 }
