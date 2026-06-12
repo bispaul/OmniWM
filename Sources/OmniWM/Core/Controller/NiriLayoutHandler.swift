@@ -82,6 +82,16 @@ enum NiriWindowMoveResult {
         let viewportSpan = orientation == .horizontal
             ? pass.insetFrame.width : pass.insetFrame.height
         guard applyPolicies else {
+            if !state.viewOffsetPixels.isAnimating, !state.viewOffsetPixels.isGesture {
+                state.applyOverspread(
+                    containers: columns,
+                    gap: pass.gap,
+                    viewportSpan: viewportSpan,
+                    sizeKeyPath: sizeKeyPath,
+                    motion: motion,
+                    animate: false
+                )
+            }
             state.clampViewportOffset(
                 containers: columns,
                 gap: pass.gap,
