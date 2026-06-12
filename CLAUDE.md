@@ -209,6 +209,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 7/27 | Column gap after moveToWorkspace | **FIXED** | 106 | Root cause: moveColumnToWorkspace missing activeColumnIndex adjustment + initializeNewColumnWidth. Fix: adjustActiveColumnIndex helper (DRY) + resetColumnWidth:Bool parameter (F7 pattern) + viewport clamp + applyOverspread on every pass. 9 commits, 53 tests. |
 | 7/27/15 | Niri viewport gap (cross-monitor) | **FIXED** | 106 | Same fix as #7/27. Viewport clamping + column transfer pipeline consolidation. |
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
+| 33 | Post-wake click causes position shifts | **OPEN** | 108 | Focus bounces 8+ times in 7s. ensureSelectionVisible runs 12x. windowId=96 wrong display width (2560→1080). Transient — settles in ~12s. applyOverspread-on-every-pass may amplify. Memorygraph `338e5986`. |
 | 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
 | 32 | verificationMismatch burst during Chrome churn | **CLOSED** (cosmetic) | 108 | RCA: position mismatches (Y off ~1895px) during Chrome internal window churn on portrait Dwindle display. Cascade CONVERGES (2703→1154→829→818→808) — scroll animation settling. Fork already has retry budgets + accept-and-adapt. Pre-existing behavior, not caused by build 108 changes (applyOverspread is Niri-only, WS6 is Dwindle). F8 (AXLedger) SKIP — already implemented. |
@@ -284,7 +285,7 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 |----------|------|------|
 | Bugs | 14 | 2 (Bug #28 floating mode wake, Bug #32 verificationMismatch burst) |
 | Features | 4 done + 2 N/A + 2 SKIP | 1 (F5 focus tracking) |
-| Bugs | 15 (incl #32 cosmetic) | 1 (Bug #28 floating mode wake) |
+| Bugs | 15 (incl #32 cosmetic) | 2 (Bug #28 floating wake, Bug #33 post-wake click position shifts) |
 | Fixes | 6 | — |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 deferred |
