@@ -1,0 +1,1355 @@
+Timestamp               Ty Process[PID:TID]
+2026-06-12 18:24:39.111 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:24:39.112 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:24:39.113 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:24:39.491 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:24:39.491 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:24:39.492 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:24:39.653 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:24:39.654 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:24:39.655 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:24:40.528 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:24:40.528 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:24:40.529 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:24:40.530 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=left currentNode=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3) targetNode=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B)
+2026-06-12 18:24:40.530 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=102 ws=C071105C
+2026-06-12 18:24:40.530 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:40.530 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:24:40.531 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] Display link created
+2026-06-12 18:24:40.533 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-12 18:24:40.533 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:24:40.534 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9982638888888888, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:40.541 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:40.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.542 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.542 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.543 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:24:40.543 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:24:40.543 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:40.544 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:24:40.595 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.596 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:40.596 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:54:40 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:40.617 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:40.617 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:24:40.617 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=102 ws=C071105C
+2026-06-12 18:24:40.617 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1482, windowId: 102)
+2026-06-12 18:24:40.619 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] renderEligibility: hide reason=notDisplayable token=WindowToken(pid: 1482, windowId: 102)
+2026-06-12 18:24:40.619 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] BorderManager: hideBorder lastWindowId=Optional(15772)
+2026-06-12 18:24:40.620 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.621 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.621 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.621 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.645 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.645 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.648 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.648 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.648 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.652 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.652 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.662 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.662 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.662 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.666 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.666 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.670 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.670 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.671 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.674 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.674 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.679 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.679 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.679 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.683 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.683 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.687 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.687 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.687 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.690 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.690 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.695 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.695 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.695 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.699 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.699 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.704 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.704 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.704 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.708 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.708 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.721 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.721 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.721 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.724 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.724 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.729 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.729 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.729 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.732 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.732 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.737 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.737 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.737 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.741 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.741 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.745 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.746 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.746 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.749 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.749 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.754 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.754 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.754 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.757 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.758 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.762 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.762 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.762 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.765 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.765 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.770 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.771 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.771 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.774 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.774 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.779 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.779 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.779 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.780 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.780 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.787 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.787 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.787 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.795 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.795 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.795 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.804 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.804 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.804 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.807 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.808 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.812 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-12 18:24:40.812 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.812 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.820 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:40.821 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:40.821 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.821 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:40.821 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.826 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.826 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.826 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.829 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:40.829 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.829 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:40.829 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.837 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:40.837 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.837 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:40.837 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.845 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:40.846 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:40.846 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.851 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.851 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.851 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.853 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:40.853 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.854 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.854 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.854 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.859 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:40.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:40.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:40.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:40.867 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.867 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:40.868 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.124 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:24:41.124 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:24:41.124 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B)
+2026-06-12 18:24:41.125 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=left currentNode=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B) targetNode=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3)
+2026-06-12 18:24:41.125 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=105130 ws=C071105C
+2026-06-12 18:24:41.125 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.126 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:24:41.126 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] Display link created
+2026-06-12 18:24:41.128 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-12 18:24:41.128 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:24:41.129 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9982638888888888, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.135 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.135 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.135 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.135 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.135 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.136 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9982638888888888, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.146 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.146 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.146 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.146 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.150 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:24:41.150 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:24:41.150 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.150 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:24:41.179 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.179 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.179 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.179 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.179 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:41.180 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:54:41 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:41.185 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.185 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:24:41.185 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=105130 ws=C071105C
+2026-06-12 18:24:41.185 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1476, windowId: 105130)
+2026-06-12 18:24:41.186 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] renderEligibility: hide reason=notDisplayable token=WindowToken(pid: 1476, windowId: 105130)
+2026-06-12 18:24:41.187 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] BorderManager: hideBorder lastWindowId=Optional(102)
+2026-06-12 18:24:41.187 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.187 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.187 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.187 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.198 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.198 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.203 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.203 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.203 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.203 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.203 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.204 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.204 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.211 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.211 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.211 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.211 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.211 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.212 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.213 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.218 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.220 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.220 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.220 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.220 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.226 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.226 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.228 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.228 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.228 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.228 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.229 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.229 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.233 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.236 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.237 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.237 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.237 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.237 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.237 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.239 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.245 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.245 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.245 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.245 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.246 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.246 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.247 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.253 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.253 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.253 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.253 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.254 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.254 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.261 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.261 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.261 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.261 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.261 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.262 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.262 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.267 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.270 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.270 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.270 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.270 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.278 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.278 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.278 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.280 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.280 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.280 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.282 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.286 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.286 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.286 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.286 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.287 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.287 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.294 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.295 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.295 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.295 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.295 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.295 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.296 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.300 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.303 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.303 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.303 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.303 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.304 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.304 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.306 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.311 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.311 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.311 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.311 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.312 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.312 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.314 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.320 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.320 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.320 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.320 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.321 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.321 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.321 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.328 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.328 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.328 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.328 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.329 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.330 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.333 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.336 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.336 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.336 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.336 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.337 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.337 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.338 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.345 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.345 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.345 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.345 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.350 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.350 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.352 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.353 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.353 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.353 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.353 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.359 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.360 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.361 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.362 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.362 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.362 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.362 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.362 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.363 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.370 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.370 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.370 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.370 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.370 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.371 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.374 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.378 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.378 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.378 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.378 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.383 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.383 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.385 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.387 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.387 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.387 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.387 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.391 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.391 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.393 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.395 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.395 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.395 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.395 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.399 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.399 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.401 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.403 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.404 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.404 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.404 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.408 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.408 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.409 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.412 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.412 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.412 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.412 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.416 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.416 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.416 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.421 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.421 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.421 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.421 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.421 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.421 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.425 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.425 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.425 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.425 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.429 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.429 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.429 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.432 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.438 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.438 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.439 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.454 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.461 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.461 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.461 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.462 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.616 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:24:41.616 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:24:41.617 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3)
+2026-06-12 18:24:41.617 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=left currentNode=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3) targetNode=NodeId(uuid: AB0C7A0B-ECD3-4220-AE4C-2FB31860CE8F)
+2026-06-12 18:24:41.617 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=95948 ws=C071105C
+2026-06-12 18:24:41.617 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.617 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:24:41.618 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] Display link created
+2026-06-12 18:24:41.619 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-12 18:24:41.619 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:24:41.619 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9982638888888888, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.621 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.622 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.622 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.622 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.624 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:24:41.624 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:24:41.624 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.624 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:24:41.658 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.658 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.658 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:41.658 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:54:42 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:41.669 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.669 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:24:41.669 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=95948 ws=C071105C
+2026-06-12 18:24:41.669 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 673, windowId: 95948)
+2026-06-12 18:24:41.671 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] renderEligibility: hide reason=notDisplayable token=WindowToken(pid: 673, windowId: 95948)
+2026-06-12 18:24:41.671 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] BorderManager: hideBorder lastWindowId=Optional(105130)
+2026-06-12 18:24:41.672 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.672 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.672 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=95948 ws=C071105C
+2026-06-12 18:24:41.672 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 673, windowId: 95948)
+2026-06-12 18:24:41.685 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] renderEligibility: hide reason=notDisplayable token=WindowToken(pid: 673, windowId: 95948)
+2026-06-12 18:24:41.685 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] BorderManager: hideBorder lastWindowId=nil
+2026-06-12 18:24:41.695 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.695 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.695 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.695 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.699 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.700 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.701 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.711 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.712 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.712 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.712 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.712 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.715 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.717 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.720 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.720 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.720 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.720 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.720 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.726 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.728 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.728 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.728 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.728 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.728 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.744 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.744 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.745 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.745 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.745 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.745 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.745 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.752 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.752 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.752 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.761 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.762 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.762 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.762 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.768 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.770 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.770 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.770 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.770 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.771 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.776 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.777 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.790 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.790 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.790 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.792 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.818 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.818 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.820 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.820 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.820 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.820 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.820 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.821 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.823 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.836 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.836 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.836 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.837 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.837 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.838 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.841 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.845 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.845 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.845 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.845 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.845 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.846 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.850 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.853 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.853 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.853 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.853 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.854 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.854 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.858 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.862 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.863 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.864 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.870 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.870 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.870 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.870 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.870 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.871 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.871 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.878 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.878 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.878 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.878 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.879 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.879 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.881 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.886 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.886 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.886 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.886 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.891 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.892 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.892 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.895 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.895 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.895 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.895 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.898 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.900 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.903 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.903 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.903 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.904 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.912 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.912 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.912 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.912 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.912 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.913 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.917 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.917 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.917 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.917 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.928 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.929 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.937 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:24:41.937 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.937 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.937 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.937 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:24:41.942 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.942 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.943 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.943 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.946 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 9649, windowId: 15772), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9982638888888888, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.right))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:41.950 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:41.950 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:24:41.950 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:24:41.950 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:41.951 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.951 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:41.952 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:47.842 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:47.842 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:54:48 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:24:47.883 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:24:47.883 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=105130 ws=C071105C
+2026-06-12 18:24:47.883 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:24:47.883 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1476, windowId: 105130)
+2026-06-12 18:24:47.900 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-12 18:24:47.900 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=C071105C
+2026-06-12 18:24:47.900 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:24:47.901 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:24:47.901 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:47.901 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:24:47.901 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:24:47.901 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:24:47.909 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.688 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:07.688 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:26:07.688 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3)
+2026-06-12 18:26:07.689 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=right currentNode=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3) targetNode=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B)
+2026-06-12 18:26:07.689 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=102 ws=C071105C
+2026-06-12 18:26:07.689 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:07.689 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:26:07.689 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] Display link created
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 9649, windowId: 15772), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.696 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:26:07.696 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:26:07.696 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:07.696 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:26:07.747 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.747 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:07.748 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:56:08 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:07.749 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:07.749 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:26:07.749 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=102 ws=C071105C
+2026-06-12 18:26:07.749 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1482, windowId: 102)
+2026-06-12 18:26:07.753 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.753 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.753 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.765 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.0, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:07.766 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.767 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.767 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.767 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.768 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.769 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.770 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.778 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.780 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.780 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.783 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.783 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.787 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.790 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.790 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.790 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.790 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.792 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.801 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.801 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.805 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.807 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.807 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.807 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.807 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.808 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.808 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.818 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.818 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.819 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.824 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.824 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.824 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.824 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.827 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.827 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.829 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.833 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.833 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.835 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.840 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.840 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.840 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.840 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.841 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.842 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.847 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.850 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.850 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.851 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.865 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.865 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.865 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.865 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.867 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.867 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.869 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.875 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.875 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.880 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.882 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.882 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.882 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.882 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.883 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.883 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.885 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.890 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.890 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.890 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.890 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.892 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.893 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.894 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.900 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.901 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.906 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.908 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.908 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.910 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.915 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.915 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.915 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.915 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.916 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.916 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.924 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.924 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.924 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.924 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.924 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.925 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.932 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.932 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.932 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.932 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.933 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.933 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.940 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.940 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.940 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.940 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.941 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.941 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.942 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.949 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.949 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.949 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.949 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.949 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.950 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.952 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.957 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.957 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.957 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.957 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.965 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.966 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.966 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.966 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.966 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.966 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.972 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.973 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.974 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.974 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.974 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.974 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.975 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.976 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.976 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.982 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.983 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.983 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.983 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.989 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.991 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.991 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.991 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:07.991 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.992 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.998 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.999 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:07.999 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:07.999 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:07.999 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:07.999 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.000 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.005 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.008 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.008 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.008 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.008 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.012 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.016 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:08.016 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 4 requests, isRetry=false
+2026-06-12 18:26:08.017 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.017 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:08.017 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.017 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.021 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.021 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.022 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.023 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.586 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:08.587 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:26:08.587 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B)
+2026-06-12 18:26:08.588 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=right currentNode=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B) targetNode=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:26:08.588 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=15772 ws=C071105C
+2026-06-12 18:26:08.588 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 9649, windowId: 15772), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:08.588 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:26:08.588 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] Display link created
+2026-06-12 18:26:08.590 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-12 18:26:08.590 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:26:08.591 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.0011574074074074073, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:08.597 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.597 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.597 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.597 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.597 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:26:08.597 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:26:08.598 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 9649, windowId: 15772), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:08.598 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:26:08.624 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.624 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.624 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.625 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:08.625 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:56:09 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:08.626 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 9649, windowId: 15772), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:08.626 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:26:08.626 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=15772 ws=C071105C
+2026-06-12 18:26:08.626 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 9649, windowId: 15772)
+2026-06-12 18:26:08.651 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.651 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.651 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.651 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.657 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.657 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.657 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.657 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.658 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.665 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.665 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.666 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.666 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.666 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.666 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.672 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.672 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.673 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.674 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.674 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.674 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.674 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.675 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.675 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.676 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.682 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.682 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.682 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.682 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.683 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.683 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.684 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.691 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.692 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.692 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.699 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.699 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.699 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.699 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.701 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.701 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.701 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.707 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.707 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.707 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.707 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.708 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.709 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.714 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.716 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.716 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.716 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.716 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.717 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.717 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.724 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.724 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.724 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.724 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.732 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.732 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.732 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.734 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.734 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.738 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.738 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.741 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.741 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.741 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.741 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.742 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.742 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.749 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.749 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.749 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.749 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.750 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.750 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.750 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.757 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.757 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.757 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.757 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.763 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.765 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.766 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.766 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.766 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.766 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.767 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.767 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.773 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.774 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.774 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.775 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.775 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.781 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.781 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.782 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.788 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.788 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.791 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.792 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.792 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.793 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.799 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.805 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.805 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.806 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.808 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.808 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.808 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.808 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.815 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.816 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.816 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.816 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.816 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.817 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.821 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.821 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.825 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.825 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.825 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.825 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.830 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.830 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.832 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.833 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.833 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.833 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.838 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.838 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.838 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.841 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.841 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.841 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.841 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.847 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.848 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.849 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.856 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.856 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.858 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.858 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.858 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.858 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.865 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.865 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.866 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.866 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.866 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.866 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.867 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.871 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.874 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.882 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.883 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.883 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.883 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.883 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.883 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.886 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.891 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.891 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.891 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.891 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.898 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.898 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.899 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.900 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.900 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.907 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.908 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:08.908 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.908 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.908 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.916 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9982638888888888, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:08.920 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:08.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:08.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:08.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:08.920 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:08.922 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.922 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:08.923 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:14.591 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:14.591 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:26:14.592 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:26:14.754 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:14.754 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:26:14.755 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:26:14.920 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:14.920 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.right)
+2026-06-12 18:26:14.921 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=right crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:26:15.954 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:15.954 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:26:15.955 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3)
+2026-06-12 18:26:15.955 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=left currentNode=NodeId(uuid: 8FCB8603-FF9D-4B92-B98B-ACB684D3FAC3) targetNode=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B)
+2026-06-12 18:26:15.955 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=102 ws=C071105C
+2026-06-12 18:26:15.955 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:15.956 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:26:15.963 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-12 18:26:15.963 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=C071105C
+2026-06-12 18:26:15.964 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:26:15.964 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:15.964 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:15.964 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:15.964 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:15.965 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:26:15.965 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:26:15.966 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:15.966 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:26:16.006 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.007 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:16.007 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:56:16 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:16.042 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1482, windowId: 102), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.043 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:26:16.043 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=102 ws=C071105C
+2026-06-12 18:26:16.043 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:26:16.043 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1482, windowId: 102)
+2026-06-12 18:26:16.049 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-12 18:26:16.049 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=C071105C
+2026-06-12 18:26:16.049 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:26:16.078 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.078 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:16.079 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.079 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.079 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:26:16.085 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.374 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:16.374 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:26:16.375 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B)
+2026-06-12 18:26:16.375 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=left currentNode=NodeId(uuid: E8857C15-5A1C-4748-9619-8196B9316E0B) targetNode=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3)
+2026-06-12 18:26:16.375 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=105130 ws=C071105C
+2026-06-12 18:26:16.375 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.376 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:26:16.376 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] Display link created
+2026-06-12 18:26:16.377 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-12 18:26:16.377 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:26:16.377 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9982638888888888, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.385 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.386 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.386 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.386 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.386 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.386 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:26:16.387 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:26:16.387 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.387 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:26:16.421 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.421 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.422 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:16.422 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:56:16 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:16.422 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.422 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:26:16.423 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=105130 ws=C071105C
+2026-06-12 18:26:16.423 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1476, windowId: 105130)
+2026-06-12 18:26:16.425 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] renderEligibility: hide reason=notDisplayable token=WindowToken(pid: 1476, windowId: 105130)
+2026-06-12 18:26:16.425 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] BorderManager: hideBorder lastWindowId=Optional(102)
+2026-06-12 18:26:16.425 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.428 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.436 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.436 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.436 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.437 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.444 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.445 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.446 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.447 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.453 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.458 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.459 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.461 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.461 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.461 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.461 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.462 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.462 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.462 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.470 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.470 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.470 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.470 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.475 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.475 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.477 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.478 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.478 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.478 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.478 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.479 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.479 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.480 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.486 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.486 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.486 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.486 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.487 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.487 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.489 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.503 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.503 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.503 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.503 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.504 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.504 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.511 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.511 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.511 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.511 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.512 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.512 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.520 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.520 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.520 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.520 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.520 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.521 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.528 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.528 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.528 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.528 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.529 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.529 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.536 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:16.536 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:26:16.536 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3)
+2026-06-12 18:26:16.536 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] focusNeighbor: direction=left currentNode=NodeId(uuid: FB975946-5125-4081-9670-900F4B8BD9D3) targetNode=NodeId(uuid: AB0C7A0B-ECD3-4220-AE4C-2FB31860CE8F)
+2026-06-12 18:26:16.536 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=95948 ws=C071105C
+2026-06-12 18:26:16.537 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.537 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:26:16.537 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.537 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.537 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.537 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus window
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.541 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request begin
+2026-06-12 18:26:16.554 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.554 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:16.554 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:56:16 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:16.556 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 673, windowId: 95948), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:16.556 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus request confirmed
+2026-06-12 18:26:16.556 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=95948 ws=C071105C
+2026-06-12 18:26:16.556 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 673, windowId: 95948)
+2026-06-12 18:26:16.559 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:16.559 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:16.559 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:16.559 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=15772 retryBudget=1 force=false
+2026-06-12 18:26:17.037 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:17.038 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:17.038 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:17.040 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:17.040 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:26:17.041 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: AB0C7A0B-ECD3-4220-AE4C-2FB31860CE8F)
+2026-06-12 18:26:17.042 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 9649, windowId: 15772), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.9890046296296297, 0.03043867502238138), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.right))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:17.043 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:17.044 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:17.044 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=95948 retryBudget=1 force=false
+2026-06-12 18:26:17.044 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105130 retryBudget=1 force=false
+2026-06-12 18:26:17.044 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:17.047 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:17.048 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:17.048 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:17.203 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:17.203 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:26:17.204 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: AB0C7A0B-ECD3-4220-AE4C-2FB31860CE8F)
+2026-06-12 18:26:17.559 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:17.559 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:26:17.559 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: AB0C7A0B-ECD3-4220-AE4C-2FB31860CE8F)
+2026-06-12 18:26:17.725 Db OmniWM[50431:ff3ff4] [com.omniwm:input] Hotkey command dispatched
+2026-06-12 18:26:17.725 I  OmniWM[50431:ff3ff4] [com.omniwm:input] performCommand: executing command=focus(OmniWM.Direction.left)
+2026-06-12 18:26:17.726 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] NiriNavigation.focusTarget: direction=left crossContainer=true currentSelection=NodeId(uuid: AB0C7A0B-ECD3-4220-AE4C-2FB31860CE8F)
+2026-06-12 18:26:19.267 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:19.267 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-12 12:56:19 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-12 18:26:19.296 Db OmniWM[50431:ff3ff4] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: C071105C-285C-4074-9A0E-63AFEF78DE8F, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-12 18:26:19.296 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=105130 ws=C071105C
+2026-06-12 18:26:19.296 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] requestImmediateRelayout
+2026-06-12 18:26:19.296 Db OmniWM[50431:ff3ff4] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1476, windowId: 105130)
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: wsId=C071105C isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=C071105C
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:layout] computeLayoutPlan: wsId=C071105C viewportNeedsRecalc=false requiresRecalc=false newWindowToken=false applyPolicies=false
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] enqueueFrameApplications: queued windowId=102 retryBudget=1 force=false
+2026-06-12 18:26:19.312 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-12 18:26:19.318 Db OmniWM[50431:ff3ff4] [com.omniwm:ax] Frame write confirmed
