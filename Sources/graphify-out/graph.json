@@ -5970,7 +5970,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase",
-      "community": 14,
+      "community": 345,
       "norm_label": "managedborderreapplyphase"
     },
     {
@@ -5980,7 +5980,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase_postlayout",
-      "community": 14,
+      "community": 345,
       "norm_label": "postlayout"
     },
     {
@@ -5990,7 +5990,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase_animationsettled",
-      "community": 14,
+      "community": 345,
       "norm_label": "animationsettled"
     },
     {
@@ -6000,7 +6000,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase_retryexhaustedfallback",
-      "community": 14,
+      "community": 345,
       "norm_label": "retryexhaustedfallback"
     },
     {
@@ -19400,7 +19400,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler",
-      "community": 110,
+      "community": 225,
       "norm_label": "mouseeventhandler"
     },
     {
@@ -19440,7 +19440,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "omniwm_core_controller_mouseeventhandler_swift_int",
-      "community": 110,
+      "community": 181,
       "norm_label": "int"
     },
     {
@@ -19500,7 +19500,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_focusfollowsmousetarget",
-      "community": 238,
+      "community": 225,
       "norm_label": "focusfollowsmousetarget"
     },
     {
@@ -19510,7 +19510,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_focusfollowsmousetarget_niri",
-      "community": 238,
+      "community": 225,
       "norm_label": "niri"
     },
     {
@@ -19520,7 +19520,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_focusfollowsmousetarget_dwindle",
-      "community": 238,
+      "community": 225,
       "norm_label": "dwindle"
     },
     {
@@ -19550,7 +19550,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "omniwm_core_controller_mouseeventhandler_swift_cgpoint",
-      "community": 238,
+      "community": 219,
       "norm_label": "cgpoint"
     },
     {
@@ -19640,7 +19640,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_gesturephase",
-      "community": 226,
+      "community": 193,
       "norm_label": "gesturephase"
     },
     {
@@ -19650,7 +19650,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_gesturephase_idle",
-      "community": 226,
+      "community": 193,
       "norm_label": "idle"
     },
     {
@@ -19660,7 +19660,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_gesturephase_armed",
-      "community": 226,
+      "community": 193,
       "norm_label": "armed"
     },
     {
@@ -19670,7 +19670,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_gesturephase_committed",
-      "community": 226,
+      "community": 193,
       "norm_label": "committed"
     },
     {
@@ -19890,7 +19890,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "omniwm_core_controller_mouseeventhandler_swift_windowtoken",
-      "community": 238,
+      "community": 226,
       "norm_label": "windowtoken"
     },
     {
@@ -19910,7 +19910,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "omniwm_core_controller_mouseeventhandler_swift_wmcontroller",
-      "community": 110,
+      "community": 225,
       "norm_label": "wmcontroller"
     },
     {
@@ -19920,7 +19920,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "omniwm_core_controller_mouseeventhandler_swift_mainactor",
-      "community": 110,
+      "community": 225,
       "norm_label": "mainactor"
     },
     {
@@ -19930,7 +19930,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_init",
-      "community": 110,
+      "community": 225,
       "norm_label": ".init()"
     },
     {
@@ -19950,7 +19950,7 @@
       "source_location": "L296",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_cleanup",
-      "community": 110,
+      "community": 225,
       "norm_label": ".cleanup()"
     },
     {
@@ -19960,7 +19960,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_dispatchmousemoved",
-      "community": 238,
+      "community": 225,
       "norm_label": ".dispatchmousemoved()"
     },
     {
@@ -20180,7 +20180,7 @@
       "source_location": "L547",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_cancelactivemouseinteraction",
-      "community": 238,
+      "community": 225,
       "norm_label": ".cancelactivemouseinteraction()"
     },
     {
@@ -20190,7 +20190,7 @@
       "source_location": "L567",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_resizeplaceholdertoken",
-      "community": 238,
+      "community": 226,
       "norm_label": ".resizeplaceholdertoken()"
     },
     {
@@ -20200,7 +20200,7 @@
       "source_location": "L577",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_workspaceidforpointer",
-      "community": 238,
+      "community": 226,
       "norm_label": ".workspaceidforpointer()"
     },
     {
@@ -20220,7 +20220,7 @@
       "source_location": "L595",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_resethoverededgesifneeded",
-      "community": 238,
+      "community": 225,
       "norm_label": ".resethoverededgesifneeded()"
     },
     {
@@ -20290,7 +20290,7 @@
       "source_location": "L728",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_replayqueuedmousedragged",
-      "community": 238,
+      "community": 225,
       "norm_label": ".replayqueuedmousedragged()"
     },
     {
@@ -20300,7 +20300,7 @@
       "source_location": "L737",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_handlemousemovedfromtap",
-      "community": 238,
+      "community": 225,
       "norm_label": ".handlemousemovedfromtap()"
     },
     {
@@ -20310,7 +20310,7 @@
       "source_location": "L758",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_shouldhandlefocusfollowsmouse",
-      "community": 238,
+      "community": 225,
       "norm_label": ".shouldhandlefocusfollowsmouse()"
     },
     {
@@ -20320,7 +20320,7 @@
       "source_location": "L769",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_handlemousedownfromtap",
-      "community": 238,
+      "community": 226,
       "norm_label": ".handlemousedownfromtap()"
     },
     {
@@ -20400,7 +20400,7 @@
       "source_location": "L1116",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_handlefocusfollowsmouse",
-      "community": 238,
+      "community": 225,
       "norm_label": ".handlefocusfollowsmouse()"
     },
     {
@@ -20410,7 +20410,7 @@
       "source_location": "L1149",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_resolvefocusfollowsmousetarget",
-      "community": 238,
+      "community": 225,
       "norm_label": ".resolvefocusfollowsmousetarget()"
     },
     {
@@ -20420,7 +20420,7 @@
       "source_location": "L1176",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_focusfollowsmousetoken",
-      "community": 238,
+      "community": 225,
       "norm_label": ".focusfollowsmousetoken()"
     },
     {
@@ -20430,7 +20430,7 @@
       "source_location": "L1185",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_activatefocusfollowsmousetarget",
-      "community": 238,
+      "community": 225,
       "norm_label": ".activatefocusfollowsmousetarget()"
     },
     {
@@ -20680,7 +20680,7 @@
       "source_location": "L1773",
       "_origin": "ast",
       "id": "controller_mouseeventhandler_mouseeventhandler_averagegesturetouchposition",
-      "community": 110,
+      "community": 219,
       "norm_label": ".averagegesturetouchposition()"
     },
     {
@@ -22227,7 +22227,7 @@
       "label": ".layoutDiff()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L954",
+      "source_location": "L956",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_layoutdiff",
       "community": 1,
@@ -22237,7 +22237,7 @@
       "label": "LayoutWindowSnapshot",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L954",
+      "source_location": "L956",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_layoutwindowsnapshot",
       "community": 1,
@@ -22247,7 +22247,7 @@
       "label": "HideSide",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L954",
+      "source_location": "L956",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_hideside",
       "community": 1,
@@ -22257,7 +22257,7 @@
       "label": "WorkspaceLayoutDiff",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L954",
+      "source_location": "L956",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_workspacelayoutdiff",
       "community": 1,
@@ -22267,7 +22267,7 @@
       "label": ".selectedWindowToken()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1055",
+      "source_location": "L1057",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_selectedwindowtoken",
       "community": 1,
@@ -22277,7 +22277,7 @@
       "label": ".updateTabbedColumnOverlays()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1064",
+      "source_location": "L1066",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_updatetabbedcolumnoverlays",
       "community": 1,
@@ -22287,7 +22287,7 @@
       "label": ".tabbedColumnOverlayInfosForTests()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1096",
+      "source_location": "L1098",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_tabbedcolumnoverlayinfosfortests",
       "community": 1,
@@ -22297,7 +22297,7 @@
       "label": "TabbedColumnOverlayInfo",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1096",
+      "source_location": "L1098",
       "_origin": "ast",
       "id": "tabbedcolumnoverlayinfo",
       "community": 1,
@@ -22307,7 +22307,7 @@
       "label": ".tabbedColumnOverlayInfos()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1104",
+      "source_location": "L1106",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_tabbedcolumnoverlayinfos",
       "community": 1,
@@ -22317,7 +22317,7 @@
       "label": ".tabbedColumnTabs()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1148",
+      "source_location": "L1150",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_tabbedcolumntabs",
       "community": 1,
@@ -22327,7 +22327,7 @@
       "label": "NiriWindow",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1148",
+      "source_location": "L1150",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_niriwindow",
       "community": 1,
@@ -22337,7 +22337,7 @@
       "label": "Int",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1148",
+      "source_location": "L1150",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_int",
       "community": 1,
@@ -22347,7 +22347,7 @@
       "label": "TabbedColumnOverlayTabInfo",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1148",
+      "source_location": "L1150",
       "_origin": "ast",
       "id": "tabbedcolumnoverlaytabinfo",
       "community": 1,
@@ -22357,7 +22357,7 @@
       "label": ".selectTabInNiri()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1186",
+      "source_location": "L1188",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_selecttabinniri",
       "community": 1,
@@ -22367,7 +22367,7 @@
       "label": ".focusNeighbor()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1233",
+      "source_location": "L1235",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_focusneighbor",
       "community": 1,
@@ -22377,7 +22377,7 @@
       "label": "Direction",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1233",
+      "source_location": "L1235",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_direction",
       "community": 1,
@@ -22387,7 +22387,7 @@
       "label": ".toggleFullscreen()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1313",
+      "source_location": "L1315",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_togglefullscreen",
       "community": 1,
@@ -22397,7 +22397,7 @@
       "label": ".cycleSize()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1331",
+      "source_location": "L1333",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_cyclesize",
       "community": 1,
@@ -22407,7 +22407,7 @@
       "label": ".cycleWindowWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1357",
+      "source_location": "L1359",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_cyclewindowwidth",
       "community": 1,
@@ -22417,7 +22417,7 @@
       "label": ".cycleWindowHeight()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1382",
+      "source_location": "L1384",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_cyclewindowheight",
       "community": 1,
@@ -22427,7 +22427,7 @@
       "label": ".toggleColumnFullWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1404",
+      "source_location": "L1406",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_togglecolumnfullwidth",
       "community": 1,
@@ -22437,7 +22437,7 @@
       "label": ".expandColumnToAvailableWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1428",
+      "source_location": "L1430",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_expandcolumntoavailablewidth",
       "community": 1,
@@ -22447,7 +22447,7 @@
       "label": ".resetWindowHeight()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1453",
+      "source_location": "L1455",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_resetwindowheight",
       "community": 1,
@@ -22457,7 +22457,7 @@
       "label": ".centerColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1470",
+      "source_location": "L1472",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_centercolumn",
       "community": 1,
@@ -22467,7 +22467,7 @@
       "label": ".centerVisibleColumns()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1489",
+      "source_location": "L1491",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_centervisiblecolumns",
       "community": 1,
@@ -22477,7 +22477,7 @@
       "label": ".setColumnWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1508",
+      "source_location": "L1510",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_setcolumnwidth",
       "community": 1,
@@ -22487,7 +22487,7 @@
       "label": "NiriSizeChange",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1508",
+      "source_location": "L1510",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_nirisizechange",
       "community": 1,
@@ -22497,7 +22497,7 @@
       "label": ".setWindowWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1534",
+      "source_location": "L1536",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_setwindowwidth",
       "community": 1,
@@ -22507,7 +22507,7 @@
       "label": ".setWindowHeight()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1559",
+      "source_location": "L1561",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_setwindowheight",
       "community": 1,
@@ -22517,7 +22517,7 @@
       "label": ".balanceSizes()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1581",
+      "source_location": "L1583",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_balancesizes",
       "community": 1,
@@ -22527,7 +22527,7 @@
       "label": ".enableNiriLayout()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1603",
+      "source_location": "L1605",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_enablenirilayout",
       "community": 1,
@@ -22537,7 +22537,7 @@
       "label": "CenterFocusedColumn",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1603",
+      "source_location": "L1605",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_centerfocusedcolumn",
       "community": 1,
@@ -22547,7 +22547,7 @@
       "label": ".syncMonitorsToNiriEngine()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1620",
+      "source_location": "L1622",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_syncmonitorstoniriengine",
       "community": 1,
@@ -22557,7 +22557,7 @@
       "label": ".refreshResolvedMonitorSettings()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1641",
+      "source_location": "L1643",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_refreshresolvedmonitorsettings",
       "community": 1,
@@ -22567,7 +22567,7 @@
       "label": ".updateNiriConfig()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1650",
+      "source_location": "L1652",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_updateniriconfig",
       "community": 1,
@@ -22577,7 +22577,7 @@
       "label": "SingleWindowAspectRatio",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1650",
+      "source_location": "L1652",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_singlewindowaspectratio",
       "community": 1,
@@ -22587,7 +22587,7 @@
       "label": "Double",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1650",
+      "source_location": "L1652",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_double",
       "community": 1,
@@ -22597,7 +22597,7 @@
       "label": ".activateNode()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1675",
+      "source_location": "L1677",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_activatenode",
       "community": 1,
@@ -22607,7 +22607,7 @@
       "label": "NiriNode",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1675",
+      "source_location": "L1677",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_nirinode",
       "community": 1,
@@ -22617,7 +22617,7 @@
       "label": "NodeActivationOptions",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1675",
+      "source_location": "L1677",
       "_origin": "ast",
       "id": "nodeactivationoptions",
       "community": 1,
@@ -22627,7 +22627,7 @@
       "label": ".rebaseViewportAnchor()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1750",
+      "source_location": "L1752",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_rebaseviewportanchor",
       "community": 1,
@@ -22637,7 +22637,7 @@
       "label": ".withNiriOperationContext()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1824",
+      "source_location": "L1826",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_withnirioperationcontext",
       "community": 1,
@@ -22647,7 +22647,7 @@
       "label": "NiriOperationContext",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1824",
+      "source_location": "L1826",
       "_origin": "ast",
       "id": "nirioperationcontext",
       "community": 1,
@@ -22657,7 +22657,7 @@
       "label": ".moveWindow()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1864",
+      "source_location": "L1866",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_movewindow",
       "community": 1,
@@ -22667,7 +22667,7 @@
       "label": ".moveWindowOrToAdjacentWorkspace()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1896",
+      "source_location": "L1898",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_movewindowortoadjacentworkspace",
       "community": 1,
@@ -22677,7 +22677,7 @@
       "label": ".consumeOrExpelWindow()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1902",
+      "source_location": "L1904",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_consumeorexpelwindow",
       "community": 1,
@@ -22687,7 +22687,7 @@
       "label": ".consumeWindowIntoColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1921",
+      "source_location": "L1923",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_consumewindowintocolumn",
       "community": 1,
@@ -22697,7 +22697,7 @@
       "label": ".expelWindowFromColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1939",
+      "source_location": "L1941",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_expelwindowfromcolumn",
       "community": 1,
@@ -22707,7 +22707,7 @@
       "label": ".windowMoveEdgeResult()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1958",
+      "source_location": "L1960",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_windowmoveedgeresult",
       "community": 1,
@@ -22717,7 +22717,7 @@
       "label": ".withNiriWorkspaceContext()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1974",
+      "source_location": "L1976",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_withniriworkspacecontext",
       "community": 1,
@@ -22727,7 +22727,7 @@
       "label": "Void",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1974",
+      "source_location": "L1976",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_void",
       "community": 1,
@@ -22737,7 +22737,7 @@
       "label": ".insertWindow()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2020",
+      "source_location": "L2022",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_insertwindow",
       "community": 1,
@@ -22747,7 +22747,7 @@
       "label": "WindowHandle",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2020",
+      "source_location": "L2022",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_windowhandle",
       "community": 1,
@@ -22757,7 +22757,7 @@
       "label": "InsertPosition",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2020",
+      "source_location": "L2022",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_insertposition",
       "community": 1,
@@ -22767,7 +22767,7 @@
       "label": ".insertWindowInNewColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2045",
+      "source_location": "L2047",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_insertwindowinnewcolumn",
       "community": 1,
@@ -22777,7 +22777,7 @@
       "label": "NodeActivationOptions",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2068",
+      "source_location": "L2070",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nodeactivationoptions",
       "community": 1,
@@ -22787,7 +22787,7 @@
       "label": "NiriOperationContext",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2078",
+      "source_location": "L2080",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext",
       "community": 1,
@@ -22797,7 +22797,7 @@
       "label": ".hasPendingAnimationWork()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2088",
+      "source_location": "L2090",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_haspendinganimationwork",
       "community": 1,
@@ -22807,7 +22807,7 @@
       "label": ".commitWithPredictedAnimation()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2092",
+      "source_location": "L2094",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_commitwithpredictedanimation",
       "community": 1,
@@ -22817,7 +22817,7 @@
       "label": ".commitWithCapturedAnimation()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2130",
+      "source_location": "L2132",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_commitwithcapturedanimation",
       "community": 1,
@@ -22827,7 +22827,7 @@
       "label": ".commitSimple()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2148",
+      "source_location": "L2150",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_commitsimple",
       "community": 1,
@@ -24850,7 +24850,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_int",
-      "community": 171,
+      "community": 48,
       "norm_label": "int"
     },
     {
@@ -25170,7 +25170,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_cgpoint",
-      "community": 171,
+      "community": 25,
       "norm_label": "cgpoint"
     },
     {
@@ -25230,7 +25230,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_applypersistedsettings",
-      "community": 25,
+      "community": 171,
       "norm_label": ".applypersistedsettings()"
     },
     {
@@ -25240,7 +25240,7 @@
       "source_location": "L354",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setanimationsenabled",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setanimationsenabled()"
     },
     {
@@ -25250,7 +25250,7 @@
       "source_location": "L368",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_applycurrentappearancemode",
-      "community": 25,
+      "community": 171,
       "norm_label": ".applycurrentappearancemode()"
     },
     {
@@ -25260,7 +25260,7 @@
       "source_location": "L374",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setenabled",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setenabled()"
     },
     {
@@ -25270,7 +25270,7 @@
       "source_location": "L384",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_sethotkeysenabled",
-      "community": 25,
+      "community": 171,
       "norm_label": ".sethotkeysenabled()"
     },
     {
@@ -25280,7 +25280,7 @@
       "source_location": "L389",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_updateaccessibilitypermissiongranted",
-      "community": 25,
+      "community": 171,
       "norm_label": ".updateaccessibilitypermissiongranted()"
     },
     {
@@ -25290,7 +25290,7 @@
       "source_location": "L394",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_reconcileenabledandhotkeysstate",
-      "community": 25,
+      "community": 171,
       "norm_label": ".reconcileenabledandhotkeysstate()"
     },
     {
@@ -25300,7 +25300,7 @@
       "source_location": "L405",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setgapsize",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setgapsize()"
     },
     {
@@ -25310,7 +25310,7 @@
       "source_location": "L405",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_double",
-      "community": 25,
+      "community": 171,
       "norm_label": "double"
     },
     {
@@ -25320,7 +25320,7 @@
       "source_location": "L409",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setoutergaps",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setoutergaps()"
     },
     {
@@ -25330,7 +25330,7 @@
       "source_location": "L413",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setbordersenabled",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setbordersenabled()"
     },
     {
@@ -25340,7 +25340,7 @@
       "source_location": "L417",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_updateborderconfig",
-      "community": 25,
+      "community": 171,
       "norm_label": ".updateborderconfig()"
     },
     {
@@ -25350,7 +25350,7 @@
       "source_location": "L417",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_borderconfig",
-      "community": 25,
+      "community": 171,
       "norm_label": "borderconfig"
     },
     {
@@ -25380,7 +25380,7 @@
       "source_location": "L436",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setpreventsleepenabled",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setpreventsleepenabled()"
     },
     {
@@ -25410,7 +25410,7 @@
       "source_location": "L468",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setquaketerminalenabled",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setquaketerminalenabled()"
     },
     {
@@ -25450,7 +25450,7 @@
       "source_location": "L503",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_ismanagedwindowdisplayable",
-      "community": 250,
+      "community": 25,
       "norm_label": ".ismanagedwindowdisplayable()"
     },
     {
@@ -25460,7 +25460,7 @@
       "source_location": "L503",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_windowhandle",
-      "community": 250,
+      "community": 25,
       "norm_label": "windowhandle"
     },
     {
@@ -25520,7 +25520,7 @@
       "source_location": "L557",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_updatemonitororientations",
-      "community": 25,
+      "community": 171,
       "norm_label": ".updatemonitororientations()"
     },
     {
@@ -25530,7 +25530,7 @@
       "source_location": "L566",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_updatemonitornirisettings",
-      "community": 25,
+      "community": 171,
       "norm_label": ".updatemonitornirisettings()"
     },
     {
@@ -25540,7 +25540,7 @@
       "source_location": "L573",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_updatemonitordwindlesettings",
-      "community": 25,
+      "community": 171,
       "norm_label": ".updatemonitordwindlesettings()"
     },
     {
@@ -25640,7 +25640,7 @@
       "source_location": "L661",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setfocusfollowsmouse",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setfocusfollowsmouse()"
     },
     {
@@ -25650,7 +25650,7 @@
       "source_location": "L666",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setmovemousetofocusedwindow",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setmovemousetofocusedwindow()"
     },
     {
@@ -25690,7 +25690,7 @@
       "source_location": "L699",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_insetworkingframe",
-      "community": 171,
+      "community": 132,
       "norm_label": ".insetworkingframe()"
     },
     {
@@ -25700,7 +25700,7 @@
       "source_location": "L710",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_cgfloat",
-      "community": 171,
+      "community": 132,
       "norm_label": "cgfloat"
     },
     {
@@ -25710,7 +25710,7 @@
       "source_location": "L725",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_updatehotkeybindings",
-      "community": 25,
+      "community": 171,
       "norm_label": ".updatehotkeybindings()"
     },
     {
@@ -25720,7 +25720,7 @@
       "source_location": "L725",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_hotkeybinding",
-      "community": 25,
+      "community": 171,
       "norm_label": "hotkeybinding"
     },
     {
@@ -25800,7 +25800,7 @@
       "source_location": "L808",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_isworkspacebarvisible",
-      "community": 171,
+      "community": 132,
       "norm_label": ".isworkspacebarvisible()"
     },
     {
@@ -25810,7 +25810,7 @@
       "source_location": "L808",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_resolvedbarsettings",
-      "community": 171,
+      "community": 132,
       "norm_label": "resolvedbarsettings"
     },
     {
@@ -25850,7 +25850,7 @@
       "source_location": "L836",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_activeworkspacebarcountfortests",
-      "community": 171,
+      "community": 48,
       "norm_label": ".activeworkspacebarcountfortests()"
     },
     {
@@ -25950,7 +25950,7 @@
       "source_location": "L897",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_enabledwindlelayout",
-      "community": 25,
+      "community": 171,
       "norm_label": ".enabledwindlelayout()"
     },
     {
@@ -26400,7 +26400,7 @@
       "source_location": "L1641",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_visiblefocusrecoverytoken",
-      "community": 250,
+      "community": 25,
       "norm_label": ".visiblefocusrecoverytoken()"
     },
     {
@@ -26760,7 +26760,7 @@
       "source_location": "L2494",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_clipboardpaletteitems",
-      "community": 336,
+      "community": 25,
       "norm_label": ".clipboardpaletteitems()"
     },
     {
@@ -26770,7 +26770,7 @@
       "source_location": "L2494",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_clipboardpaletteitem",
-      "community": 336,
+      "community": 25,
       "norm_label": "clipboardpaletteitem"
     },
     {
@@ -26780,7 +26780,7 @@
       "source_location": "L2498",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_setclipboardhistoryenabled",
-      "community": 25,
+      "community": 171,
       "norm_label": ".setclipboardhistoryenabled()"
     },
     {
@@ -26790,7 +26790,7 @@
       "source_location": "L2503",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_copyclipboarditem",
-      "community": 336,
+      "community": 25,
       "norm_label": ".copyclipboarditem()"
     },
     {
@@ -26800,7 +26800,7 @@
       "source_location": "L2503",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_uuid",
-      "community": 336,
+      "community": 25,
       "norm_label": "uuid"
     },
     {
@@ -26810,7 +26810,7 @@
       "source_location": "L2507",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_deleteclipboarditem",
-      "community": 336,
+      "community": 25,
       "norm_label": ".deleteclipboarditem()"
     },
     {
@@ -26820,7 +26820,7 @@
       "source_location": "L2511",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_clearclipboardhistory",
-      "community": 336,
+      "community": 25,
       "norm_label": ".clearclipboardhistory()"
     },
     {
@@ -26830,7 +26830,7 @@
       "source_location": "L2515",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_syncclipboardhistoryservice",
-      "community": 25,
+      "community": 171,
       "norm_label": ".syncclipboardhistoryservice()"
     },
     {
@@ -26840,7 +26840,7 @@
       "source_location": "L2519",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_clipboardhistoryconfiguration",
-      "community": 25,
+      "community": 171,
       "norm_label": ".clipboardhistoryconfiguration()"
     },
     {
@@ -26850,7 +26850,7 @@
       "source_location": "L2519",
       "_origin": "ast",
       "id": "omniwm_core_controller_wmcontroller_swift_clipboardhistoryconfiguration",
-      "community": 25,
+      "community": 171,
       "norm_label": "clipboardhistoryconfiguration"
     },
     {
@@ -26880,7 +26880,7 @@
       "source_location": "L2537",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_navigatetocommandpalettewindow",
-      "community": 250,
+      "community": 25,
       "norm_label": ".navigatetocommandpalettewindow()"
     },
     {
@@ -26890,7 +26890,7 @@
       "source_location": "L2541",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_summoncommandpalettewindowright",
-      "community": 250,
+      "community": 25,
       "norm_label": ".summoncommandpalettewindowright()"
     },
     {
@@ -26940,7 +26940,7 @@
       "source_location": "L2565",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_restorevisibleworkspaceinactivefloatingwindows",
-      "community": 171,
+      "community": 48,
       "norm_label": ".restorevisibleworkspaceinactivefloatingwindows()"
     },
     {
@@ -26980,7 +26980,7 @@
       "source_location": "L2661",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_selectedoverviewwindowfortests",
-      "community": 250,
+      "community": 25,
       "norm_label": ".selectedoverviewwindowfortests()"
     },
     {
@@ -27080,7 +27080,7 @@
       "source_location": "L2804",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_ispointinquaketerminal",
-      "community": 171,
+      "community": 25,
       "norm_label": ".ispointinquaketerminal()"
     },
     {
@@ -27090,7 +27090,7 @@
       "source_location": "L2814",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_ispointinownwindow",
-      "community": 171,
+      "community": 25,
       "norm_label": ".ispointinownwindow()"
     },
     {
@@ -27100,7 +27100,7 @@
       "source_location": "L2826",
       "_origin": "ast",
       "id": "controller_wmcontroller_wmcontroller_isownedwindow",
-      "community": 171,
+      "community": 48,
       "norm_label": ".isownedwindow()"
     },
     {
@@ -37100,7 +37100,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore",
-      "community": 231,
+      "community": 336,
       "norm_label": "nirilayoutengine+restore.swift"
     },
     {
@@ -37110,7 +37110,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine",
-      "community": 231,
+      "community": 336,
       "norm_label": "nirilayoutengine"
     },
     {
@@ -37120,7 +37120,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_persistedplacements",
-      "community": 231,
+      "community": 336,
       "norm_label": ".persistedplacements()"
     },
     {
@@ -37130,7 +37130,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_workspacedescriptor",
-      "community": 231,
+      "community": 336,
       "norm_label": "workspacedescriptor"
     },
     {
@@ -37140,7 +37140,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_windowtoken",
-      "community": 231,
+      "community": 336,
       "norm_label": "windowtoken"
     },
     {
@@ -37150,7 +37150,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_persistedniriplacement",
-      "community": 231,
+      "community": 336,
       "norm_label": "persistedniriplacement"
     },
     {
@@ -37160,7 +37160,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_restoreinitialplacements",
-      "community": 231,
+      "community": 336,
       "norm_label": ".restoreinitialplacements()"
     },
     {
@@ -37170,7 +37170,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_bool",
-      "community": 231,
+      "community": 336,
       "norm_label": "bool"
     },
     {
@@ -37180,7 +37180,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_applypersistedcolumnstate",
-      "community": 231,
+      "community": 336,
       "norm_label": ".applypersistedcolumnstate()"
     },
     {
@@ -37190,7 +37190,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "persistedniricolumnstate",
-      "community": 231,
+      "community": 336,
       "norm_label": "persistedniricolumnstate"
     },
     {
@@ -37200,7 +37200,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_niricontainer",
-      "community": 231,
+      "community": 336,
       "norm_label": "niricontainer"
     },
     {
@@ -37210,7 +37210,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_applypersistedwindowstate",
-      "community": 231,
+      "community": 336,
       "norm_label": ".applypersistedwindowstate()"
     },
     {
@@ -37220,7 +37220,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "persistedniriwindowstate",
-      "community": 231,
+      "community": 336,
       "norm_label": "persistedniriwindowstate"
     },
     {
@@ -37230,7 +37230,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_niriwindow",
-      "community": 231,
+      "community": 336,
       "norm_label": "niriwindow"
     },
     {
@@ -45490,7 +45490,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewdismissreason",
-      "community": 263,
+      "community": 142,
       "norm_label": "overviewdismissreason"
     },
     {
@@ -45510,7 +45510,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewdismissreason_selection",
-      "community": 263,
+      "community": 142,
       "norm_label": "selection"
     },
     {
@@ -45520,7 +45520,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewdismissreason_externaldeactivation",
-      "community": 263,
+      "community": 142,
       "norm_label": "externaldeactivation"
     },
     {
@@ -45530,7 +45530,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "omniwm_core_overview_overviewcontroller_swift_bool",
-      "community": 263,
+      "community": 142,
       "norm_label": "bool"
     },
     {
@@ -45560,7 +45560,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "omniwm_core_overview_overviewcontroller_swift_windowhandle",
-      "community": 142,
+      "community": 263,
       "norm_label": "windowhandle"
     },
     {
@@ -45910,7 +45910,7 @@
       "source_location": "L433",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewcontroller_ispointinside",
-      "community": 263,
+      "community": 142,
       "norm_label": ".ispointinside()"
     },
     {
@@ -46050,7 +46050,7 @@
       "source_location": "L554",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewcontroller_completeclosetransition",
-      "community": 142,
+      "community": 263,
       "norm_label": ".completeclosetransition()"
     },
     {
@@ -46060,7 +46060,7 @@
       "source_location": "L577",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewcontroller_focustargetwindow",
-      "community": 142,
+      "community": 263,
       "norm_label": ".focustargetwindow()"
     },
     {
@@ -46080,7 +46080,7 @@
       "source_location": "L595",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewcontroller_closewindow",
-      "community": 142,
+      "community": 263,
       "norm_label": ".closewindow()"
     },
     {
@@ -46090,7 +46090,7 @@
       "source_location": "L604",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewcontroller_rebuildlayoutafterwindowclose",
-      "community": 142,
+      "community": 263,
       "norm_label": ".rebuildlayoutafterwindowclose()"
     },
     {
@@ -46410,7 +46410,7 @@
       "source_location": "L911",
       "_origin": "ast",
       "id": "overview_overviewcontroller_overviewcontroller_selectedwindowhandlefortests",
-      "community": 142,
+      "community": 263,
       "norm_label": ".selectedwindowhandlefortests()"
     },
     {
@@ -83970,7 +83970,7 @@
       "source_location": "L1615",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname",
-      "community": 19,
+      "community": 129,
       "norm_label": "ipcruleactionname"
     },
     {
@@ -83980,7 +83980,7 @@
       "source_location": "L1616",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_add",
-      "community": 19,
+      "community": 129,
       "norm_label": "add"
     },
     {
@@ -83990,7 +83990,7 @@
       "source_location": "L1617",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_replace",
-      "community": 19,
+      "community": 129,
       "norm_label": "replace"
     },
     {
@@ -84000,7 +84000,7 @@
       "source_location": "L1618",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_remove",
-      "community": 19,
+      "community": 129,
       "norm_label": "remove"
     },
     {
@@ -84010,7 +84010,7 @@
       "source_location": "L1619",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_move",
-      "community": 19,
+      "community": 129,
       "norm_label": "move"
     },
     {
@@ -84020,7 +84020,7 @@
       "source_location": "L1620",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_apply",
-      "community": 19,
+      "community": 129,
       "norm_label": "apply"
     },
     {
@@ -84310,7 +84310,7 @@
       "source_location": "L1782",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload",
-      "community": 129,
+      "community": 196,
       "norm_label": "payload"
     },
     {
@@ -84320,7 +84320,7 @@
       "source_location": "L1783",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_none",
-      "community": 129,
+      "community": 196,
       "norm_label": "none"
     },
     {
@@ -84330,7 +84330,7 @@
       "source_location": "L1784",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_command",
-      "community": 129,
+      "community": 196,
       "norm_label": "command"
     },
     {
@@ -84340,7 +84340,7 @@
       "source_location": "L1785",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_query",
-      "community": 129,
+      "community": 196,
       "norm_label": "query"
     },
     {
@@ -84350,7 +84350,7 @@
       "source_location": "L1786",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_rule",
-      "community": 129,
+      "community": 196,
       "norm_label": "rule"
     },
     {
@@ -84360,7 +84360,7 @@
       "source_location": "L1787",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_workspace",
-      "community": 129,
+      "community": 196,
       "norm_label": "workspace"
     },
     {
@@ -84370,7 +84370,7 @@
       "source_location": "L1788",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_window",
-      "community": 129,
+      "community": 196,
       "norm_label": "window"
     },
     {
@@ -84380,7 +84380,7 @@
       "source_location": "L1789",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_subscribe",
-      "community": 129,
+      "community": 196,
       "norm_label": "subscribe"
     },
     {
@@ -84460,7 +84460,7 @@
       "source_location": "L1910",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind",
-      "community": 196,
+      "community": 227,
       "norm_label": "ipcresultkind"
     },
     {
@@ -84470,7 +84470,7 @@
       "source_location": "L1911",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_pong",
-      "community": 196,
+      "community": 227,
       "norm_label": "pong"
     },
     {
@@ -84480,7 +84480,7 @@
       "source_location": "L1912",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_version",
-      "community": 196,
+      "community": 227,
       "norm_label": "version"
     },
     {
@@ -84490,7 +84490,7 @@
       "source_location": "L1913",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_workspacebar",
-      "community": 196,
+      "community": 227,
       "norm_label": "workspacebar"
     },
     {
@@ -84500,7 +84500,7 @@
       "source_location": "L1914",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_activeworkspace",
-      "community": 196,
+      "community": 227,
       "norm_label": "activeworkspace"
     },
     {
@@ -84510,7 +84510,7 @@
       "source_location": "L1915",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_focusedmonitor",
-      "community": 196,
+      "community": 227,
       "norm_label": "focusedmonitor"
     },
     {
@@ -84520,7 +84520,7 @@
       "source_location": "L1916",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_apps",
-      "community": 196,
+      "community": 227,
       "norm_label": "apps"
     },
     {
@@ -84530,7 +84530,7 @@
       "source_location": "L1917",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_focusedwindow",
-      "community": 196,
+      "community": 227,
       "norm_label": "focusedwindow"
     },
     {
@@ -84540,7 +84540,7 @@
       "source_location": "L1918",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_windows",
-      "community": 196,
+      "community": 227,
       "norm_label": "windows"
     },
     {
@@ -84550,7 +84550,7 @@
       "source_location": "L1919",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_workspaces",
-      "community": 196,
+      "community": 227,
       "norm_label": "workspaces"
     },
     {
@@ -84560,7 +84560,7 @@
       "source_location": "L1920",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_displays",
-      "community": 196,
+      "community": 227,
       "norm_label": "displays"
     },
     {
@@ -84570,7 +84570,7 @@
       "source_location": "L1921",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_rules",
-      "community": 196,
+      "community": 227,
       "norm_label": "rules"
     },
     {
@@ -84580,7 +84580,7 @@
       "source_location": "L1922",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_ruleactions",
-      "community": 196,
+      "community": 227,
       "norm_label": "ruleactions"
     },
     {
@@ -84590,7 +84590,7 @@
       "source_location": "L1923",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_queries",
-      "community": 196,
+      "community": 227,
       "norm_label": "queries"
     },
     {
@@ -84600,7 +84600,7 @@
       "source_location": "L1924",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_commands",
-      "community": 196,
+      "community": 227,
       "norm_label": "commands"
     },
     {
@@ -84610,7 +84610,7 @@
       "source_location": "L1925",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_subscriptions",
-      "community": 196,
+      "community": 227,
       "norm_label": "subscriptions"
     },
     {
@@ -84620,7 +84620,7 @@
       "source_location": "L1926",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_capabilities",
-      "community": 196,
+      "community": 227,
       "norm_label": "capabilities"
     },
     {
@@ -84630,7 +84630,7 @@
       "source_location": "L1927",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_focusedwindowdecision",
-      "community": 196,
+      "community": 227,
       "norm_label": "focusedwindowdecision"
     },
     {
@@ -84640,7 +84640,7 @@
       "source_location": "L1928",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_reconciledebug",
-      "community": 196,
+      "community": 227,
       "norm_label": "reconciledebug"
     },
     {
@@ -84650,7 +84650,7 @@
       "source_location": "L1929",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcresultkind_subscribed",
-      "community": 196,
+      "community": 227,
       "norm_label": "subscribed"
     },
     {
@@ -85420,7 +85420,7 @@
       "source_location": "L2554",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_pong",
-      "community": 129,
+      "community": 196,
       "norm_label": "pong"
     },
     {
@@ -85430,7 +85430,7 @@
       "source_location": "L2555",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_version",
-      "community": 129,
+      "community": 196,
       "norm_label": "version"
     },
     {
@@ -85440,7 +85440,7 @@
       "source_location": "L2556",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_workspacebar",
-      "community": 129,
+      "community": 196,
       "norm_label": "workspacebar"
     },
     {
@@ -85450,7 +85450,7 @@
       "source_location": "L2557",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_activeworkspace",
-      "community": 129,
+      "community": 196,
       "norm_label": "activeworkspace"
     },
     {
@@ -85460,7 +85460,7 @@
       "source_location": "L2558",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_focusedmonitor",
-      "community": 129,
+      "community": 196,
       "norm_label": "focusedmonitor"
     },
     {
@@ -85470,7 +85470,7 @@
       "source_location": "L2559",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_apps",
-      "community": 129,
+      "community": 196,
       "norm_label": "apps"
     },
     {
@@ -85480,7 +85480,7 @@
       "source_location": "L2560",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_focusedwindow",
-      "community": 129,
+      "community": 196,
       "norm_label": "focusedwindow"
     },
     {
@@ -85490,7 +85490,7 @@
       "source_location": "L2561",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_windows",
-      "community": 129,
+      "community": 196,
       "norm_label": "windows"
     },
     {
@@ -85500,7 +85500,7 @@
       "source_location": "L2562",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_workspaces",
-      "community": 129,
+      "community": 196,
       "norm_label": "workspaces"
     },
     {
@@ -85510,7 +85510,7 @@
       "source_location": "L2563",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_displays",
-      "community": 129,
+      "community": 196,
       "norm_label": "displays"
     },
     {
@@ -85520,7 +85520,7 @@
       "source_location": "L2564",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_rules",
-      "community": 129,
+      "community": 196,
       "norm_label": "rules"
     },
     {
@@ -85530,7 +85530,7 @@
       "source_location": "L2565",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_ruleactions",
-      "community": 129,
+      "community": 196,
       "norm_label": "ruleactions"
     },
     {
@@ -85540,7 +85540,7 @@
       "source_location": "L2566",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_queries",
-      "community": 129,
+      "community": 196,
       "norm_label": "queries"
     },
     {
@@ -85550,7 +85550,7 @@
       "source_location": "L2567",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_commands",
-      "community": 129,
+      "community": 196,
       "norm_label": "commands"
     },
     {
@@ -85560,7 +85560,7 @@
       "source_location": "L2568",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_subscriptions",
-      "community": 129,
+      "community": 196,
       "norm_label": "subscriptions"
     },
     {
@@ -85570,7 +85570,7 @@
       "source_location": "L2569",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_capabilities",
-      "community": 129,
+      "community": 196,
       "norm_label": "capabilities"
     },
     {
@@ -85580,7 +85580,7 @@
       "source_location": "L2570",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_focusedwindowdecision",
-      "community": 129,
+      "community": 196,
       "norm_label": "focusedwindowdecision"
     },
     {
@@ -85590,7 +85590,7 @@
       "source_location": "L2571",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_reconciledebug",
-      "community": 129,
+      "community": 196,
       "norm_label": "reconciledebug"
     },
     {
@@ -85600,7 +85600,7 @@
       "source_location": "L2572",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_payload_subscribed",
-      "community": 129,
+      "community": 196,
       "norm_label": "subscribed"
     },
     {
@@ -312529,5 +312529,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "3e03245fbb496e5372464e85e973246fd287732f"
+  "built_at_commit": "3d29a4bab3210fa1d829863328c5b44999fc21fe"
 }
