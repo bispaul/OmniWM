@@ -4,7 +4,7 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) released v0.4.9.7 (2026-06-10).** Fork is the primary codebase. GhosttyKit updated to v0.4.9.7. Upstream analysis: 4 adoptable ideas (AXFrameApplicationLedger, AX rekey, Hyper key, bezier motion). Memorygraph `64426c1b`.
-Branch: `fix/scope-relayout-to-workspace`. Build 103. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 106. PID check: `pgrep -x OmniWM`.
 **Build:** `make build-sign` (auto-signs with dev cert). `make sign` to re-sign existing binary.
 
 ### Architecture Status
@@ -206,8 +206,8 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 26 | Focus feedback loop | CLOSED | 96 | — |
 | 30 | Cross-display transfer wrong frame | CLOSED | 100 | — |
 | — | Ghost border during Chrome tabs | CLOSED | 101 | — |
-| 7/27 | Column gap after moveToWorkspace | **OPEN** | — | TWO bugs (CodeRabbit bisect). Bug A: .current()→.target() line 672 (commit 10cf53a). Bug B: duplicate commitWorkspaceTransition (commit 652057f). Memorygraph `5ff899c7`. |
-| 7/27/15 | Niri viewport gap (cross-monitor) | **OPEN** | — | Same two bugs. Fix D L2 commits are CORRECT and KEPT. |
+| 7/27 | Column gap after moveToWorkspace | **FIXED** | 106 | Root cause: moveColumnToWorkspace missing activeColumnIndex adjustment + initializeNewColumnWidth. Fix: adjustActiveColumnIndex helper (DRY) + resetColumnWidth:Bool parameter (F7 pattern) + viewport clamp + applyOverspread on every pass. 9 commits, 53 tests. |
+| 7/27/15 | Niri viewport gap (cross-monitor) | **FIXED** | 106 | Same fix as #7/27. Viewport clamping + column transfer pipeline consolidation. |
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
 | 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
@@ -225,7 +225,9 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | F6 | Dev signing | DONE | 101 | Fork infra | `make build-sign`, willSleep now fires |
 | F7 | Frame coalescing | DONE | 102-103 | Fork + upstream | animate: Bool on ESV (build 102) + applyViewportPipeline animate:false (build 103). 85% AX write reduction. Click focus: 1-2 batches (was 17). Spec: `docs/superpowers/specs/2026-06-11-f7-frame-coalescing-design.md` |
 
-Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is correct for WM).
+| F8 | Upstream v0.4.9.7 carry-over | **OPEN** | — | Upstream | 9 commits pending evaluation: resize placeholders, bezier motion, semantic Hyper, hotkey simplification, tabbing prevention, runtime refresh consolidation. Need constitution-compliant review. |
+
+Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is correct for WM). **NOTE:** These rejections were for v0.4.9.6. v0.4.9.7 re-introduces some — need re-evaluation.
 
 #### Fix Pipeline
 
@@ -263,12 +265,13 @@ Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is co
 
 | Method | Call Sites | Status |
 |--------|-----------|--------|
-| `requestImmediateRelayout` | 44 | Unaudited — no animation/workspace policy threading |
-| `focusWindow` | 30 | Unaudited — multiple racing paths |
+| `requestImmediateRelayout` | 44 | **REAL RISK** — 29 `.layoutCommand` callers, missing animation policy param. F7 pipeline uses animate:false but directive→execution race possible. Needs fresh session analysis. |
+| `focusWindow` | 23 | **REAL RISK** — 5 ungated callers bypass `reconcileFocusBeforeCommand`. Bar click + post-animation focus can race with managed focus. |
 | `ensureSelectionVisible` | 28 | **F7 FIXED** — `animate: Bool` + typed wrappers |
-| `startScrollAnimation` | 16 | Unaudited — inconsistent start conditions |
-| `commitWorkspaceTransition` | 13 | **BUG B** — inconsistent `affectedWorkspaces` |
-| `commitWorkspaceSelection` | 9 | Unaudited |
+| `startScrollAnimation` | 16 | **NEEDS AUDIT** — 4 start-condition paths, direct calls skip `hasPendingNiriAnimationWork()`. Related to requestImmediateRelayout. |
+| `commitWorkspaceTransition` | 13 | **DA REOPENED** — empty affectedWorkspaces silently escalates to relayout-all (CPU footgun, no assertion). Upstream same pattern. |
+| `moveColumnToWorkspace` | 3 | **FIXED** (build 106) — adjustActiveColumnIndex + resetColumnWidth parameter |
+| `commitWorkspaceSelection` | 9 | **DA REOPENED** — hidden contract between nodeId/focusedToken params, no validation. Risk: focus/selection desync. |
 
 Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% AX reduction).
 
@@ -276,12 +279,12 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 
 | Category | Done | Open |
 |----------|------|------|
-| Bugs | 12 | 3 (Bug #7/27 two fixes needed, Bug #28 floating mode) |
-| Features | 3 done + 2 N/A | 1 (F5 focus request tracking) |
-| Fixes | 5 | 1 (Fix D L2 — Bug A fixed, Bug B needs caller guards) |
+| Bugs | 14 | 1 (Bug #28 floating mode wake) |
+| Features | 3 done + 2 N/A | 2 (F5 focus request tracking, F8 upstream v0.4.9.7 eval) |
+| Fixes | 6 | — |
 | SSOT | 6/6 | — |
-| Extractions | 4/5 | 1 (Fix D L2 safety net) |
-| Scattered pathways | 1 fixed (F7) | 4 unaudited (44+30+16+13 call sites) |
+| Extractions | 4/5 | 1 deferred |
+| Scattered pathways | 2 fixed (F7 + moveColumnToWorkspace) | 5 open: 2 real risks (requestImmediateRelayout 44, focusWindow 23) + 3 DA-reopened (commitWorkspaceTransition 13, viewport coupling 10+, commitWorkspaceSelection 9) |
 
 ## Cross-References
 
