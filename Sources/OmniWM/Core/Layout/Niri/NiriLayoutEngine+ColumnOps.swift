@@ -207,28 +207,34 @@ extension NiriLayoutEngine {
         return true
     }
 
+    static func adjustActiveColumnIndex(
+        _ state: inout ViewportState,
+        afterRemovalAt removedIndex: Int?,
+        newColumnCount: Int
+    ) {
+        guard let removedIndex else { return }
+        if newColumnCount == 0 {
+            state.activeColumnIndex = 0
+        } else if removedIndex < state.activeColumnIndex {
+            state.activeColumnIndex -= 1
+        } else if state.activeColumnIndex >= newColumnCount {
+            state.activeColumnIndex = newColumnCount - 1
+        }
+    }
+
     func cleanupEmptyColumn(
         _ column: NiriContainer,
         in workspaceId: WorkspaceDescriptor.ID,
         state: inout ViewportState
     ) {
         guard column.children.isEmpty else { return }
-
         let removedIndex = columnIndex(of: column, in: workspaceId)
-
-        // Window-close removals use removeWindows(...); this is structural cleanup for move/consume paths.
         column.remove()
-
-        if let removedIndex {
-            let newCount = columns(in: workspaceId).count
-            if newCount == 0 {
-                state.activeColumnIndex = 0
-            } else if removedIndex < state.activeColumnIndex {
-                state.activeColumnIndex -= 1
-            } else if state.activeColumnIndex >= newCount {
-                state.activeColumnIndex = newCount - 1
-            }
-        }
+        Self.adjustActiveColumnIndex(
+            &state,
+            afterRemovalAt: removedIndex,
+            newColumnCount: columns(in: workspaceId).count
+        )
     }
 
     func normalizeColumnSizes(in workspaceId: WorkspaceDescriptor.ID) {
