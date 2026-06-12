@@ -1454,6 +1454,9 @@ final class WorkspaceManager {
         in workspaceId: WorkspaceDescriptor.ID,
         onMonitor monitorId: Monitor.ID? = nil
     ) -> Bool {
+        WMLog.focus.debug(
+            "commitWorkspaceSelection: nodeId=\(nodeId.map { String(describing: $0).prefix(8) } ?? "nil", privacy: .public) focusedToken=\(focusedToken?.windowId ?? 0, privacy: .public) ws=\(workspaceId.uuidString.prefix(8), privacy: .public)"
+        )
         var changed = false
 
         if let nodeId {
