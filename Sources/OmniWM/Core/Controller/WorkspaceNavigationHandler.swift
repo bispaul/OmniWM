@@ -483,13 +483,18 @@ final class WorkspaceNavigationHandler {
         var sourceState = controller.workspaceManager.niriViewportState(for: sourceWorkspaceId)
         var targetState = controller.workspaceManager.niriViewportState(for: targetWorkspaceId)
 
+        let sourceMonitorId = controller.workspaceManager.monitorId(for: sourceWorkspaceId)
+        let targetMonitorId = controller.workspaceManager.monitorId(for: targetWorkspaceId)
+        let needsWidthReset = sourceMonitorId != targetMonitorId
+
         guard let result = engine.moveColumnToWorkspace(
             column,
             from: sourceWorkspaceId,
             to: targetWorkspaceId,
             sourceState: &sourceState,
             targetState: &targetState,
-            atColumnIndex: columnIndex
+            atColumnIndex: columnIndex,
+            resetColumnWidth: needsWidthReset
         ) else {
             return false
         }
@@ -754,7 +759,8 @@ final class WorkspaceNavigationHandler {
             from: wsId,
             to: targetWorkspace.id,
             sourceState: &sourceState,
-            targetState: &targetState
+            targetState: &targetState,
+            resetColumnWidth: false
         ) else {
             return
         }
@@ -818,12 +824,17 @@ final class WorkspaceNavigationHandler {
             return
         }
 
+        let sourceMonitorId = controller.workspaceManager.monitorId(for: wsId)
+        let targetMonitorId = controller.workspaceManager.monitorId(for: targetWsId)
+        let needsWidthReset = sourceMonitorId != targetMonitorId
+
         guard let result = engine.moveColumnToWorkspace(
             column,
             from: wsId,
             to: targetWsId,
             sourceState: &sourceState,
-            targetState: &targetState
+            targetState: &targetState,
+            resetColumnWidth: needsWidthReset
         ) else {
             return
         }

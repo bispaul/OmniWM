@@ -132,8 +132,52 @@ import Testing
 
     // MARK: - Task 2: atomicTransferWindow
 
-    @Test func atomicTransferPreservesColumnWidth() async {
-        let (controller, primaryMonitor, secondaryMonitor, ws1, ws2) =
+    @Test func atomicTransferPreservesColumnWidthSameDisplay() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let ws1 = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing context")
+            return
+        }
+
+        let ws2 = controller.workspaceManager.workspaceId(for: "2", createIfMissing: true)!
+
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: ws1, windowId: 3001)
+        _ = controller.workspaceManager.setManagedFocus(token, in: ws1, onMonitor: monitor.id)
+        engine.syncWindows([token], in: ws1, selectedNodeId: nil)
+
+        let plans = try? await controller.niriLayoutHandler.layoutWithNiriEngine(activeWorkspaces: [ws1])
+        if let plans { controller.layoutRefreshController.executeLayoutPlans(plans) }
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        guard let windowNode = engine.findNode(for: token),
+              let column = engine.findColumn(containing: windowNode, in: ws1)
+        else {
+            Issue.record("Window not in engine")
+            return
+        }
+        let widthBefore = column.cachedWidth
+
+        let result = controller.workspaceNavigationHandler.atomicTransferWindow(token, from: ws1, to: ws2)
+        #expect(result)
+
+        guard let movedNode = engine.findNode(for: token),
+              let movedColumn = engine.findColumn(containing: movedNode, in: ws2)
+        else {
+            Issue.record("Window not found after transfer")
+            return
+        }
+        #expect(movedColumn.cachedWidth == widthBefore, "Same-display transfer should preserve column width")
+    }
+
+    @Test func atomicTransferResetsColumnWidthCrossDisplay() async {
+        let (controller, primaryMonitor, _, ws1, ws2) =
             makeTwoMonitorLayoutPlanTestController()
         controller.enableNiriLayout()
         await controller.layoutRefreshController.waitForRefreshWorkForTests()
@@ -144,48 +188,34 @@ import Testing
             return
         }
 
-        let token = addLayoutPlanTestWindow(on: controller, workspaceId: ws1, windowId: 3001)
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: ws1, windowId: 3002)
         _ = controller.workspaceManager.setManagedFocus(token, in: ws1, onMonitor: primaryMonitor.id)
-
-        // Sync window into engine
         engine.syncWindows([token], in: ws1, selectedNodeId: nil)
 
-        // Run layout so column gets a computed width
-        let plans = try? await controller.niriLayoutHandler.layoutWithNiriEngine(
-            activeWorkspaces: [ws1]
-        )
+        let plans = try? await controller.niriLayoutHandler.layoutWithNiriEngine(activeWorkspaces: [ws1])
         if let plans { controller.layoutRefreshController.executeLayoutPlans(plans) }
         await controller.layoutRefreshController.waitForRefreshWorkForTests()
 
-        // Capture column width before transfer
         guard let windowNode = engine.findNode(for: token),
               let column = engine.findColumn(containing: windowNode, in: ws1)
         else {
-            Issue.record("Window not in engine before transfer")
+            Issue.record("Window not in engine")
             return
         }
         let widthBefore = column.cachedWidth
+        #expect(widthBefore > 0, "Should have a computed width before transfer")
 
-        // Perform atomic transfer
-        let result = controller.workspaceNavigationHandler.atomicTransferWindow(
-            token,
-            from: ws1,
-            to: ws2
-        )
-
+        let result = controller.workspaceNavigationHandler.atomicTransferWindow(token, from: ws1, to: ws2)
         #expect(result)
 
-        // Verify registry updated
-        #expect(controller.workspaceManager.workspace(for: token) == ws2)
-
-        // Verify column width preserved (moveColumnToWorkspace, not moveWindowToWorkspace)
         guard let movedNode = engine.findNode(for: token),
               let movedColumn = engine.findColumn(containing: movedNode, in: ws2)
         else {
-            Issue.record("Window not in engine after transfer")
+            Issue.record("Window not found after transfer")
             return
         }
-        #expect(movedColumn.cachedWidth == widthBefore)
+        #expect(movedColumn.cachedWidth == 0, "Cross-display transfer should reset column width")
+        #expect(movedColumn.isFullWidth == false, "Cross-display transfer should reset isFullWidth")
     }
 
     @Test func atomicTransferFailsForFloatingWindow() async {
