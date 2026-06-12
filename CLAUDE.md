@@ -226,9 +226,11 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | F6 | Dev signing | DONE | 101 | Fork infra | `make build-sign`, willSleep now fires |
 | F7 | Frame coalescing | DONE | 102-103 | Fork + upstream | animate: Bool on ESV (build 102) + applyViewportPipeline animate:false (build 103). 85% AX write reduction. Click focus: 1-2 batches (was 17). Spec: `docs/superpowers/specs/2026-06-11-f7-frame-coalescing-design.md` |
 
-| F8 | Upstream v0.4.9.7 carry-over | **OPEN** | — | Upstream | 9 commits pending evaluation: resize placeholders, bezier motion, semantic Hyper, hotkey simplification, tabbing prevention, runtime refresh consolidation. Need constitution-compliant review. |
+| F8 | AXFrameApplicationLedger (from upstream commit 8baadb6) | **OPEN** | — | Upstream v0.4.9.7 | Retry budgets + request ID tracking. Directly addresses Bug #32 (verificationMismatch burst). Fork's current frame dedup insufficient. DA-validated. |
+| F9 | Prevent app-created tabbing (from upstream commit 2131050) | **OPEN** | — | Upstream v0.4.9.7 | Fork missing rekeying logic for app-created windows. Correctness gap. Post-Bug #32. |
+| F10 | Native Hyper key support (from upstream commit 53265e2) | **OPEN** | — | Upstream v0.4.9.7 | Complete HyperKeyTrigger native support. Removes Karabiner dependency. DA overturned previous SKIP. |
 
-Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is correct for WM). **NOTE:** These rejections were for v0.4.9.6. v0.4.9.7 re-introduces some — need re-evaluation.
+Rejected: Bezier motion (no user complaints, opinion-driven). Resize placeholder removal (179 active refs — unsafe). Test harness removal (fork tests are current). Hotkey simplification (fork already matches). Memorygraph `d2b1df25`.
 
 #### Fix Pipeline
 
@@ -281,7 +283,7 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 | Category | Done | Open |
 |----------|------|------|
 | Bugs | 14 | 2 (Bug #28 floating mode wake, Bug #32 verificationMismatch burst) |
-| Features | 3 done + 2 N/A | 2 (F5 focus request tracking, F8 upstream v0.4.9.7 eval) |
+| Features | 3 done + 2 N/A | 4 (F5 focus tracking, F8 AXLedger, F9 tabbing prevention, F10 native Hyper) |
 | Fixes | 6 | — |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 deferred |
