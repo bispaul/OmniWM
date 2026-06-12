@@ -1549,4 +1549,57 @@ private func waitForFocusRefresh(on controller: WMController) async {
 
         #expect(controller.commandHandler.performCommand(.toggleFocusedWindowFloating) == .notFound)
     }
+
+    @Test @MainActor func reconcileFocusBeforeCommandRoutesThroughBridge() {
+        var activatedPids: [pid_t] = []
+        var focusedWindows: [(pid_t, UInt32)] = []
+        let operations = WindowFocusOperations(
+            activateApp: { pid in activatedPids.append(pid) },
+            focusSpecificWindow: { pid, windowId, _ in focusedWindows.append((pid, windowId)) },
+            raiseWindow: { _ in }
+        )
+        let (controller, workspaceId, _) = makeFocusTestController(windowFocusOperations: operations)
+
+        let borderPid: pid_t = 88_001
+        let borderWindowId = 5001
+        let token = controller.workspaceManager.addWindow(
+            makeFocusTestWindow(windowId: borderWindowId),
+            pid: borderPid,
+            windowId: borderWindowId,
+            to: workspaceId
+        )
+        let target = KeyboardFocusTarget(
+            token: token,
+            axRef: AXWindowRef(element: AXUIElementCreateSystemWide(), windowId: borderWindowId),
+            workspaceId: workspaceId,
+            isManaged: true
+        )
+        controller.focusBorderController.focusChanged(to: target)
+
+        // Set frontmost PID to a DIFFERENT app so reconcile has work to do
+        controller.frontmostPidProviderForTests = { 99_999 }
+
+        // Call reconcile — routes through focusBridge.focusWindow
+        controller.reconcileFocusBeforeCommand()
+
+        // The bridge should have executed performFocus (activate + focus)
+        #expect(
+            activatedPids == [borderPid],
+            "reconcile should route through bridge and activate the border target's app"
+        )
+        #expect(
+            focusedWindows.count == 1 && focusedWindows[0].0 == borderPid
+                && focusedWindows[0].1 == UInt32(borderWindowId),
+            "reconcile should focus the specific window through the bridge"
+        )
+
+        // Call reconcile again immediately — bridge deduplicates within 16ms
+        activatedPids.removeAll()
+        focusedWindows.removeAll()
+        controller.reconcileFocusBeforeCommand()
+        #expect(
+            activatedPids.isEmpty,
+            "Bridge should deduplicate rapid reconcile calls for the same token"
+        )
+    }
 }

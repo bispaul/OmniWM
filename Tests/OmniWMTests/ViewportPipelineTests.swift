@@ -155,4 +155,51 @@ import Testing
         let methodNames = mirror.children.compactMap { $0.label }
         #expect(!methodNames.contains("applyOverspreadIfNeeded"))
     }
+
+    @Test func nonPolicyPassCentersColumnsWhenTheyFit() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        // Add 1 window (should fit in viewport — applyOverspread should center)
+        let token = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 6001)
+        _ = controller.workspaceManager.setManagedFocus(token, in: workspaceId, onMonitor: monitor.id)
+
+        // Run initial layout with policies
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        // Manually set viewport offset to a bad position (simulating stale state)
+        var state = controller.workspaceManager.niriViewportState(for: workspaceId)
+        state.viewOffsetPixels = .static(500)
+        controller.workspaceManager.updateNiriViewportState(state, for: workspaceId)
+
+        // Run a NON-policy layout pass (no recalc flag — applyPolicies=false)
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        // Check: viewport should be corrected by applyOverspread (centers the single column)
+        let postState = controller.workspaceManager.niriViewportState(for: workspaceId)
+        let columns = engine.columns(in: workspaceId)
+        if columns.count == 1 {
+            let offset = postState.stationary()
+            let columnWidth = columns[0].cachedWidth
+            let viewportWidth = monitor.frame.width
+            let expectedCenterOffset = -((viewportWidth - columnWidth) / 2)
+            #expect(
+                abs(offset - expectedCenterOffset) < 2,
+                "Non-policy pass should center column via applyOverspread (offset=\(offset) expected=\(expectedCenterOffset))"
+            )
+            #expect(offset != 500, "Stale offset 500 should have been corrected")
+        }
+    }
 }
