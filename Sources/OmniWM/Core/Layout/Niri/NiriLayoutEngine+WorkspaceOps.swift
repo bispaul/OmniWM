@@ -61,7 +61,8 @@ extension NiriLayoutEngine {
         from sourceWorkspaceId: WorkspaceDescriptor.ID,
         to targetWorkspaceId: WorkspaceDescriptor.ID,
         sourceState: inout ViewportState,
-        targetState: inout ViewportState
+        targetState: inout ViewportState,
+        resetColumnWidth: Bool = true
     ) -> WorkspaceMoveResult? {
         guard sourceWorkspaceId != targetWorkspaceId else { return nil }
 
@@ -76,8 +77,9 @@ extension NiriLayoutEngine {
         removeEmptyColumnsIfWorkspaceEmpty(in: targetRoot)
 
         let allCols = columns(in: sourceWorkspaceId)
+        let removedIndex = columnIndex(of: column, in: sourceWorkspaceId)
         var fallbackSelection: NodeId?
-        if let colIdx = columnIndex(of: column, in: sourceWorkspaceId) {
+        if let colIdx = removedIndex {
             if colIdx > 0 {
                 fallbackSelection = allCols[colIdx - 1].firstChild()?.id
             } else if allCols.count > 1 {
@@ -88,6 +90,16 @@ extension NiriLayoutEngine {
         column.detach()
 
         targetRoot.appendChild(column)
+
+        Self.adjustActiveColumnIndex(
+            &sourceState,
+            afterRemovalAt: removedIndex,
+            newColumnCount: columns(in: sourceWorkspaceId).count
+        )
+
+        if resetColumnWidth {
+            initializeNewColumnWidth(column, in: targetWorkspaceId)
+        }
 
         sourceState.selectedNodeId = fallbackSelection
 
@@ -108,7 +120,8 @@ extension NiriLayoutEngine {
         to targetWorkspaceId: WorkspaceDescriptor.ID,
         sourceState: inout ViewportState,
         targetState: inout ViewportState,
-        atColumnIndex: Int?
+        atColumnIndex: Int?,
+        resetColumnWidth: Bool = true
     ) -> WorkspaceMoveResult? {
         guard sourceWorkspaceId != targetWorkspaceId else { return nil }
 
@@ -123,8 +136,9 @@ extension NiriLayoutEngine {
         removeEmptyColumnsIfWorkspaceEmpty(in: targetRoot)
 
         let allCols = columns(in: sourceWorkspaceId)
+        let removedIndex = columnIndex(of: column, in: sourceWorkspaceId)
         var fallbackSelection: NodeId?
-        if let colIdx = columnIndex(of: column, in: sourceWorkspaceId) {
+        if let colIdx = removedIndex {
             if colIdx > 0 {
                 fallbackSelection = allCols[colIdx - 1].firstChild()?.id
             } else if allCols.count > 1 {
@@ -138,6 +152,16 @@ extension NiriLayoutEngine {
             targetRoot.insertChild(column, at: targetIndex)
         } else {
             targetRoot.appendChild(column)
+        }
+
+        Self.adjustActiveColumnIndex(
+            &sourceState,
+            afterRemovalAt: removedIndex,
+            newColumnCount: columns(in: sourceWorkspaceId).count
+        )
+
+        if resetColumnWidth {
+            initializeNewColumnWidth(column, in: targetWorkspaceId)
         }
 
         sourceState.selectedNodeId = fallbackSelection
