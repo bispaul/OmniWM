@@ -228,7 +228,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 
 | F8 | AXFrameApplicationLedger (from upstream commit 8baadb6) | **OPEN** | — | Upstream v0.4.9.7 | Retry budgets + request ID tracking. Directly addresses Bug #32 (verificationMismatch burst). Fork's current frame dedup insufficient. DA-validated. |
 | F9 | Prevent app-created tabbing (from upstream commit 2131050) | **OPEN** | — | Upstream v0.4.9.7 | Fork missing rekeying logic for app-created windows. Correctness gap. Post-Bug #32. |
-| F10 | Native Hyper key support (from upstream commit 53265e2) | **OPEN** | — | Upstream v0.4.9.7 | Complete HyperKeyTrigger native support. Removes Karabiner dependency. DA overturned previous SKIP. |
+| F10 | Native Hyper key support (upstream 53265e2) | **SKIP** | — | Upstream v0.4.9.7 | Fork already has HyperKeyTrigger + handleVirtualHyperEvent. User needs Karabiner for app launchers (G/C/S/V/D/B/P) regardless. CapsLockHyperRemapper would conflict with Karabiner HID interception. HotkeyCenter degree=56 — don't increase. |
 
 Rejected: Bezier motion (no user complaints, opinion-driven). Resize placeholder removal (179 active refs — unsafe). Test harness removal (fork tests are current). Hotkey simplification (fork already matches). Memorygraph `d2b1df25`.
 
@@ -283,7 +283,7 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 | Category | Done | Open |
 |----------|------|------|
 | Bugs | 14 | 2 (Bug #28 floating mode wake, Bug #32 verificationMismatch burst) |
-| Features | 3 done + 2 N/A | 4 (F5 focus tracking, F8 AXLedger, F9 tabbing prevention, F10 native Hyper) |
+| Features | 3 done + 2 N/A + 1 SKIP | 3 (F5 focus tracking, F8 AXLedger, F9 tabbing prevention) |
 | Fixes | 6 | — |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 deferred |
