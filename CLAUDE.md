@@ -211,6 +211,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
 | 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
+| 32 | verificationMismatch burst during Chrome churn | **OPEN** | 108 | 31 mismatches/10min. Chrome internal window create/destroy triggers fullRescan → frame dirty → frame write rejected. windowId=95951 (Chrome) most affected (22/31). Burst at 15:27:54. applyOverspread-on-every-pass may increase baseline. Need RCA: compare vs pre-build-108 baseline. Log: /tmp/omniwm_build108_10min_log.txt. Memorygraph `71b9bc75`. Related: Bug #6/22, #19. |
 | — | Portrait wake window loss | CLOSED | 102 | 0 removals, 10/10 windows survived, willSleep+snapshot fired |
 
 #### Features (from upstream v0.4.9.7 analysis + fork work)
@@ -279,7 +280,7 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 
 | Category | Done | Open |
 |----------|------|------|
-| Bugs | 14 | 1 (Bug #28 floating mode wake) |
+| Bugs | 14 | 2 (Bug #28 floating mode wake, Bug #32 verificationMismatch burst) |
 | Features | 3 done + 2 N/A | 2 (F5 focus request tracking, F8 upstream v0.4.9.7 eval) |
 | Fixes | 6 | — |
 | SSOT | 6/6 | — |
