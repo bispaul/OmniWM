@@ -2861,10 +2861,19 @@ extension WMController {
             WMLog.focus.info(
                 "reconcileFocusBeforeCommand: border=\(borderTarget.token.windowId, privacy: .public) macOS frontmost pid=\(frontPid ?? 0, privacy: .public) — syncing"
             )
-            performWindowFronting(
-                pid: borderTarget.pid,
-                windowId: borderTarget.token.windowId,
-                axRef: borderTarget.axRef
+            focusBridge.focusWindow(
+                borderTarget.token,
+                performFocus: {
+                    performWindowFronting(
+                        pid: borderTarget.pid,
+                        windowId: borderTarget.token.windowId,
+                        axRef: borderTarget.axRef
+                    )
+                },
+                onDeferredFocus: { [weak self] deferred in
+                    guard let self, self.workspaceManager.entry(for: deferred) != nil else { return }
+                    self.focusWindow(deferred)
+                }
             )
         }
     }
