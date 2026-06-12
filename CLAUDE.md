@@ -266,7 +266,7 @@ Rejected: Semantic Hyper key (Karabiner handles it), Bezier motion (spring is co
 | Method | Call Sites | Status |
 |--------|-----------|--------|
 | `requestImmediateRelayout` | 44 | **REAL RISK** — 29 `.layoutCommand` callers, missing animation policy param. F7 pipeline uses animate:false but directive→execution race possible. Needs fresh session analysis. |
-| `focusWindow` | 23 | **REAL RISK** — 5 ungated callers bypass `reconcileFocusBeforeCommand`. Bar click + post-animation focus can race with managed focus. |
+| `focusWindow` | 23 | **FIXED** (build 107) — `reconcileFocusBeforeCommand` routed through `focusBridge` for serialization. DA-confirmed race resolved. |
 | `ensureSelectionVisible` | 28 | **F7 FIXED** — `animate: Bool` + typed wrappers |
 | `startScrollAnimation` | 16 | **NEEDS AUDIT** — 4 start-condition paths, direct calls skip `hasPendingNiriAnimationWork()`. Related to requestImmediateRelayout. |
 | `commitWorkspaceTransition` | 13 | **DA REOPENED** — empty affectedWorkspaces silently escalates to relayout-all (CPU footgun, no assertion). Upstream same pattern. |
@@ -284,7 +284,7 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 | Fixes | 6 | — |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 deferred |
-| Scattered pathways | 2 fixed (F7 + moveColumnToWorkspace) | 5 open: 2 real risks (requestImmediateRelayout 44, focusWindow 23) + 3 DA-reopened (commitWorkspaceTransition 13, viewport coupling 10+, commitWorkspaceSelection 9) |
+| Scattered pathways | 3 fixed (F7 + moveColumnToWorkspace + focusWindow) | 4 deferred: requestImmediateRelayout 44, commitWorkspaceTransition 13, viewport coupling 10+, commitWorkspaceSelection 9 + 1 needs audit (startScrollAnimation 16) |
 
 ## Cross-References
 
