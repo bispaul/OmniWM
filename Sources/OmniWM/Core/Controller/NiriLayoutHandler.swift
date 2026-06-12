@@ -902,7 +902,9 @@ enum NiriWindowMoveResult {
         var directives: [AnimationDirective] = []
 
         if !snapshot.useScrollAnimationPath {
-            if hasColumnAnimations {
+            if viewportNeedsRecalc, newWindowToken == nil {
+                directives.append(.startNiriScroll(workspaceId: pass.wsId))
+            } else if hasColumnAnimations {
                 directives.append(.startNiriScroll(workspaceId: pass.wsId))
             }
         }
