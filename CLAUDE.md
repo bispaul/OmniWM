@@ -285,13 +285,14 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 
 | Category | Done | Open |
 |----------|------|------|
-| Bugs | 14 | 2 (Bug #28 floating mode wake, Bug #32 verificationMismatch burst) |
-| Features | 4 done + 2 N/A + 2 SKIP | 1 (F5 focus tracking) |
-| Bugs | 15 (incl #32 cosmetic) | 2 (Bug #28 floating wake, Bug #33 post-wake click position shifts) |
-| Fixes | 6 | — |
-| SSOT | 6/6 | — |
+| Bugs | 16 closed | 4 (#28 wake, #33 post-wake clicks, #34 32" gap, #35 elastic lost — ROOT CAUSE of #33/#34/test#2) |
+| Features | 5 done + 2 N/A + 2 SKIP | 1 (F5 focus tracking) |
+| Fixes A-E + D L1/L2 | 6/6 | — |
+| SSOT #1-6 | 6/6 | — |
 | Extractions | 4/5 | 1 deferred |
-| Scattered pathways | 3 fixed (F7 + moveColumnToWorkspace + focusWindow) | 4 deferred: requestImmediateRelayout 44, commitWorkspaceTransition 13, viewport coupling 10+, commitWorkspaceSelection 9 + 1 needs audit (startScrollAnimation 16) |
+| Scattered pathways | 7/7 resolved | — |
+| Tests | 185/186 | 1 (test #2 — related to Bug #35) |
+| Session commits | 29 | — |
 
 ## Cross-References
 
