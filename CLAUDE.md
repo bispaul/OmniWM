@@ -211,7 +211,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
 | 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
-| 32 | verificationMismatch burst during Chrome churn | **OPEN** | 108 | 31 mismatches/10min. Chrome internal window create/destroy triggers fullRescan → frame dirty → frame write rejected. windowId=95951 (Chrome) most affected (22/31). Burst at 15:27:54. applyOverspread-on-every-pass may increase baseline. Need RCA: compare vs pre-build-108 baseline. Log: /tmp/omniwm_build108_10min_log.txt. Memorygraph `71b9bc75`. Related: Bug #6/22, #19. |
+| 32 | verificationMismatch burst during Chrome churn | **CLOSED** (cosmetic) | 108 | RCA: position mismatches (Y off ~1895px) during Chrome internal window churn on portrait Dwindle display. Cascade CONVERGES (2703→1154→829→818→808) — scroll animation settling. Fork already has retry budgets + accept-and-adapt. Pre-existing behavior, not caused by build 108 changes (applyOverspread is Niri-only, WS6 is Dwindle). F8 (AXLedger) SKIP — already implemented. |
 | — | Portrait wake window loss | CLOSED | 102 | 0 removals, 10/10 windows survived, willSleep+snapshot fired |
 
 #### Features (from upstream v0.4.9.7 analysis + fork work)
@@ -226,7 +226,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | F6 | Dev signing | DONE | 101 | Fork infra | `make build-sign`, willSleep now fires |
 | F7 | Frame coalescing | DONE | 102-103 | Fork + upstream | animate: Bool on ESV (build 102) + applyViewportPipeline animate:false (build 103). 85% AX write reduction. Click focus: 1-2 batches (was 17). Spec: `docs/superpowers/specs/2026-06-11-f7-frame-coalescing-design.md` |
 
-| F8 | AXFrameApplicationLedger (from upstream commit 8baadb6) | **OPEN** | — | Upstream v0.4.9.7 | Retry budgets + request ID tracking. Directly addresses Bug #32 (verificationMismatch burst). Fork's current frame dedup insufficient. DA-validated. |
+| F8 | AXFrameApplicationLedger (upstream 8baadb6) | **SKIP** | — | Upstream v0.4.9.7 | Fork ALREADY has retryBudgetByWindowId + recentFrameWriteFailures + accept-and-adapt (Phase 1). Upstream Ledger is redundant. Bug #32 root cause is layout engine re-computing rejected target from proportions — systematic debugging needed, not new subsystem. |
 | F9 | Prevent app-created tabbing (from upstream commit 2131050) | **OPEN** | — | Upstream v0.4.9.7 | Fork missing rekeying logic for app-created windows. Correctness gap. Post-Bug #32. |
 | F10 | Native Hyper key support (upstream 53265e2) | **SKIP** | — | Upstream v0.4.9.7 | Fork already has HyperKeyTrigger + handleVirtualHyperEvent. User needs Karabiner for app launchers (G/C/S/V/D/B/P) regardless. CapsLockHyperRemapper would conflict with Karabiner HID interception. HotkeyCenter degree=56 — don't increase. |
 
@@ -283,7 +283,8 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 | Category | Done | Open |
 |----------|------|------|
 | Bugs | 14 | 2 (Bug #28 floating mode wake, Bug #32 verificationMismatch burst) |
-| Features | 3 done + 2 N/A + 1 SKIP | 3 (F5 focus tracking, F8 AXLedger, F9 tabbing prevention) |
+| Features | 3 done + 2 N/A + 2 SKIP | 2 (F5 focus tracking, F9 tabbing prevention) |
+| Bugs | 15 (incl #32 cosmetic) | 1 (Bug #28 floating mode wake) |
 | Fixes | 6 | — |
 | SSOT | 6/6 | — |
 | Extractions | 4/5 | 1 deferred |
