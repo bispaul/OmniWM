@@ -227,7 +227,7 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | F7 | Frame coalescing | DONE | 102-103 | Fork + upstream | animate: Bool on ESV (build 102) + applyViewportPipeline animate:false (build 103). 85% AX write reduction. Click focus: 1-2 batches (was 17). Spec: `docs/superpowers/specs/2026-06-11-f7-frame-coalescing-design.md` |
 
 | F8 | AXFrameApplicationLedger (upstream 8baadb6) | **SKIP** | — | Upstream v0.4.9.7 | Fork ALREADY has retryBudgetByWindowId + recentFrameWriteFailures + accept-and-adapt (Phase 1). Upstream Ledger is redundant. Bug #32 root cause is layout engine re-computing rejected target from proportions — systematic debugging needed, not new subsystem. |
-| F9 | Prevent app-created tabbing (from upstream commit 2131050) | **OPEN** | — | Upstream v0.4.9.7 | Fork missing rekeying logic for app-created windows. Correctness gap. Post-Bug #32. |
+| F9 | Prevent app-created tabbing (upstream 2131050) | **ALREADY DONE** | — | Upstream v0.4.9.7 | Fork's `insertWindow` ALWAYS creates new columns (no auto-tabbing code). Full rekey pipeline exists (AXManager + AXEventHandler + engines). Upstream is catching up to fork. Test gap: RuntimeArchitectureTests missing (320 lines). |
 | F10 | Native Hyper key support (upstream 53265e2) | **SKIP** | — | Upstream v0.4.9.7 | Fork already has HyperKeyTrigger + handleVirtualHyperEvent. User needs Karabiner for app launchers (G/C/S/V/D/B/P) regardless. CapsLockHyperRemapper would conflict with Karabiner HID interception. HotkeyCenter degree=56 — don't increase. |
 
 Rejected: Bezier motion (no user complaints, opinion-driven). Resize placeholder removal (179 active refs — unsafe). Test harness removal (fork tests are current). Hotkey simplification (fork already matches). Memorygraph `d2b1df25`.
@@ -283,7 +283,7 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 | Category | Done | Open |
 |----------|------|------|
 | Bugs | 14 | 2 (Bug #28 floating mode wake, Bug #32 verificationMismatch burst) |
-| Features | 3 done + 2 N/A + 2 SKIP | 2 (F5 focus tracking, F9 tabbing prevention) |
+| Features | 4 done + 2 N/A + 2 SKIP | 1 (F5 focus tracking) |
 | Bugs | 15 (incl #32 cosmetic) | 1 (Bug #28 floating mode wake) |
 | Fixes | 6 | — |
 | SSOT | 6/6 | — |
