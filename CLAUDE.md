@@ -4,7 +4,7 @@
 
 Swift 6.3 macOS tiling WM. Fork at `bispaul/OmniWM`, clone at `~/Documents/Personal/github/OmniWM`.
 **Upstream (BarutSRB/Hiro) released v0.4.9.7 (2026-06-10).** Fork is the primary codebase. GhosttyKit updated to v0.4.9.7. Upstream analysis: 4 adoptable ideas (AXFrameApplicationLedger, AX rekey, Hyper key, bezier motion). Memorygraph `64426c1b`.
-Branch: `fix/scope-relayout-to-workspace`. Build 108. PID check: `pgrep -x OmniWM`.
+Branch: `fix/scope-relayout-to-workspace`. Build 109. PID check: `pgrep -x OmniWM`.
 **Build:** `make build-sign` (auto-signs with dev cert). `make sign` to re-sign existing binary.
 
 ### Architecture Status

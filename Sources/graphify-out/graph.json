@@ -5970,7 +5970,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase",
-      "community": 345,
+      "community": 14,
       "norm_label": "managedborderreapplyphase"
     },
     {
@@ -5980,7 +5980,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase_postlayout",
-      "community": 345,
+      "community": 14,
       "norm_label": "postlayout"
     },
     {
@@ -5990,7 +5990,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase_animationsettled",
-      "community": 345,
+      "community": 14,
       "norm_label": "animationsettled"
     },
     {
@@ -6000,7 +6000,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "border_focusbordercontroller_managedborderreapplyphase_retryexhaustedfallback",
-      "community": 345,
+      "community": 14,
       "norm_label": "retryexhaustedfallback"
     },
     {
@@ -22227,7 +22227,7 @@
       "label": ".layoutDiff()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L956",
+      "source_location": "L954",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_layoutdiff",
       "community": 1,
@@ -22237,7 +22237,7 @@
       "label": "LayoutWindowSnapshot",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L956",
+      "source_location": "L954",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_layoutwindowsnapshot",
       "community": 1,
@@ -22247,7 +22247,7 @@
       "label": "HideSide",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L956",
+      "source_location": "L954",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_hideside",
       "community": 1,
@@ -22257,7 +22257,7 @@
       "label": "WorkspaceLayoutDiff",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L956",
+      "source_location": "L954",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_workspacelayoutdiff",
       "community": 1,
@@ -22267,7 +22267,7 @@
       "label": ".selectedWindowToken()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1057",
+      "source_location": "L1055",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_selectedwindowtoken",
       "community": 1,
@@ -22277,7 +22277,7 @@
       "label": ".updateTabbedColumnOverlays()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1066",
+      "source_location": "L1064",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_updatetabbedcolumnoverlays",
       "community": 1,
@@ -22287,7 +22287,7 @@
       "label": ".tabbedColumnOverlayInfosForTests()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1098",
+      "source_location": "L1096",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_tabbedcolumnoverlayinfosfortests",
       "community": 1,
@@ -22297,7 +22297,7 @@
       "label": "TabbedColumnOverlayInfo",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1098",
+      "source_location": "L1096",
       "_origin": "ast",
       "id": "tabbedcolumnoverlayinfo",
       "community": 1,
@@ -22307,7 +22307,7 @@
       "label": ".tabbedColumnOverlayInfos()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1106",
+      "source_location": "L1104",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_tabbedcolumnoverlayinfos",
       "community": 1,
@@ -22317,7 +22317,7 @@
       "label": ".tabbedColumnTabs()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1150",
+      "source_location": "L1148",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_tabbedcolumntabs",
       "community": 1,
@@ -22327,7 +22327,7 @@
       "label": "NiriWindow",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1150",
+      "source_location": "L1148",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_niriwindow",
       "community": 1,
@@ -22337,7 +22337,7 @@
       "label": "Int",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1150",
+      "source_location": "L1148",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_int",
       "community": 1,
@@ -22347,7 +22347,7 @@
       "label": "TabbedColumnOverlayTabInfo",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1150",
+      "source_location": "L1148",
       "_origin": "ast",
       "id": "tabbedcolumnoverlaytabinfo",
       "community": 1,
@@ -22357,7 +22357,7 @@
       "label": ".selectTabInNiri()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1188",
+      "source_location": "L1186",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_selecttabinniri",
       "community": 1,
@@ -22367,7 +22367,7 @@
       "label": ".focusNeighbor()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1235",
+      "source_location": "L1233",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_focusneighbor",
       "community": 1,
@@ -22377,7 +22377,7 @@
       "label": "Direction",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1235",
+      "source_location": "L1233",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_direction",
       "community": 1,
@@ -22387,7 +22387,7 @@
       "label": ".toggleFullscreen()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1315",
+      "source_location": "L1313",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_togglefullscreen",
       "community": 1,
@@ -22397,7 +22397,7 @@
       "label": ".cycleSize()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1333",
+      "source_location": "L1331",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_cyclesize",
       "community": 1,
@@ -22407,7 +22407,7 @@
       "label": ".cycleWindowWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1359",
+      "source_location": "L1357",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_cyclewindowwidth",
       "community": 1,
@@ -22417,7 +22417,7 @@
       "label": ".cycleWindowHeight()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1384",
+      "source_location": "L1382",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_cyclewindowheight",
       "community": 1,
@@ -22427,7 +22427,7 @@
       "label": ".toggleColumnFullWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1406",
+      "source_location": "L1404",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_togglecolumnfullwidth",
       "community": 1,
@@ -22437,7 +22437,7 @@
       "label": ".expandColumnToAvailableWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1430",
+      "source_location": "L1428",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_expandcolumntoavailablewidth",
       "community": 1,
@@ -22447,7 +22447,7 @@
       "label": ".resetWindowHeight()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1455",
+      "source_location": "L1453",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_resetwindowheight",
       "community": 1,
@@ -22457,7 +22457,7 @@
       "label": ".centerColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1472",
+      "source_location": "L1470",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_centercolumn",
       "community": 1,
@@ -22467,7 +22467,7 @@
       "label": ".centerVisibleColumns()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1491",
+      "source_location": "L1489",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_centervisiblecolumns",
       "community": 1,
@@ -22477,7 +22477,7 @@
       "label": ".setColumnWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1510",
+      "source_location": "L1508",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_setcolumnwidth",
       "community": 1,
@@ -22487,7 +22487,7 @@
       "label": "NiriSizeChange",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1510",
+      "source_location": "L1508",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_nirisizechange",
       "community": 1,
@@ -22497,7 +22497,7 @@
       "label": ".setWindowWidth()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1536",
+      "source_location": "L1534",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_setwindowwidth",
       "community": 1,
@@ -22507,7 +22507,7 @@
       "label": ".setWindowHeight()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1561",
+      "source_location": "L1559",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_setwindowheight",
       "community": 1,
@@ -22517,7 +22517,7 @@
       "label": ".balanceSizes()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1583",
+      "source_location": "L1581",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_balancesizes",
       "community": 1,
@@ -22527,7 +22527,7 @@
       "label": ".enableNiriLayout()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1605",
+      "source_location": "L1603",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_enablenirilayout",
       "community": 1,
@@ -22537,7 +22537,7 @@
       "label": "CenterFocusedColumn",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1605",
+      "source_location": "L1603",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_centerfocusedcolumn",
       "community": 1,
@@ -22547,7 +22547,7 @@
       "label": ".syncMonitorsToNiriEngine()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1622",
+      "source_location": "L1620",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_syncmonitorstoniriengine",
       "community": 1,
@@ -22557,7 +22557,7 @@
       "label": ".refreshResolvedMonitorSettings()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1643",
+      "source_location": "L1641",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_refreshresolvedmonitorsettings",
       "community": 1,
@@ -22567,7 +22567,7 @@
       "label": ".updateNiriConfig()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1652",
+      "source_location": "L1650",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_updateniriconfig",
       "community": 1,
@@ -22577,7 +22577,7 @@
       "label": "SingleWindowAspectRatio",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1652",
+      "source_location": "L1650",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_singlewindowaspectratio",
       "community": 1,
@@ -22587,7 +22587,7 @@
       "label": "Double",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1652",
+      "source_location": "L1650",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_double",
       "community": 1,
@@ -22597,7 +22597,7 @@
       "label": ".activateNode()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1677",
+      "source_location": "L1675",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_activatenode",
       "community": 1,
@@ -22607,7 +22607,7 @@
       "label": "NiriNode",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1677",
+      "source_location": "L1675",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_nirinode",
       "community": 1,
@@ -22617,7 +22617,7 @@
       "label": "NodeActivationOptions",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1677",
+      "source_location": "L1675",
       "_origin": "ast",
       "id": "nodeactivationoptions",
       "community": 1,
@@ -22627,7 +22627,7 @@
       "label": ".rebaseViewportAnchor()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1752",
+      "source_location": "L1750",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_rebaseviewportanchor",
       "community": 1,
@@ -22637,7 +22637,7 @@
       "label": ".withNiriOperationContext()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1826",
+      "source_location": "L1824",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_withnirioperationcontext",
       "community": 1,
@@ -22647,7 +22647,7 @@
       "label": "NiriOperationContext",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1826",
+      "source_location": "L1824",
       "_origin": "ast",
       "id": "nirioperationcontext",
       "community": 1,
@@ -22657,7 +22657,7 @@
       "label": ".moveWindow()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1866",
+      "source_location": "L1864",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_movewindow",
       "community": 1,
@@ -22667,7 +22667,7 @@
       "label": ".moveWindowOrToAdjacentWorkspace()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1898",
+      "source_location": "L1896",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_movewindowortoadjacentworkspace",
       "community": 1,
@@ -22677,7 +22677,7 @@
       "label": ".consumeOrExpelWindow()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1904",
+      "source_location": "L1902",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_consumeorexpelwindow",
       "community": 1,
@@ -22687,7 +22687,7 @@
       "label": ".consumeWindowIntoColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1923",
+      "source_location": "L1921",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_consumewindowintocolumn",
       "community": 1,
@@ -22697,7 +22697,7 @@
       "label": ".expelWindowFromColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1941",
+      "source_location": "L1939",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_expelwindowfromcolumn",
       "community": 1,
@@ -22707,7 +22707,7 @@
       "label": ".windowMoveEdgeResult()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1960",
+      "source_location": "L1958",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_windowmoveedgeresult",
       "community": 1,
@@ -22717,7 +22717,7 @@
       "label": ".withNiriWorkspaceContext()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1976",
+      "source_location": "L1974",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_withniriworkspacecontext",
       "community": 1,
@@ -22727,7 +22727,7 @@
       "label": "Void",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L1976",
+      "source_location": "L1974",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_void",
       "community": 1,
@@ -22737,7 +22737,7 @@
       "label": ".insertWindow()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2022",
+      "source_location": "L2020",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_insertwindow",
       "community": 1,
@@ -22747,7 +22747,7 @@
       "label": "WindowHandle",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2022",
+      "source_location": "L2020",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_windowhandle",
       "community": 1,
@@ -22757,7 +22757,7 @@
       "label": "InsertPosition",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2022",
+      "source_location": "L2020",
       "_origin": "ast",
       "id": "omniwm_core_controller_nirilayouthandler_swift_insertposition",
       "community": 1,
@@ -22767,7 +22767,7 @@
       "label": ".insertWindowInNewColumn()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2047",
+      "source_location": "L2045",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirilayouthandler_insertwindowinnewcolumn",
       "community": 1,
@@ -22777,7 +22777,7 @@
       "label": "NodeActivationOptions",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2070",
+      "source_location": "L2068",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nodeactivationoptions",
       "community": 1,
@@ -22787,7 +22787,7 @@
       "label": "NiriOperationContext",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2080",
+      "source_location": "L2078",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext",
       "community": 1,
@@ -22797,7 +22797,7 @@
       "label": ".hasPendingAnimationWork()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2090",
+      "source_location": "L2088",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_haspendinganimationwork",
       "community": 1,
@@ -22807,7 +22807,7 @@
       "label": ".commitWithPredictedAnimation()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2094",
+      "source_location": "L2092",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_commitwithpredictedanimation",
       "community": 1,
@@ -22817,7 +22817,7 @@
       "label": ".commitWithCapturedAnimation()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2132",
+      "source_location": "L2130",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_commitwithcapturedanimation",
       "community": 1,
@@ -22827,7 +22827,7 @@
       "label": ".commitSimple()",
       "file_type": "code",
       "source_file": "OmniWM/Core/Controller/NiriLayoutHandler.swift",
-      "source_location": "L2150",
+      "source_location": "L2148",
       "_origin": "ast",
       "id": "controller_nirilayouthandler_nirioperationcontext_commitsimple",
       "community": 1,
@@ -37100,7 +37100,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore",
-      "community": 218,
+      "community": 231,
       "norm_label": "nirilayoutengine+restore.swift"
     },
     {
@@ -37110,7 +37110,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine",
-      "community": 218,
+      "community": 231,
       "norm_label": "nirilayoutengine"
     },
     {
@@ -37120,7 +37120,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_persistedplacements",
-      "community": 218,
+      "community": 231,
       "norm_label": ".persistedplacements()"
     },
     {
@@ -37130,7 +37130,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_workspacedescriptor",
-      "community": 218,
+      "community": 231,
       "norm_label": "workspacedescriptor"
     },
     {
@@ -37140,7 +37140,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_windowtoken",
-      "community": 218,
+      "community": 231,
       "norm_label": "windowtoken"
     },
     {
@@ -37150,7 +37150,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_persistedniriplacement",
-      "community": 218,
+      "community": 231,
       "norm_label": "persistedniriplacement"
     },
     {
@@ -37160,7 +37160,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_restoreinitialplacements",
-      "community": 218,
+      "community": 231,
       "norm_label": ".restoreinitialplacements()"
     },
     {
@@ -37170,7 +37170,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_bool",
-      "community": 218,
+      "community": 231,
       "norm_label": "bool"
     },
     {
@@ -37180,7 +37180,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_applypersistedcolumnstate",
-      "community": 218,
+      "community": 231,
       "norm_label": ".applypersistedcolumnstate()"
     },
     {
@@ -37190,7 +37190,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "persistedniricolumnstate",
-      "community": 218,
+      "community": 231,
       "norm_label": "persistedniricolumnstate"
     },
     {
@@ -37200,7 +37200,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_niricontainer",
-      "community": 218,
+      "community": 231,
       "norm_label": "niricontainer"
     },
     {
@@ -37210,7 +37210,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "niri_nirilayoutengine_restore_nirilayoutengine_applypersistedwindowstate",
-      "community": 218,
+      "community": 231,
       "norm_label": ".applypersistedwindowstate()"
     },
     {
@@ -37220,7 +37220,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "persistedniriwindowstate",
-      "community": 218,
+      "community": 231,
       "norm_label": "persistedniriwindowstate"
     },
     {
@@ -37230,7 +37230,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "omniwm_core_layout_niri_nirilayoutengine_restore_swift_niriwindow",
-      "community": 218,
+      "community": 231,
       "norm_label": "niriwindow"
     },
     {
@@ -56870,7 +56870,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "workspace_workspacemanager",
-      "community": 352,
+      "community": 34,
       "norm_label": "workspacemanager.swift"
     },
     {
@@ -56930,7 +56930,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "workspace_workspacemanager_persistedwindowrestorecatalogbuildsnapshot",
-      "community": 352,
+      "community": 21,
       "norm_label": "persistedwindowrestorecatalogbuildsnapshot"
     },
     {
@@ -56940,7 +56940,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "persistedwindowrestorecatalogbuildentry",
-      "community": 352,
+      "community": 21,
       "norm_label": "persistedwindowrestorecatalogbuildentry"
     },
     {
@@ -57030,7 +57030,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "workspace_workspacemanager_persistedwindowrestorecatalogbuilder",
-      "community": 352,
+      "community": 34,
       "norm_label": "persistedwindowrestorecatalogbuilder"
     },
     {
@@ -57040,7 +57040,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "workspace_workspacemanager_candidate",
-      "community": 352,
+      "community": 34,
       "norm_label": "candidate"
     },
     {
@@ -57050,7 +57050,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "omniwm_core_workspace_workspacemanager_swift_persistedwindowrestorekey",
-      "community": 352,
+      "community": 34,
       "norm_label": "persistedwindowrestorekey"
     },
     {
@@ -57060,7 +57060,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "omniwm_core_workspace_workspacemanager_swift_persistedwindowrestoreentry",
-      "community": 352,
+      "community": 34,
       "norm_label": "persistedwindowrestoreentry"
     },
     {
@@ -57070,7 +57070,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "workspace_workspacemanager_persistedwindowrestorecatalogbuilder_build",
-      "community": 352,
+      "community": 34,
       "norm_label": ".build()"
     },
     {
@@ -57110,7 +57110,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "workspace_workspacemanager_nativefullscreentransition",
-      "community": 352,
+      "community": 34,
       "norm_label": "nativefullscreentransition"
     },
     {
@@ -57120,7 +57120,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "workspace_workspacemanager_nativefullscreentransition_enterrequested",
-      "community": 352,
+      "community": 34,
       "norm_label": "enterrequested"
     },
     {
@@ -57130,7 +57130,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "workspace_workspacemanager_nativefullscreentransition_suspended",
-      "community": 352,
+      "community": 34,
       "norm_label": "suspended"
     },
     {
@@ -57140,7 +57140,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "workspace_workspacemanager_nativefullscreentransition_exitrequested",
-      "community": 352,
+      "community": 34,
       "norm_label": "exitrequested"
     },
     {
@@ -57150,7 +57150,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "workspace_workspacemanager_nativefullscreenavailability",
-      "community": 352,
+      "community": 34,
       "norm_label": "nativefullscreenavailability"
     },
     {
@@ -57160,7 +57160,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "workspace_workspacemanager_nativefullscreenavailability_present",
-      "community": 352,
+      "community": 34,
       "norm_label": "present"
     },
     {
@@ -57170,7 +57170,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "workspace_workspacemanager_nativefullscreenavailability_temporarilyunavailable",
-      "community": 352,
+      "community": 34,
       "norm_label": "temporarilyunavailable"
     },
     {
@@ -57220,7 +57220,7 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "workspace_workspacemanager_sessionstate",
-      "community": 352,
+      "community": 34,
       "norm_label": "sessionstate"
     },
     {
@@ -57230,7 +57230,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "workspace_workspacemanager_monitorsession",
-      "community": 352,
+      "community": 34,
       "norm_label": "monitorsession"
     },
     {
@@ -57260,7 +57260,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "workspace_workspacemanager_focussession",
-      "community": 352,
+      "community": 34,
       "norm_label": "focussession"
     },
     {
@@ -57270,7 +57270,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "workspace_workspacemanager_pendingmanagedfocusrequest",
-      "community": 352,
+      "community": 34,
       "norm_label": "pendingmanagedfocusrequest"
     },
     {
@@ -57280,7 +57280,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "omniwm_core_workspace_workspacemanager_swift_focuspolicylease",
-      "community": 352,
+      "community": 34,
       "norm_label": "focuspolicylease"
     },
     {
@@ -57630,7 +57630,7 @@
       "source_location": "L513",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_refreshrestoreintentsforallentries",
-      "community": 76,
+      "community": 21,
       "norm_label": ".refreshrestoreintentsforallentries()"
     },
     {
@@ -57650,7 +57650,7 @@
       "source_location": "L532",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_applytopologytransition",
-      "community": 23,
+      "community": 21,
       "norm_label": ".applytopologytransition()"
     },
     {
@@ -57660,7 +57660,7 @@
       "source_location": "L532",
       "_origin": "ast",
       "id": "topologytransitionplan",
-      "community": 23,
+      "community": 21,
       "norm_label": "topologytransitionplan"
     },
     {
@@ -57680,7 +57680,7 @@
       "source_location": "L570",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_refreshwindowmonitorreferencesforallentries",
-      "community": 23,
+      "community": 21,
       "norm_label": ".refreshwindowmonitorreferencesforallentries()"
     },
     {
@@ -58330,7 +58330,7 @@
       "source_location": "L1696",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_updatependingmanagedfocusrequest",
-      "community": 352,
+      "community": 34,
       "norm_label": ".updatependingmanagedfocusrequest()"
     },
     {
@@ -58380,7 +58380,7 @@
       "source_location": "L1801",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_clearrememberedfocus",
-      "community": 352,
+      "community": 34,
       "norm_label": ".clearrememberedfocus()"
     },
     {
@@ -58900,7 +58900,7 @@
       "source_location": "L2407",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_allentries",
-      "community": 34,
+      "community": 21,
       "norm_label": ".allentries()"
     },
     {
@@ -58910,7 +58910,7 @@
       "source_location": "L2411",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_alltiledentries",
-      "community": 34,
+      "community": 21,
       "norm_label": ".alltiledentries()"
     },
     {
@@ -58920,7 +58920,7 @@
       "source_location": "L2415",
       "_origin": "ast",
       "id": "workspace_workspacemanager_workspacemanager_allfloatingentries",
-      "community": 34,
+      "community": 21,
       "norm_label": ".allfloatingentries()"
     },
     {
@@ -63980,7 +63980,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "quaketerminal_ghosttysurfaceview_ghosttysurfaceview_makebackinglayer",
-      "community": 81,
+      "community": 218,
       "norm_label": ".makebackinglayer()"
     },
     {
@@ -63990,7 +63990,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "omniwm_quaketerminal_ghosttysurfaceview_swift_calayer",
-      "community": 81,
+      "community": 218,
       "norm_label": "calayer"
     },
     {
@@ -83970,7 +83970,7 @@
       "source_location": "L1615",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname",
-      "community": 129,
+      "community": 19,
       "norm_label": "ipcruleactionname"
     },
     {
@@ -83980,7 +83980,7 @@
       "source_location": "L1616",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_add",
-      "community": 129,
+      "community": 19,
       "norm_label": "add"
     },
     {
@@ -83990,7 +83990,7 @@
       "source_location": "L1617",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_replace",
-      "community": 129,
+      "community": 19,
       "norm_label": "replace"
     },
     {
@@ -84000,7 +84000,7 @@
       "source_location": "L1618",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_remove",
-      "community": 129,
+      "community": 19,
       "norm_label": "remove"
     },
     {
@@ -84010,7 +84010,7 @@
       "source_location": "L1619",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_move",
-      "community": 129,
+      "community": 19,
       "norm_label": "move"
     },
     {
@@ -84020,7 +84020,7 @@
       "source_location": "L1620",
       "_origin": "ast",
       "id": "omniwmipc_ipcmodels_ipcruleactionname_apply",
-      "community": 129,
+      "community": 19,
       "norm_label": "apply"
     },
     {
@@ -169976,9 +169976,9 @@
       "source_file": "OmniWM/Core/Controller/WMController.swift",
       "source_location": "L2864",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "controller_wmcontroller_wmcontroller_reconcilefocusbeforecommand",
-      "target": "controller_wmcontroller_wmcontroller_focuswindow",
-      "confidence_score": 1.0
+      "target": "controller_wmcontroller_wmcontroller_focuswindow"
     },
     {
       "relation": "calls",
@@ -312529,5 +312529,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d7fe7be57131b56d2593e1427ff4208bbe6b97ab"
+  "built_at_commit": "3e03245fbb496e5372464e85e973246fd287732f"
 }

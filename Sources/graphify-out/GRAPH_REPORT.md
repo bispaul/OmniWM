@@ -1,16 +1,16 @@
 # Graph Report - Sources  (2026-06-12)
 
 ## Corpus Check
-- 247 files · ~266,337 words
+- 247 files · ~266,327 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 8646 nodes · 21163 edges · 356 communities (339 shown, 17 thin omitted)
+- 8646 nodes · 21163 edges · 354 communities (336 shown, 18 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 252 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d7fe7be5`
+- Built from commit: `3e03245f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -359,13 +359,11 @@
 - [[_COMMUNITY_Community 342|Community 342]]
 - [[_COMMUNITY_Community 343|Community 343]]
 - [[_COMMUNITY_Community 344|Community 344]]
-- [[_COMMUNITY_Community 345|Community 345]]
 - [[_COMMUNITY_Community 346|Community 346]]
 - [[_COMMUNITY_Community 347|Community 347]]
 - [[_COMMUNITY_Community 348|Community 348]]
 - [[_COMMUNITY_Community 349|Community 349]]
 - [[_COMMUNITY_Community 351|Community 351]]
-- [[_COMMUNITY_Community 352|Community 352]]
 - [[_COMMUNITY_Community 353|Community 353]]
 - [[_COMMUNITY_Community 354|Community 354]]
 - [[_COMMUNITY_Community 357|Community 357]]
@@ -397,7 +395,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (356 total, 17 thin omitted)
+## Communities (354 total, 18 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.04
@@ -457,7 +455,7 @@ Nodes (51): AXWindowFacts, AXWindowHeuristicReason, NSRegularExpression, AppRule
 
 ### Community 14 - "Community 14"
 Cohesion: 0.06
-Nodes (43): CLIParseError, IPCManagedAppSummary, IPCResponseStatus, IPCSize, IPCWorkspaceWindowCounts, CLILocalErrorCode, internalError, invalidArguments (+35 more)
+Nodes (47): ManagedBorderReapplyPhase, animationSettled, postLayout, retryExhaustedFallback, CLIParseError, IPCManagedAppSummary, IPCResponseStatus, IPCSize (+39 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.06
@@ -476,8 +474,8 @@ Cohesion: 0.07
 Nodes (26): AXManager, FullRescanEnumerationSnapshot, PendingFrameObserver, WindowStateDebugSnapshot, FrameApplicationTerminalObserver, AXFrameApplicationRequest, AXFrameApplyResult, AXFrameRequestId (+18 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.03
-Nodes (80): CaseIterable, AppearanceMode, automatic, dark, light, AppRule, WindowRuleLayoutAction, auto (+72 more)
+Cohesion: 0.02
+Nodes (86): CaseIterable, AppearanceMode, automatic, dark, light, AppRule, WindowRuleLayoutAction, auto (+78 more)
 
 ### Community 20 - "Community 20"
 Cohesion: 0.14
@@ -485,15 +483,15 @@ Nodes (17): ActionPlan, Bool, DesiredWindowState, FocusPolicyLease, FocusSession
 
 ### Community 21 - "Community 21"
 Cohesion: 0.05
-Nodes (22): AnimationClock, DesiredWindowState, Double, FocusSessionSnapshot, LayoutGaps, ManualWindowOverride, ObservedWindowState, PersistedWindowRestoreCatalog (+14 more)
+Nodes (25): AnimationClock, DesiredWindowState, Double, FocusSessionSnapshot, LayoutGaps, ManualWindowOverride, ObservedWindowState, PersistedWindowRestoreCatalog (+17 more)
 
 ### Community 22 - "Community 22"
 Cohesion: 0.10
 Nodes (19): CanonicalTOMLConfig.Appearance, CanonicalTOMLConfig.Borders, CanonicalTOMLConfig.Borders.Color, CanonicalTOMLConfig.Clipboard, CanonicalTOMLConfig.Dwindle, CanonicalTOMLConfig.Focus, CanonicalTOMLConfig.Gaps, CanonicalTOMLConfig.Gaps.Outer (+11 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.10
-Nodes (9): Monitor, MonitorRestoreKey, TopologyProfile, UInt32, Void, TopologyTransitionPlan, DisconnectedVisibleWorkspaceMigration, MonitorResolutionContext (+1 more)
+Cohesion: 0.11
+Nodes (8): Monitor, MonitorRestoreKey, TopologyProfile, UInt32, Void, DisconnectedVisibleWorkspaceMigration, MonitorResolutionContext, WorkspaceRestoreSnapshot
 
 ### Community 24 - "Community 24"
 Cohesion: 0.18
@@ -536,8 +534,8 @@ Cohesion: 0.08
 Nodes (34): InteractiveMove, InteractiveResize, computeWorkingArea(), NiriLayoutEngine, NiriRenderStyle, SingleWindowAspectRatio, none, ratio16x9 (+26 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.11
-Nodes (8): ID, NodeId, ViewportState, WindowModel, WorkspaceSessionPatch, WorkspaceDescriptor, WorkspaceSession, WorkspaceSessionTransfer
+Cohesion: 0.07
+Nodes (24): ID, FocusPolicyLease, NodeId, PersistedWindowRestoreEntry, PersistedWindowRestoreKey, ViewportState, WindowModel, WorkspaceSessionPatch (+16 more)
 
 ### Community 35 - "Community 35"
 Cohesion: 0.09
@@ -724,8 +722,8 @@ Cohesion: 0.08
 Nodes (42): Kind, enqueued, flushed, matched, ManagedReplacementCorrelationPolicy, structural, ManagedReplacementCorrelator, ManagedReplacementCorrelatorDelegate (+34 more)
 
 ### Community 81 - "Community 81"
-Cohesion: 0.10
-Nodes (16): GhosttySurfacePixelSize, NSMutableAttributedString, NSTextInputClient, Any, Bool, CALayer, CGSize, ghostty_input_action_e (+8 more)
+Cohesion: 0.11
+Nodes (15): GhosttySurfacePixelSize, NSMutableAttributedString, NSTextInputClient, Any, Bool, CGSize, ghostty_input_action_e, ghostty_surface_size_s (+7 more)
 
 ### Community 82 - "Community 82"
 Cohesion: 0.15
@@ -917,7 +915,7 @@ Nodes (18): InteractiveResize, LayoutGaps, OuterGaps, ResizeConfiguration, Resiz
 
 ### Community 129 - "Community 129"
 Cohesion: 0.03
-Nodes (72): IPCWorkspaceRequest, DecodedPayload, IPCCommandArgumentValue, direction, integer, layout, resizeOperation, sizeChange (+64 more)
+Nodes (66): IPCWorkspaceRequest, DecodedPayload, IPCCommandArgumentValue, direction, integer, layout, resizeOperation, sizeChange (+58 more)
 
 ### Community 130 - "Community 130"
 Cohesion: 0.16
@@ -1267,10 +1265,6 @@ Nodes (8): IPCHiddenReason, IPCLayoutReason, IPCWindowMode, IPCWindowQuerySnapsh
 Cohesion: 0.30
 Nodes (8): NiriLayoutEngine, Bool, CGFloat, CGRect, MotionSnapshot, NiriContainer, ViewportState, WorkspaceDescriptor
 
-### Community 218 - "Community 218"
-Cohesion: 0.24
-Nodes (9): NiriLayoutEngine, Bool, NiriContainer, NiriWindow, PersistedNiriPlacement, WindowToken, WorkspaceDescriptor, PersistedNiriColumnState (+1 more)
-
 ### Community 219 - "Community 219"
 Cohesion: 0.47
 Nodes (5): GestureEventSnapshot, GestureTouchSample, NSTouch, NSEvent, TimeInterval
@@ -1316,8 +1310,8 @@ Cohesion: 0.27
 Nodes (6): CGFloat, Direction, MonitorSelectionMode, directional, wrapped, MonitorSelectionRank
 
 ### Community 231 - "Community 231"
-Cohesion: 0.18
-Nodes (11): NiriLayoutEngine, WorkspaceMoveResult, Bool, Direction, Int, NiriContainer, NiriWindow, NodeId (+3 more)
+Cohesion: 0.10
+Nodes (20): NiriLayoutEngine, NiriLayoutEngine, WorkspaceMoveResult, Bool, NiriContainer, NiriWindow, PersistedNiriPlacement, WindowToken (+12 more)
 
 ### Community 232 - "Community 232"
 Cohesion: 0.36
@@ -1723,10 +1717,6 @@ Nodes (3): Bool, ResolvedBarSettings, WorkspaceBarProjectionOptions
 Cohesion: 0.50
 Nodes (4): DecodedCGSEvent, event, ignored, malformed
 
-### Community 345 - "Community 345"
-Cohesion: 0.50
-Nodes (4): ManagedBorderReapplyPhase, animationSettled, postLayout, retryExhaustedFallback
-
 ### Community 346 - "Community 346"
 Cohesion: 0.50
 Nodes (3): SettingsStore, WMController, QuakeTerminalSettingsTab
@@ -1739,10 +1729,6 @@ Nodes (4): WeightedSize, auto, fixed, preset
 Cohesion: 0.50
 Nodes (4): Kind, focused, pid, window
 
-### Community 352 - "Community 352"
-Cohesion: 0.11
-Nodes (18): FocusPolicyLease, PersistedWindowRestoreEntry, PersistedWindowRestoreKey, PersistedWindowRestoreCatalogBuildEntry, Candidate, FocusSession, MonitorSession, NativeFullscreenAvailability (+10 more)
-
 ### Community 357 - "Community 357"
 Cohesion: 0.25
 Nodes (3): GhosttySurfaceView, SplitDirection, QuakeTerminalTab
@@ -1750,7 +1736,7 @@ Nodes (3): GhosttySurfaceView, SplitDirection, QuakeTerminalTab
 ## Knowledge Gaps
 - **2184 isolated node(s):** `boot`, `homebrewManaged`, `appManaged`, `notInstalled`, `conflict` (+2179 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
