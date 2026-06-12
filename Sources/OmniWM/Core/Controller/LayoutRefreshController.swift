@@ -767,6 +767,12 @@ import QuartzCore
         reason: RefreshReason = .workspaceTransition,
         postLayout: PostLayoutAction? = nil
     ) {
+        // Contract: empty affectedWorkspaces = relayout ALL active workspaces (not "none").
+        // This is intentional for workspace switches. If you want specific workspaces,
+        // pass them explicitly via affectedWorkspaceIds helper.
+        if affectedWorkspaces.isEmpty {
+            WMLog.layout.debug("commitWorkspaceTransition: affectedWorkspaces=ALL (empty set → relayout all active)")
+        }
         requestImmediateRelayout(
             reason: reason,
             affectedWorkspaceIds: affectedWorkspaces,
