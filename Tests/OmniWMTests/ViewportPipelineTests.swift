@@ -203,6 +203,50 @@ import Testing
         }
     }
 
+    @Test func clampViewportOffsetDoesNotOverrideNavigationWithinGapTolerance() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9501)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9502)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9503)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let columns = engine.columns(in: workspaceId)
+        #expect(columns.count == 3, "Need 3 columns to overflow viewport")
+
+        let gap = CGFloat(controller.workspaceManager.gaps)
+        var state = controller.workspaceManager.niriViewportState(for: workspaceId)
+        let totalW = state.totalSpan(containers: columns, gap: gap, sizeKeyPath: \.cachedWidth)
+        let minOffsetStrict = monitor.frame.width - totalW
+
+        state.activeColumnIndex = 1
+        state.viewOffsetPixels = .static(minOffsetStrict - 6)
+
+        let clamped = state.clampViewportOffset(
+            containers: columns,
+            gap: gap,
+            viewportSpan: monitor.frame.width,
+            sizeKeyPath: \.cachedWidth
+        )
+        #expect(
+            !clamped,
+            "Offset 6px past strict min should NOT be clamped (within gap tolerance of \(Int(gap))px)"
+        )
+    }
+
     @Test func focusNeighborWritesSpringBeforeRelayout() async {
         let controller = makeLayoutPlanTestController()
         controller.enableNiriLayout()

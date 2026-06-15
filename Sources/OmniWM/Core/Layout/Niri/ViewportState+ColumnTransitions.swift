@@ -275,7 +275,7 @@ extension ViewportState {
         let totalW = totalSpan(containers: containers, gap: gap, sizeKeyPath: sizeKeyPath)
 
         let maxOffset: CGFloat = 0
-        let minOffset = viewportSpan - totalW
+        let minOffset = viewportSpan - totalW - gap
         guard minOffset < maxOffset else { return false }
 
         let current = stationary()
