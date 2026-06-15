@@ -232,6 +232,16 @@ final class WorkspaceManager {
 
     var onGapsChanged: (() -> Void)?
     var onSessionStateChanged: (() -> Void)?
+    var onRuntimeRevisionChanged: ((WorkspaceDescriptor.ID?, RuntimeRevisionDomain) -> Void)?
+    private var runtimeRevisionSerial: UInt64 = 0
+    private var globalWorkspaceRevision: UInt64 = 0
+    private var globalLayoutRevision: UInt64 = 0
+    private var globalFocusRevision: UInt64 = 0
+    private var globalFullscreenRevision: UInt64 = 0
+    private var workspaceRevisions: [WorkspaceDescriptor.ID: UInt64] = [:]
+    private var layoutRevisions: [WorkspaceDescriptor.ID: UInt64] = [:]
+    private var focusRevisions: [WorkspaceDescriptor.ID: UInt64] = [:]
+    private var fullscreenRevisions: [WorkspaceDescriptor.ID: UInt64] = [:]
 
     init(settings: SettingsStore) {
         self.settings = settings
@@ -309,6 +319,7 @@ final class WorkspaceManager {
 
     @discardableResult
     func recordReconcileEvent(_ event: WMEvent) -> ReconcileTxn {
+        bumpRuntimeRevisionForEvent(event)
         let snapshot = reconcileSnapshot()
         let restoreEventPlan = restorePlanner.planEvent(
             .init(
@@ -353,6 +364,37 @@ final class WorkspaceManager {
                 return self.applyActionPlan(plan, to: token)
             }
         )
+    }
+
+    private func bumpRuntimeRevisionForEvent(_ event: WMEvent) {
+        switch event {
+        case let .windowAdmitted(_, workspaceId, _, _, _),
+             let .windowModeChanged(_, workspaceId, _, _, _),
+             let .hiddenStateChanged(_, workspaceId, _, _, _),
+             let .managedReplacementMetadataChanged(_, workspaceId, _, _):
+            bumpRuntimeRevision(for: workspaceId, domains: [.workspace, .layout, .focus])
+        case let .floatingGeometryUpdated(_, workspaceId, _, _, _, _):
+            bumpRuntimeRevision(for: workspaceId, domains: [.workspace, .layout])
+        case let .windowRekeyed(_, _, workspaceId, _, _, _):
+            bumpRuntimeRevision(for: workspaceId, domains: [.workspace, .layout, .focus])
+        case let .workspaceAssigned(_, _, toWorkspaceId, _, _):
+            bumpRuntimeRevision(for: toWorkspaceId, domains: [.workspace, .layout, .focus])
+        case let .nativeFullscreenTransition(_, workspaceId, _, _, _):
+            bumpRuntimeRevision(for: workspaceId, domains: [.workspace, .layout, .fullscreen])
+        case let .managedFocusConfirmed(_, workspaceId, _, _, _):
+            bumpRuntimeRevision(for: workspaceId, domains: .focus)
+        case let .managedFocusRequested(_, workspaceId, _, _):
+            bumpRuntimeRevision(for: workspaceId, domains: .focus)
+        case .windowRemoved,
+             .topologyChanged,
+             .activeSpaceChanged,
+             .focusLeaseChanged,
+             .managedFocusCancelled,
+             .nonManagedFocusChanged,
+             .systemSleep,
+             .systemWake:
+            break
+        }
     }
 
     @discardableResult
@@ -2991,7 +3033,66 @@ final class WorkspaceManager {
     }
 
     func runtimeRevision(for workspaceId: WorkspaceDescriptor.ID) -> RuntimeRevision {
-        RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+        RuntimeRevision(
+            runtime: runtimeRevisionSerial,
+            workspace: workspaceRevisions[workspaceId, default: 0],
+            layout: layoutRevisions[workspaceId, default: 0],
+            focus: focusRevisions[workspaceId, default: 0],
+            fullscreen: fullscreenRevisions[workspaceId, default: 0]
+        )
+    }
+
+    func isRuntimeRevisionCurrent(
+        _ revision: RuntimeRevision,
+        for workspaceId: WorkspaceDescriptor.ID,
+        domains: RuntimeRevisionDomain
+    ) -> Bool {
+        guard workspacesById[workspaceId] != nil else { return false }
+        return revision.matches(runtimeRevision(for: workspaceId), domains: domains)
+    }
+
+    func invalidateLayoutRevision(for workspaceIds: Set<WorkspaceDescriptor.ID>) {
+        for workspaceId in workspaceIds {
+            bumpRuntimeRevision(for: workspaceId, domains: .layout)
+        }
+    }
+
+    private func bumpRuntimeRevision(
+        for workspaceId: WorkspaceDescriptor.ID?,
+        domains: RuntimeRevisionDomain
+    ) {
+        runtimeRevisionSerial &+= 1
+        guard let workspaceId else {
+            for wsId in workspacesById.keys {
+                bumpRuntimeRevisionDomains(for: wsId, domains: domains)
+            }
+            onRuntimeRevisionChanged?(nil, domains)
+            return
+        }
+        bumpRuntimeRevisionDomains(for: workspaceId, domains: domains)
+        onRuntimeRevisionChanged?(workspaceId, domains)
+    }
+
+    private func bumpRuntimeRevisionDomains(
+        for workspaceId: WorkspaceDescriptor.ID,
+        domains: RuntimeRevisionDomain
+    ) {
+        if domains.contains(.workspace) {
+            globalWorkspaceRevision &+= 1
+            workspaceRevisions[workspaceId, default: 0] &+= 1
+        }
+        if domains.contains(.layout) {
+            globalLayoutRevision &+= 1
+            layoutRevisions[workspaceId, default: 0] &+= 1
+        }
+        if domains.contains(.focus) {
+            globalFocusRevision &+= 1
+            focusRevisions[workspaceId, default: 0] &+= 1
+        }
+        if domains.contains(.fullscreen) {
+            globalFullscreenRevision &+= 1
+            fullscreenRevisions[workspaceId, default: 0] &+= 1
+        }
     }
 
     func withNiriViewportState(
