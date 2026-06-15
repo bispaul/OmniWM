@@ -58,6 +58,14 @@ enum ViewOffset {
     case gesture(ViewGesture)
     case spring(SpringAnimation)
 
+    static func settled(at position: CGFloat) -> ViewOffset {
+        .spring(SpringAnimation(
+            from: Double(position),
+            to: Double(position),
+            startTime: CACurrentMediaTime()
+        ))
+    }
+
     func current() -> CGFloat {
         switch self {
         case let .static(offset):

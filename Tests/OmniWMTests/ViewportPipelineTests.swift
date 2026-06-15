@@ -287,4 +287,36 @@ import Testing
             "Viewport should shift to show the newly focused column"
         )
     }
+
+    @Test func focusNeighborLeavesViewportAnimatingToPreventESVOverwrite() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9701)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9702)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9703)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        #expect(engine.columns(in: workspaceId).count == 3)
+
+        controller.niriLayoutHandler.focusNeighbor(direction: .right)
+
+        let stateImmediately = controller.workspaceManager.niriViewportState(for: workspaceId)
+        #expect(
+            stateImmediately.viewOffsetPixels.isAnimating,
+            "Viewport must be animating after focusNeighbor to prevent resolveSelection ESV from recomputing offset"
+        )
+    }
 }

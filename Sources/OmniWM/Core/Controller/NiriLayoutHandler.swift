@@ -1318,6 +1318,9 @@ enum NiriWindowMoveResult {
                     axFocus: false
                 )
             )
+            if !state.viewOffsetPixels.isAnimating, controller.motionPolicy.animationsEnabled {
+                state.viewOffsetPixels = .settled(at: state.viewOffsetPixels.target())
+            }
             _ = controller.workspaceManager.applySessionPatch(
                 .init(
                     workspaceId: wsId,
