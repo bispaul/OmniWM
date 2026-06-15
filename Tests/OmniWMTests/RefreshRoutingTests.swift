@@ -1173,7 +1173,10 @@ private func syncNiriWorkspaceStatesForRefreshTests(
         let plan = WorkspaceLayoutPlan(
             workspaceId: workspaceId,
             monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-            sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+            sessionPatch: WorkspaceSessionPatch(
+                workspaceId: workspaceId,
+                runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+            ),
             diff: WorkspaceLayoutDiff(),
             animationDirectives: [.updateTabbedOverlays]
         )

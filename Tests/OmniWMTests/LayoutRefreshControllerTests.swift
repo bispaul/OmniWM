@@ -123,7 +123,8 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
             sessionPatch: WorkspaceSessionPatch(
                 workspaceId: workspaceId,
-                rememberedFocusToken: token
+                rememberedFocusToken: token,
+                runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
             ),
             diff: diff
         )
@@ -183,7 +184,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
                 WorkspaceLayoutPlan(
                     workspaceId: workspaceId,
                     monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                    sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                    sessionPatch: WorkspaceSessionPatch(
+                        workspaceId: workspaceId,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                    ),
                     diff: diff
                 )
             )
@@ -257,7 +261,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
                 WorkspaceLayoutPlan(
                     workspaceId: workspaceId,
                     monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                    sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                    sessionPatch: WorkspaceSessionPatch(
+                        workspaceId: workspaceId,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                    ),
                     diff: diff
                 )
             )
@@ -299,7 +306,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: placeholderDiff
             )
         )
@@ -314,7 +324,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: restoreDiff
             )
         )
@@ -365,7 +378,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
                 WorkspaceLayoutPlan(
                     workspaceId: workspaceId,
                     monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                    sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                    sessionPatch: WorkspaceSessionPatch(
+                        workspaceId: workspaceId,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                    ),
                     diff: diff
                 )
             )
@@ -434,7 +450,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
                 WorkspaceLayoutPlan(
                     workspaceId: workspaceId,
                     monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                    sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                    sessionPatch: WorkspaceSessionPatch(
+                        workspaceId: workspaceId,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                    ),
                     diff: diff
                 )
             )
@@ -588,7 +607,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
                 WorkspaceLayoutPlan(
                     workspaceId: workspaceId,
                     monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                    sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                    sessionPatch: WorkspaceSessionPatch(
+                        workspaceId: workspaceId,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                    ),
                     diff: diff
                 )
             )
@@ -850,7 +872,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
                 WorkspaceLayoutPlan(
                     workspaceId: workspaceId,
                     monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                    sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                    sessionPatch: WorkspaceSessionPatch(
+                        workspaceId: workspaceId,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                    ),
                     diff: diff
                 )
             )
@@ -889,7 +914,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: hideDiff
             )
         )
@@ -903,7 +931,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: showDiff
             )
         )
@@ -944,7 +975,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -987,7 +1021,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -1097,7 +1134,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -1241,7 +1281,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -1437,7 +1480,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -1475,7 +1521,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: primingDiff
             )
         )
@@ -1488,7 +1537,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: hideBorderDiff
             )
         )
@@ -1517,7 +1569,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -1549,7 +1604,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: primingDiff
             )
         )
@@ -1572,7 +1630,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -1604,7 +1665,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: primingDiff
             )
         )
@@ -1620,7 +1684,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff,
                 animationDirectives: [.activateWindow(token: newToken)]
             )
@@ -1654,7 +1721,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: primingDiff
             )
         )
@@ -1670,7 +1740,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: directDiff
             )
         )
@@ -1685,7 +1758,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: coordinatedDiff
             )
         )
@@ -1721,7 +1797,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: inactiveWorkspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: inactiveWorkspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: inactiveWorkspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -1762,7 +1841,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: fixture.secondaryWorkspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: fixture.secondaryMonitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: fixture.secondaryWorkspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: fixture.secondaryWorkspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -2538,7 +2620,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )
@@ -2698,7 +2783,10 @@ private func makeUnavailableLayoutPlanTestWindow(windowId: Int) -> AXWindowRef {
             WorkspaceLayoutPlan(
                 workspaceId: workspaceId,
                 monitor: controller.layoutRefreshController.buildMonitorSnapshot(for: monitor),
-                sessionPatch: WorkspaceSessionPatch(workspaceId: workspaceId),
+                sessionPatch: WorkspaceSessionPatch(
+                    workspaceId: workspaceId,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                ),
                 diff: diff
             )
         )

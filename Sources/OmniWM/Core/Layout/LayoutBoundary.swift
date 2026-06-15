@@ -55,6 +55,7 @@ struct NiriWindowRemovalSeed {
 
 struct NiriWorkspaceSnapshot {
     let workspaceId: WorkspaceDescriptor.ID
+    let runtimeRevision: RuntimeRevision
     let monitor: LayoutMonitorSnapshot
     let windows: [LayoutWindowSnapshot]
     let viewportState: ViewportState
@@ -72,6 +73,7 @@ struct NiriWorkspaceSnapshot {
 
 struct DwindleWorkspaceSnapshot {
     let workspaceId: WorkspaceDescriptor.ID
+    let runtimeRevision: RuntimeRevision
     let monitor: LayoutMonitorSnapshot
     let windows: [LayoutWindowSnapshot]
     let preferredFocusToken: WindowToken?
@@ -130,6 +132,8 @@ struct WorkspaceSessionPatch {
     let workspaceId: WorkspaceDescriptor.ID
     var viewportState: ViewportState?
     var rememberedFocusToken: WindowToken?
+    var baseSelectionRevision: UInt64? = nil
+    var runtimeRevision: RuntimeRevision
 }
 
 struct WorkspaceSessionTransfer {

@@ -2191,7 +2191,8 @@ private func workspaceConfigurations(
                 .init(
                     workspaceId: workspaceId,
                     viewportState: viewportState,
-                    rememberedFocusToken: handle.id
+                    rememberedFocusToken: handle.id,
+                    runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
                 )
             )
         )
@@ -2242,12 +2243,14 @@ private func workspaceConfigurations(
                     sourcePatch: .init(
                         workspaceId: sourceWorkspaceId,
                         viewportState: sourceState,
-                        rememberedFocusToken: sourceHandle.id
+                        rememberedFocusToken: sourceHandle.id,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
                     ),
                     targetPatch: .init(
                         workspaceId: targetWorkspaceId,
                         viewportState: targetState,
-                        rememberedFocusToken: targetHandle.id
+                        rememberedFocusToken: targetHandle.id,
+                        runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
                     )
                 )
             )

@@ -2990,6 +2990,10 @@ final class WorkspaceManager {
         sessionState.workspaceSessions[workspaceId] = workspaceSession
     }
 
+    func runtimeRevision(for workspaceId: WorkspaceDescriptor.ID) -> RuntimeRevision {
+        RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+    }
+
     func withNiriViewportState(
         for workspaceId: WorkspaceDescriptor.ID,
         _ mutate: (inout ViewportState) -> Void

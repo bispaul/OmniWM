@@ -7542,7 +7542,11 @@ private func makeCenteredCrossMonitorFixture(
         )
         _ = controller.workspaceManager.setManagedFocus(focusedToken, in: workspaceId, onMonitor: monitor.id)
         _ = controller.workspaceManager.applySessionPatch(
-            .init(workspaceId: workspaceId, rememberedFocusToken: rememberedToken)
+            .init(
+                workspaceId: workspaceId,
+                rememberedFocusToken: rememberedToken,
+                runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+            )
         )
 
         let plans = try await controller.niriLayoutHandler.layoutWithNiriEngine(
@@ -7796,7 +7800,8 @@ private func makeCenteredCrossMonitorFixture(
             .init(
                 workspaceId: workspaceId,
                 viewportState: state,
-                rememberedFocusToken: nil
+                rememberedFocusToken: nil,
+                runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
             )
         )
 

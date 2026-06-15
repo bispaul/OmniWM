@@ -202,4 +202,45 @@ import Testing
             #expect(offset != 500, "Stale offset 500 should have been corrected")
         }
     }
+
+    @Test func focusNeighborWritesSpringBeforeRelayout() async {
+        let controller = makeLayoutPlanTestController()
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        let token1 = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 7001)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 7002)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 7003)
+        _ = controller.workspaceManager.setManagedFocus(token1, in: workspaceId, onMonitor: monitor.id)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let columns = engine.columns(in: workspaceId)
+        #expect(columns.count == 3, "Need 3 columns to overflow viewport")
+
+        let stateBefore = controller.workspaceManager.niriViewportState(for: workspaceId)
+
+        controller.niriLayoutHandler.focusNeighbor(direction: .right)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let stateAfter = controller.workspaceManager.niriViewportState(for: workspaceId)
+        #expect(
+            stateAfter.activeColumnIndex != stateBefore.activeColumnIndex,
+            "focusNeighbor should change active column"
+        )
+        #expect(
+            abs(stateAfter.viewOffsetPixels.target() - stateBefore.viewOffsetPixels.target()) > 1,
+            "Viewport should shift to show the newly focused column"
+        )
+    }
 }

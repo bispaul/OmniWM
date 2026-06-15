@@ -491,7 +491,8 @@ final class CommandHandler {
             .init(
                 workspaceId: wsId,
                 viewportState: state,
-                rememberedFocusToken: nil
+                rememberedFocusToken: nil,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
             )
         )
     }

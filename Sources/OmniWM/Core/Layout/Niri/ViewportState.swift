@@ -166,4 +166,6 @@ struct ViewportState {
     var displayRefreshRate: Double = 60.0
 
     var requiresViewportRecalc: Bool = false
+
+    var selectionRevision: UInt64 = 0
 }

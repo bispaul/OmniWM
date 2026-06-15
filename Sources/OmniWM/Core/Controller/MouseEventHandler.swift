@@ -1634,7 +1634,8 @@ final class MouseEventHandler {
             .init(
                 workspaceId: wsId,
                 viewportState: nil,
-                rememberedFocusToken: window.token
+                rememberedFocusToken: window.token,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
             )
         )
         engine.updateFocusTimestamp(for: window.id)

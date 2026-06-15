@@ -2726,7 +2726,8 @@ final class WMController {
                     .init(
                         workspaceId: workspaceId,
                         viewportState: nil,
-                        rememberedFocusToken: pendingFocusedToken
+                        rememberedFocusToken: pendingFocusedToken,
+                        runtimeRevision: workspaceManager.runtimeRevision(for: workspaceId)
                     )
                 )
             }
@@ -2750,7 +2751,8 @@ final class WMController {
                     .init(
                         workspaceId: workspaceId,
                         viewportState: nil,
-                        rememberedFocusToken: focusedToken
+                        rememberedFocusToken: focusedToken,
+                        runtimeRevision: workspaceManager.runtimeRevision(for: workspaceId)
                     )
                 )
             }

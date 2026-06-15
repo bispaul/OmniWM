@@ -1426,7 +1426,8 @@ final class AXEventHandler: CGSEventDelegate {
                 .init(
                     workspaceId: wsId,
                     viewportState: state,
-                    rememberedFocusToken: nil
+                    rememberedFocusToken: nil,
+                    runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
                 )
             )
 

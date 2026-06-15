@@ -407,6 +407,7 @@ enum NiriWindowMoveResult {
 
         return NiriWorkspaceSnapshot(
             workspaceId: wsId,
+            runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId),
             monitor: refreshInput.monitor,
             windows: refreshInput.windows,
             viewportState: effectiveViewportState,
@@ -465,7 +466,10 @@ enum NiriWindowMoveResult {
         return WorkspaceLayoutPlan(
             workspaceId: snapshot.workspaceId,
             monitor: snapshot.monitor,
-            sessionPatch: WorkspaceSessionPatch(workspaceId: snapshot.workspaceId),
+            sessionPatch: WorkspaceSessionPatch(
+                workspaceId: snapshot.workspaceId,
+                runtimeRevision: snapshot.runtimeRevision
+            ),
             diff: diff
         )
     }
@@ -946,7 +950,8 @@ enum NiriWindowMoveResult {
             sessionPatch: WorkspaceSessionPatch(
                 workspaceId: pass.wsId,
                 viewportState: state,
-                rememberedFocusToken: rememberedFocusToken
+                rememberedFocusToken: rememberedFocusToken,
+                runtimeRevision: snapshot.runtimeRevision
             ),
             diff: diff,
             animationDirectives: directives
@@ -1221,7 +1226,8 @@ enum NiriWindowMoveResult {
             .init(
                 workspaceId: workspaceId,
                 viewportState: state,
-                rememberedFocusToken: nil
+                rememberedFocusToken: nil,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: workspaceId)
             )
         )
         let updatedState = controller.workspaceManager.niriViewportState(for: workspaceId)
@@ -1270,7 +1276,8 @@ enum NiriWindowMoveResult {
                 .init(
                     workspaceId: wsId,
                     viewportState: state,
-                    rememberedFocusToken: nil
+                    rememberedFocusToken: nil,
+                    runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
                 )
             )
             return
@@ -1307,7 +1314,8 @@ enum NiriWindowMoveResult {
             .init(
                 workspaceId: wsId,
                 viewportState: state,
-                rememberedFocusToken: nil
+                rememberedFocusToken: nil,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
             )
         )
     }

@@ -452,7 +452,8 @@ final class WindowActionHandler {
             .init(
                 workspaceId: workspaceId,
                 viewportState: targetState,
-                rememberedFocusToken: token
+                rememberedFocusToken: token,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: workspaceId)
             )
         )
         controller.layoutRefreshController
@@ -572,7 +573,8 @@ final class WindowActionHandler {
             .init(
                 workspaceId: workspaceId,
                 viewportState: nil,
-                rememberedFocusToken: rememberedFocusToken ?? token
+                rememberedFocusToken: rememberedFocusToken ?? token,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: workspaceId)
             )
         )
         controller.layoutRefreshController.requestImmediateRelayout(

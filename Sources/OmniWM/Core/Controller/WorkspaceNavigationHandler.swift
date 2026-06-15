@@ -27,7 +27,8 @@ final class WorkspaceNavigationHandler {
             .init(
                 workspaceId: workspaceId,
                 viewportState: viewportState,
-                rememberedFocusToken: rememberedFocusToken
+                rememberedFocusToken: rememberedFocusToken,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: workspaceId)
             )
         )
     }
@@ -47,14 +48,16 @@ final class WorkspaceNavigationHandler {
                     .init(
                         workspaceId: $0,
                         viewportState: sourceState,
-                        rememberedFocusToken: sourceFocusedToken
+                        rememberedFocusToken: sourceFocusedToken,
+                        runtimeRevision: controller.workspaceManager.runtimeRevision(for: $0)
                     )
                 },
                 targetPatch: targetWorkspaceId.map {
                     .init(
                         workspaceId: $0,
                         viewportState: targetState,
-                        rememberedFocusToken: targetFocusedToken
+                        rememberedFocusToken: targetFocusedToken,
+                        runtimeRevision: controller.workspaceManager.runtimeRevision(for: $0)
                     )
                 }
             )

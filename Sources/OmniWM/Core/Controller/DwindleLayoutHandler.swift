@@ -147,7 +147,8 @@ import QuartzCore
                     .init(
                         workspaceId: wsId,
                         viewportState: nil,
-                        rememberedFocusToken: token
+                        rememberedFocusToken: token,
+                        runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
                     )
                 )
                 controller.layoutRefreshController.requestImmediateRelayout(
@@ -175,7 +176,8 @@ import QuartzCore
             .init(
                 workspaceId: workspaceId,
                 viewportState: nil,
-                rememberedFocusToken: token
+                rememberedFocusToken: token,
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: workspaceId)
             )
         )
         controller.layoutRefreshController.requestImmediateRelayout(
@@ -215,7 +217,8 @@ import QuartzCore
                     .init(
                         workspaceId: wsId,
                         viewportState: nil,
-                        rememberedFocusToken: token
+                        rememberedFocusToken: token,
+                        runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
                     )
                 )
                 controller.layoutRefreshController.requestImmediateRelayout(
@@ -330,6 +333,7 @@ import QuartzCore
 
         return DwindleWorkspaceSnapshot(
             workspaceId: wsId,
+            runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId),
             monitor: refreshInput.monitor,
             windows: refreshInput.windows,
             preferredFocusToken: controller.workspaceManager.preferredFocusToken(in: wsId),
@@ -409,7 +413,8 @@ import QuartzCore
             monitor: snapshot.monitor,
             sessionPatch: WorkspaceSessionPatch(
                 workspaceId: snapshot.workspaceId,
-                rememberedFocusToken: rememberedFocusToken
+                rememberedFocusToken: rememberedFocusToken,
+                runtimeRevision: snapshot.runtimeRevision
             ),
             diff: diff,
             animationDirectives: directives
@@ -438,7 +443,10 @@ import QuartzCore
         return WorkspaceLayoutPlan(
             workspaceId: snapshot.workspaceId,
             monitor: snapshot.monitor,
-            sessionPatch: WorkspaceSessionPatch(workspaceId: snapshot.workspaceId),
+            sessionPatch: WorkspaceSessionPatch(
+                workspaceId: snapshot.workspaceId,
+                runtimeRevision: snapshot.runtimeRevision
+            ),
             diff: diff
         )
     }
@@ -471,7 +479,10 @@ import QuartzCore
         return WorkspaceLayoutPlan(
             workspaceId: snapshot.workspaceId,
             monitor: snapshot.monitor,
-            sessionPatch: WorkspaceSessionPatch(workspaceId: snapshot.workspaceId),
+            sessionPatch: WorkspaceSessionPatch(
+                workspaceId: snapshot.workspaceId,
+                runtimeRevision: snapshot.runtimeRevision
+            ),
             diff: diff
         )
     }
