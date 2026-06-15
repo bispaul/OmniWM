@@ -418,7 +418,15 @@ import QuartzCore
     }
 
     func executeLayoutPlans(_ plans: [WorkspaceLayoutPlan]) {
+        guard let controller else { return }
         for plan in plans {
+            guard controller.workspaceManager.isRuntimeRevisionCurrent(
+                plan.sessionPatch.runtimeRevision,
+                for: plan.sessionPatch.workspaceId,
+                domains: .layoutCommit
+            ) else {
+                continue
+            }
             executeLayoutPlan(plan)
         }
     }

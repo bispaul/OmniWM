@@ -890,9 +890,13 @@ enum NiriWindowMoveResult {
             state.requiresViewportRecalc = false
         }
 
+        let diagOffset = state.viewOffsetPixels.target()
+        let diagActive = state.activeColumnIndex
+        let diagFrameXs = frames.sorted(by: { $0.value.minX < $1.value.minX }).prefix(3)
+            .map { "\($0.key.windowId):\(Int($0.value.minX))" }.joined(separator: ",")
         WMLog.layout
             .debug(
-                "computeLayoutPlan: wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public) viewportNeedsRecalc=\(viewportNeedsRecalc, privacy: .public) requiresRecalc=\(requiresRecalc, privacy: .public) newWindowToken=\(newWindowToken != nil, privacy: .public) applyPolicies=\(viewportNeedsRecalc || newWindowToken != nil || requiresRecalc, privacy: .public)"
+                "computeLayoutPlan: wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public) offset=\(diagOffset, privacy: .public) activeCol=\(diagActive, privacy: .public) frames=[\(diagFrameXs, privacy: .public)] viewportNeedsRecalc=\(viewportNeedsRecalc, privacy: .public) requiresRecalc=\(requiresRecalc, privacy: .public) applyPolicies=\(viewportNeedsRecalc || newWindowToken != nil || requiresRecalc, privacy: .public)"
             )
 
         applyViewportPipeline(
