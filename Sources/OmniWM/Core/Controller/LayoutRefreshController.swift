@@ -729,6 +729,18 @@ import QuartzCore
         )
     }
 
+    func requestLayoutCommandRelayout(
+        affectedWorkspaceIds: Set<WorkspaceDescriptor.ID>,
+        postLayout: PostLayoutAction? = nil
+    ) {
+        controller?.workspaceManager.invalidateLayoutRevision(for: affectedWorkspaceIds)
+        requestImmediateRelayout(
+            reason: .layoutCommand,
+            affectedWorkspaceIds: affectedWorkspaceIds,
+            postLayout: postLayout
+        )
+    }
+
     func requestVisibilityRefresh(
         reason: RefreshReason,
         postLayout: PostLayoutAction? = nil

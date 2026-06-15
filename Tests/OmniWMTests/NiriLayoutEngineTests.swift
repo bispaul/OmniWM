@@ -7801,7 +7801,7 @@ private func makeCenteredCrossMonitorFixture(
                 workspaceId: workspaceId,
                 viewportState: state,
                 rememberedFocusToken: nil,
-                runtimeRevision: RuntimeRevision(runtime: 0, workspace: 0, layout: 0, focus: 0, fullscreen: 0)
+                runtimeRevision: controller.workspaceManager.runtimeRevision(for: workspaceId)
             )
         )
 

@@ -1306,18 +1306,40 @@ enum NiriWindowMoveResult {
                 )
             activateNode(
                 newNode, in: wsId, state: &state,
-                options: .init(activateWindow: false, ensureVisible: false, preserveViewportAnchor: true)
+                options: .init(
+                    activateWindow: false,
+                    ensureVisible: false,
+                    preserveViewportAnchor: true,
+                    layoutRefresh: false,
+                    axFocus: false
+                )
             )
+            _ = controller.workspaceManager.applySessionPatch(
+                .init(
+                    workspaceId: wsId,
+                    viewportState: state,
+                    rememberedFocusToken: nil,
+                    runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
+                )
+            )
+            requestSelectedWindowFocusAfterLayout(in: wsId)
+            let appliedState = controller.workspaceManager.niriViewportState(for: wsId)
+            startScrollAnimationIfNeeded(for: wsId, state: appliedState, engine: engine)
         }
+    }
 
-        _ = controller.workspaceManager.applySessionPatch(
-            .init(
-                workspaceId: wsId,
-                viewportState: state,
-                rememberedFocusToken: nil,
-                runtimeRevision: controller.workspaceManager.runtimeRevision(for: wsId)
-            )
-        )
+    private func requestSelectedWindowFocusAfterLayout(in workspaceId: WorkspaceDescriptor.ID) {
+        controller?.layoutRefreshController.requestLayoutCommandRelayout(
+            affectedWorkspaceIds: [workspaceId]
+        ) { [weak controller] in
+            guard let controller else { return }
+            let viewportState = controller.workspaceManager.niriViewportState(for: workspaceId)
+            guard let selectedNodeId = viewportState.selectedNodeId,
+                  let selectedWindow = controller.niriEngine?.findNode(by: selectedNodeId) as? NiriWindow,
+                  controller.workspaceManager.entry(for: selectedWindow.token)?.workspaceId == workspaceId
+            else { return }
+            controller.focusWindow(selectedWindow.token)
+        }
     }
 
     func toggleFullscreen() {
