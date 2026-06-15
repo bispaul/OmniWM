@@ -209,8 +209,8 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 7/27 | Column gap after moveToWorkspace | **FIXED** | 106 | Root cause: moveColumnToWorkspace missing activeColumnIndex adjustment + initializeNewColumnWidth. Fix: adjustActiveColumnIndex helper (DRY) + resetColumnWidth:Bool parameter (F7 pattern) + viewport clamp + applyOverspread on every pass. 9 commits, 53 tests. |
 | 7/27/15 | Niri viewport gap (cross-monitor) | **FIXED** | 106 | Same fix as #7/27. Viewport clamping + column transfer pipeline consolidation. |
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
-| 35 | Focus-click pushes adjacent column off-screen — elastic feel lost | **OPEN** | 109 | ensureSelectionVisible runs on EVERY active-workspace layout pass (not just removals). F7's blanket animate:false removed elastic spring feel. Before F7: smooth scroll. After F7: harsh snap. Upstream #343 shows elastic behavior fork lost. Fix: restore animate:true for focus-change viewport adjustments, keep animate:false for pipeline corrections. Memorygraph `4a192fe8`. |
-| 34 | 32" display 1275px left gap — viewport at middle column | **OPEN** | 109 | Code at x=1275 on 2560px display. Viewport scrolled to middle column, 1275px empty on left. May be stale state from rapid transfers. Memorygraph `4dbed7ca`. |
+| 35 | Viewport gap from ESV offset recomputation | **FIXED** | 118 | Four-layer fix: (1) RuntimeRevision system ported from upstream — stale-patch rejection, (2) focusNeighbor aligned with upstream — layoutRefresh:false + requestSelectedWindowFocusAfterLayout, (3) clampViewportOffset gap tolerance — minOffset includes gap, (4) settled spring in focusNeighbor — prevents resolveSelection ESV from recomputing with different params. Root cause: computeVisibleOffset with fromContainerIndex=nil took different branch → 4px offset. 10 commits. Memorygraph `d89ceef7`. |
+| 34 | 32" display 1275px left gap — viewport at middle column | **FIXED** | 118 | Root cause was Bug #35 (ESV offset recomputation). Fixed by same four-layer solution. Memorygraph `4dbed7ca`. |
 | 33 | Post-wake click causes position shifts | **OPEN** | 108 | Focus bounces 8+ times in 7s. ensureSelectionVisible runs 12x. windowId=96 wrong display width (2560→1080). Transient — settles in ~12s. applyOverspread-on-every-pass may amplify. Memorygraph `338e5986`. |
 | 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
@@ -285,14 +285,14 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 
 | Category | Done | Open |
 |----------|------|------|
-| Bugs | 16 closed | 4 (#28 wake, #33 post-wake clicks, #34 32" gap, #35 elastic lost — ROOT CAUSE of #33/#34/test#2) |
+| Bugs | 18 closed | 2 (#28 wake, #33 post-wake clicks) |
 | Features | 5 done + 2 N/A + 2 SKIP | 1 (F5 focus tracking) |
 | Fixes A-E + D L1/L2 | 6/6 | — |
 | SSOT #1-6 | 6/6 | — |
 | Extractions | 4/5 | 1 deferred |
 | Scattered pathways | 7/7 resolved | — |
-| Tests | 185/186 | 1 (test #2 — related to Bug #35) |
-| Session commits | 29 | — |
+| Tests | 260/261 | 1 (test #2 — pre-existing, unrelated) |
+| Session commits | 39 | — |
 
 ## Cross-References
 
