@@ -830,4 +830,50 @@ private func makeViewportGestureContainers(
         )
         #expect(result == false, "0.3px within 0.5px epsilon → no clamp")
     }
+
+    @Test @MainActor func viewportOffsetStableAcrossRelayoutAfterNavigation() async {
+        let controller = makeLayoutPlanTestController(
+            monitors: [makeLayoutPlanTestMonitor(width: 2560, height: 1440)]
+        )
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9801)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9802)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9803)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        #expect(engine.columns(in: workspaceId).count == 3)
+
+        controller.niriLayoutHandler.focusNeighbor(direction: .right)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let afterNav = controller.workspaceManager.niriViewportState(for: workspaceId)
+        let navOffset = afterNav.viewOffsetPixels.target()
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let afterRelayout = controller.workspaceManager.niriViewportState(for: workspaceId)
+        let relayoutOffset = afterRelayout.viewOffsetPixels.target()
+
+        #expect(
+            abs(relayoutOffset - navOffset) < 2,
+            "Viewport offset must be stable across relayouts (nav=\(navOffset) relayout=\(relayoutOffset) diff=\(abs(relayoutOffset - navOffset)))"
+        )
+    }
 }
