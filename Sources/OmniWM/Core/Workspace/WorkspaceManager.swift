@@ -1522,14 +1522,27 @@ final class WorkspaceManager {
 
     @discardableResult
     func applySessionPatch(_ patch: WorkspaceSessionPatch) -> Bool {
+        guard isRuntimeRevisionCurrent(
+            patch.runtimeRevision,
+            for: patch.workspaceId,
+            domains: .layoutCommit
+        ) else {
+            return false
+        }
+
         var changed = false
 
         if var viewportState = patch.viewportState {
-            // Guard against a stale gesture snapshot overwriting an in-progress snap animation.
-            // Layout plans are built asynchronously and may arrive after endGesture() has already
-            // transitioned the viewport from .gesture to .spring. Preserve the spring animation.
+            let currentState = niriViewportState(for: patch.workspaceId)
+            let patchHasStaleSelection = patch.baseSelectionRevision
+                .map { $0 < currentState.selectionRevision } ?? false
+            if patchHasStaleSelection {
+                viewportState.selectedNodeId = currentState.selectedNodeId
+                viewportState.activeColumnIndex = currentState.activeColumnIndex
+                viewportState.selectionProgress = currentState.selectionProgress
+                viewportState.selectionRevision = currentState.selectionRevision
+            }
             if viewportState.viewOffsetPixels.isGesture {
-                let currentState = niriViewportState(for: patch.workspaceId)
                 if case .spring = currentState.viewOffsetPixels {
                     viewportState.viewOffsetPixels = currentState.viewOffsetPixels
                     viewportState.activeColumnIndex = currentState.activeColumnIndex
@@ -1540,7 +1553,13 @@ final class WorkspaceManager {
         }
 
         if let rememberedFocusToken = patch.rememberedFocusToken {
-            changed = rememberFocus(rememberedFocusToken, in: patch.workspaceId) || changed
+            if isRuntimeRevisionCurrent(
+                patch.runtimeRevision,
+                for: patch.workspaceId,
+                domains: .focusCommit
+            ) {
+                changed = rememberFocus(rememberedFocusToken, in: patch.workspaceId) || changed
+            }
         }
 
         return changed
@@ -3026,9 +3045,23 @@ final class WorkspaceManager {
         return newState
     }
 
-    func updateNiriViewportState(_ state: ViewportState, for workspaceId: WorkspaceDescriptor.ID) {
+    func updateNiriViewportState(
+        _ state: ViewportState,
+        for workspaceId: WorkspaceDescriptor.ID
+    ) {
         var workspaceSession = sessionState.workspaceSessions[workspaceId] ?? SessionState.WorkspaceSession()
-        workspaceSession.niriViewportState = state
+        let currentState = workspaceSession.niriViewportState
+        var nextState = state
+        if let currentState {
+            if nextState.selectedNodeId != currentState.selectedNodeId {
+                nextState.selectionRevision = max(nextState.selectionRevision, currentState.selectionRevision &+ 1)
+            } else {
+                nextState.selectionRevision = max(nextState.selectionRevision, currentState.selectionRevision)
+            }
+        } else if nextState.selectedNodeId != nil {
+            nextState.selectionRevision = max(nextState.selectionRevision, 1)
+        }
+        workspaceSession.niriViewportState = nextState
         sessionState.workspaceSessions[workspaceId] = workspaceSession
     }
 
