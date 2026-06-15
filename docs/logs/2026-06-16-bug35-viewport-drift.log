@@ -1,0 +1,707 @@
+Timestamp               Ty Process[PID:TID]
+2026-06-16 01:06:28.504 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:06:28.504 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:36:28 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:06:28.550 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125700), workspaceId: F91A401D-C61B-4F9B-80DD-C82ABD7744E7, monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:06:28.550 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125700)
+2026-06-16 01:06:28.586 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125700), workspaceId: F91A401D-C61B-4F9B-80DD-C82ABD7744E7, monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:06:28.586 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125700)
+2026-06-16 01:06:28.592 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:06:28.593 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:06:28.593 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:06:28.597 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:06:28.993 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139815
+2026-06-16 01:06:28.996 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139815 windowInfoResolved=true
+2026-06-16 01:06:29.028 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139815 hasWindowInfo=true
+2026-06-16 01:06:29.033 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139815
+2026-06-16 01:06:29.033 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139815 pid=47053
+2026-06-16 01:06:31.917 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139816
+2026-06-16 01:06:31.918 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139816 windowInfoResolved=true
+2026-06-16 01:06:31.924 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139816 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:06:31.924 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139816 hasWindowInfo=true
+2026-06-16 01:06:46.525 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139816
+2026-06-16 01:06:46.525 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139816 pid=47053
+2026-06-16 01:06:46.525 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139816
+2026-06-16 01:06:46.525 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139816 windowInfoResolved=true
+2026-06-16 01:06:46.527 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139816 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:06:46.527 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139816 hasWindowInfo=true
+2026-06-16 01:06:56.673 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139816
+2026-06-16 01:06:56.673 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139816 pid=47053
+2026-06-16 01:07:01.495 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139817
+2026-06-16 01:07:01.498 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139817 windowInfoResolved=true
+2026-06-16 01:07:01.505 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139817 hasWindowInfo=true
+2026-06-16 01:07:01.608 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139817 windowInfoResolved=true
+2026-06-16 01:07:01.609 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139817 hasWindowInfo=true
+2026-06-16 01:07:01.715 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139817 windowInfoResolved=true
+2026-06-16 01:07:01.716 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139817 hasWindowInfo=true
+2026-06-16 01:07:01.822 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139817 windowInfoResolved=true
+2026-06-16 01:07:01.823 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139817 hasWindowInfo=true
+2026-06-16 01:07:01.932 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139817 windowInfoResolved=true
+2026-06-16 01:07:01.933 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139817 hasWindowInfo=true
+2026-06-16 01:07:02.039 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139817 windowInfoResolved=true
+2026-06-16 01:07:02.040 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139817 hasWindowInfo=true
+2026-06-16 01:07:05.236 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:07:05.256 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125697), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:05.256 Db OmniWM[17365:1450004] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=125697 ws=BF6F3259
+2026-06-16 01:07:05.256 Db OmniWM[17365:1450004] [com.omniwm:layout] requestImmediateRelayout
+2026-06-16 01:07:05.256 Db OmniWM[17365:1450004] [com.omniwm:layout] Display link created
+2026-06-16 01:07:05.257 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125697)
+2026-06-16 01:07:05.300 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:05.300 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:05.302 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=true
+2026-06-16 01:07:05.302 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[105105:1278,125690:2557,125697:2559] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:07:05.303 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:05.308 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:05.309 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.310 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.310 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125697 retryBudget=1 force=false
+2026-06-16 01:07:05.310 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105105 retryBudget=1 force=false
+2026-06-16 01:07:05.313 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 47053, windowId: 125697), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), hiddenState: Optional(OmniWM.WindowModel.HiddenState(proportionalPosition: (0.00078125, 0.001388888888888889), referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), reason: OmniWM.WindowModel.HiddenReason.layoutTransient(OmniWM.HideSide.left))), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:05.316 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 2 requests, isRetry=false
+2026-06-16 01:07:05.316 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.316 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105105 retryBudget=1 force=false
+2026-06-16 01:07:05.316 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:07:05.365 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.365 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.374 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=hiddenStateChanged(token: OmniWM.WindowToken(pid: 47053, windowId: 125697), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), hiddenState: nil, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:05.374 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.374 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.374 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125697 retryBudget=1 force=false
+2026-06-16 01:07:05.374 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105105 retryBudget=1 force=false
+2026-06-16 01:07:05.382 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.395 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.395 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.399 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.399 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.399 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125697 retryBudget=1 force=false
+2026-06-16 01:07:05.399 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105105 retryBudget=1 force=false
+2026-06-16 01:07:05.407 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.407 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.407 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.415 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.415 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.415 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125697 retryBudget=1 force=false
+2026-06-16 01:07:05.415 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=105105 retryBudget=1 force=false
+2026-06-16 01:07:05.421 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.432 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.432 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.439 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.439 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.439 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.439 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.449 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.449 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.449 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.449 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.457 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.465 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.465 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.465 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.465 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.467 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.482 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.482 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.482 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.482 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.484 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.499 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.499 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.499 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.499 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.502 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.516 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.516 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.516 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.516 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.523 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.532 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.532 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.532 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.532 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.538 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.549 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.549 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.549 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.549 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.550 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.565 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.565 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.565 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.565 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.568 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.582 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:05.582 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:05.582 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.582 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:05.583 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:11.509 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139817
+2026-06-16 01:07:11.509 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139817 pid=47053
+2026-06-16 01:07:12.357 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125700), workspaceId: F91A401D-C61B-4F9B-80DD-C82ABD7744E7, monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:12.357 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125700)
+2026-06-16 01:07:12.396 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:12.396 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:12.396 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:12.398 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:14.921 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139821
+2026-06-16 01:07:14.921 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139821 windowInfoResolved=true
+2026-06-16 01:07:14.923 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139821 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:07:14.923 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139821 hasWindowInfo=true
+2026-06-16 01:07:15.039 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125697), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:15.040 Db OmniWM[17365:1450004] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=125697 ws=BF6F3259
+2026-06-16 01:07:15.040 Db OmniWM[17365:1450004] [com.omniwm:layout] requestImmediateRelayout
+2026-06-16 01:07:15.040 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125697)
+2026-06-16 01:07:15.063 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:15.071 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:15.071 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:15.071 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:15.073 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:07:15.073 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:07:15.073 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:07:15.074 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:15.074 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:15.074 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:15.074 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:15.075 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:07:15.077 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:15.190 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139821
+2026-06-16 01:07:15.190 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139821 pid=47053
+2026-06-16 01:07:16.767 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139822
+2026-06-16 01:07:16.770 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139822 windowInfoResolved=true
+2026-06-16 01:07:16.773 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139822 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:07:16.773 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139822 hasWindowInfo=true
+2026-06-16 01:07:16.889 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139822 windowInfoResolved=true
+2026-06-16 01:07:16.892 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139822 hasWindowInfo=true
+2026-06-16 01:07:16.997 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139822 windowInfoResolved=true
+2026-06-16 01:07:17.008 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139822 hasWindowInfo=true
+2026-06-16 01:07:17.113 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139822 windowInfoResolved=true
+2026-06-16 01:07:17.114 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139822 hasWindowInfo=true
+2026-06-16 01:07:17.217 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139822 windowInfoResolved=true
+2026-06-16 01:07:17.217 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139822 hasWindowInfo=true
+2026-06-16 01:07:17.320 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139822 windowInfoResolved=true
+2026-06-16 01:07:17.321 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139822 hasWindowInfo=true
+2026-06-16 01:07:19.726 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139822
+2026-06-16 01:07:19.731 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139822 pid=47053
+2026-06-16 01:07:19.731 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139822
+2026-06-16 01:07:19.739 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139822 windowInfoResolved=true
+2026-06-16 01:07:19.741 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139822 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:07:19.741 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139822 hasWindowInfo=true
+2026-06-16 01:07:20.805 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139822
+2026-06-16 01:07:20.805 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139822 pid=47053
+2026-06-16 01:07:25.053 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139833
+2026-06-16 01:07:25.059 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139833 windowInfoResolved=true
+2026-06-16 01:07:25.061 I  OmniWM[17365:1450004] [com.omniwm:config] WindowRuleEngine: matchedUserRule id=43AF0EE3-660B-41D5-9517-8A1499E637CA disposition=floating layoutKind=explicitLayout
+2026-06-16 01:07:25.061 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139833 pid=85688 disposition=floating source=userRule(43AF0EE3-660B-41D5-9517-8A1499E637CA) layoutKind=explicitLayout
+2026-06-16 01:07:25.061 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139833 trackedMode=floating heuristicReasons=[]
+2026-06-16 01:07:25.062 Db OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139833 workspaceId=BF6F3259-F359-4BC6-B103-8F2938050589 bundleId=Optional("us.zoom.xos")
+2026-06-16 01:07:25.062 I  OmniWM[17365:1450004] [com.omniwm:ax] trackPreparedCreate: windowId=139833 pid=85688 mode=floating workspaceId=BF6F3259-F359-4BC6-B103-8F2938050589
+2026-06-16 01:07:25.062 I  OmniWM[17365:1450004] [com.omniwm:workspace] Adding window: windowId=139833 workspace=BF6F3259-F359-4BC6-B103-8F2938050589
+2026-06-16 01:07:25.062 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=windowAdmitted(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), mode: OmniWM.TrackedWindowMode.floating, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.062 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planPersistedHydration: noMatch token=WindowToken(pid: 85688, windowId: 139833) matchCount=0
+2026-06-16 01:07:25.063 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.ruleCreatedFloatingWindow, reason: "floating_window_create", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:37:25 +0000), monitorId: nil)), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:07:25.064 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.065 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2539.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.066 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 1 requests, isRetry=false
+2026-06-16 01:07:25.066 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=139833 retryBudget=1 force=true
+2026-06-16 01:07:25.066 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus window
+2026-06-16 01:07:25.067 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusRequested(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.067 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus request begin
+2026-06-16 01:07:25.118 Db OmniWM[17365:1450004] [com.omniwm:layout] requestRelayout
+2026-06-16 01:07:25.119 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.119 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus request confirmed
+2026-06-16 01:07:25.119 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 85688, windowId: 139833)
+2026-06-16 01:07:25.141 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:37:25 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:07:25.142 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.142 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 85688, windowId: 139833)
+2026-06-16 01:07:25.148 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.148 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 85688, windowId: 139833)
+2026-06-16 01:07:25.149 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.150 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2426.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.150 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:25.150 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:25.151 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:25.153 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:25.153 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.154 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2412.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.156 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:07:25.156 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:07:25.156 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:07:25.157 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:25.157 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:25.157 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.157 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.157 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:07:25.169 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.172 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.173 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2377.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.176 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2377.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.184 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.185 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2363.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.187 I  OmniWM[17365:1450004] [com.omniwm:config] WindowRuleEngine: matchedUserRule id=43AF0EE3-660B-41D5-9517-8A1499E637CA disposition=floating layoutKind=explicitLayout
+2026-06-16 01:07:25.188 I  OmniWM[17365:1450004] [com.omniwm:workspace] Adding window: windowId=134279 workspace=BF6F3259-F359-4BC6-B103-8F2938050589
+2026-06-16 01:07:25.188 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=windowAdmitted(token: OmniWM.WindowToken(pid: 85688, windowId: 134279), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), mode: OmniWM.TrackedWindowMode.floating, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.189 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 134279), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2110.0, 1117.0, 450.0, 1440.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.190 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 134279), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.190 I  OmniWM[17365:1450004] [com.omniwm:config] WindowRuleEngine: matchedUserRule id=43AF0EE3-660B-41D5-9517-8A1499E637CA disposition=floating layoutKind=explicitLayout
+2026-06-16 01:07:25.190 I  OmniWM[17365:1450004] [com.omniwm:workspace] assignWindowToWorkspace: skipping already-tracked windowId=139833
+2026-06-16 01:07:25.190 Db OmniWM[17365:1450004] [com.omniwm:layout] requestRelayout
+2026-06-16 01:07:25.191 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.192 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2350.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.194 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:07:25.196 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.202 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.203 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2338.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.205 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.205 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2327.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.213 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.214 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2316.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.220 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.221 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2305.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.234 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.235 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2295.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.237 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.238 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2286.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.251 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.252 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2277.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.254 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.255 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2269.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.269 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.269 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2261.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.271 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.272 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2254.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.279 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.280 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2247.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.288 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.289 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2240.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.301 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.302 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2234.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.304 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.305 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2229.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.318 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.319 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2223.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.320 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.321 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2218.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.335 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.335 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2213.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.340 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.342 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2209.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.351 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.352 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2205.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.354 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.356 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2201.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.368 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.369 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2197.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.373 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.373 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2194.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.383 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.384 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2191.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.387 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.388 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2188.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.400 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.401 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2185.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.404 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.405 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2183.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.413 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.414 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2180.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.421 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.422 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2178.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.433 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.434 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2176.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.437 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.438 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2175.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.450 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.452 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2173.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.456 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.457 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2172.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.469 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.470 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2171.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.471 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.472 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2169.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.479 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.480 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2168.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.497 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.498 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2167.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.506 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedReplacementMetadataChanged(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.507 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=floatingGeometryUpdated(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, referenceMonitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), frame: (2166.0, 2488.0, 384.0, 64.0), restoreToFloating: true, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.903 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:07:25.903 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:37:26 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:07:25.922 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125697), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:25.923 Db OmniWM[17365:1450004] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=125697 ws=BF6F3259
+2026-06-16 01:07:25.923 Db OmniWM[17365:1450004] [com.omniwm:layout] requestImmediateRelayout
+2026-06-16 01:07:25.923 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125697)
+2026-06-16 01:07:25.940 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:25.940 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:25.941 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:07:25.941 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:07:25.941 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:07:25.941 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:07:25.942 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:07:25.942 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:25.942 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:25.942 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.942 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:25.942 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:07:25.962 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:55.089 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139833
+2026-06-16 01:07:55.232 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139833 pid=85688
+2026-06-16 01:07:55.232 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusCancelled(token: Optional(OmniWM.WindowToken(pid: 85688, windowId: 139833)), workspaceId: Optional(BF6F3259-F359-4BC6-B103-8F2938050589), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:55.233 Db OmniWM[17365:1450004] [com.omniwm:layout] Display link created
+2026-06-16 01:07:55.233 I  OmniWM[17365:1450004] [com.omniwm:workspace] Removing window: windowId=139833
+2026-06-16 01:07:55.233 I  OmniWM[17365:1450004] [com.omniwm:workspace] recordRemoval: cached workspace for pid=85688 bundleId=us.zoom.xos
+2026-06-16 01:07:55.233 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=windowRemoved(token: OmniWM.WindowToken(pid: 85688, windowId: 139833), workspaceId: Optional(BF6F3259-F359-4BC6-B103-8F2938050589), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:55.234 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=134279 pid=85688
+2026-06-16 01:07:55.234 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusCancelled(token: Optional(OmniWM.WindowToken(pid: 85688, windowId: 134279)), workspaceId: Optional(BF6F3259-F359-4BC6-B103-8F2938050589), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:55.235 I  OmniWM[17365:1450004] [com.omniwm:workspace] Removing window: windowId=134279
+2026-06-16 01:07:55.235 I  OmniWM[17365:1450004] [com.omniwm:workspace] recordRemoval: cached workspace for pid=85688 bundleId=us.zoom.xos
+2026-06-16 01:07:55.235 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=windowRemoved(token: OmniWM.WindowToken(pid: 85688, windowId: 134279), workspaceId: Optional(BF6F3259-F359-4BC6-B103-8F2938050589), source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:07:55.237 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:07:55.237 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:07:55.237 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:07:55.239 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:55.239 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:07:55.239 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:55.239 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:55.240 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:07:55.242 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:07:55.242 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:07:55.242 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:07:55.260 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:07:55.261 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:55.261 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:55.261 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:07:55.261 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:07:55.261 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:08:02.712 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:08:02.753 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125700), workspaceId: F91A401D-C61B-4F9B-80DD-C82ABD7744E7, monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:08:02.753 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125700)
+2026-06-16 01:08:02.782 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:08:02.782 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:08:02.787 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:08:02.788 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:08:02.970 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139834
+2026-06-16 01:08:02.971 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139834 windowInfoResolved=true
+2026-06-16 01:08:02.976 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139834 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:08:02.976 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139834 hasWindowInfo=true
+2026-06-16 01:08:04.380 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139834
+2026-06-16 01:08:04.382 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139834 pid=47053
+2026-06-16 01:08:04.382 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139834
+2026-06-16 01:08:04.382 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139834 windowInfoResolved=true
+2026-06-16 01:08:04.385 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139834 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:08:04.385 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139834 hasWindowInfo=true
+2026-06-16 01:08:07.457 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139835
+2026-06-16 01:08:07.457 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139835 windowInfoResolved=true
+2026-06-16 01:08:07.479 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139835 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:08:07.479 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139835 hasWindowInfo=true
+2026-06-16 01:08:08.248 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139835
+2026-06-16 01:08:08.248 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139835 pid=47053
+2026-06-16 01:08:09.986 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139836 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:08:09.986 I  OmniWM[17365:1450004] [com.omniwm:ax] admitFocusedWindow: candidateFailed windowId=139836 hasWindowInfo=true
+2026-06-16 01:08:09.987 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=nonManagedFocusChanged(active: true, appFullscreen: false, preserveFocusedToken: false, preservePendingManagedFocus: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:08:09.987 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 139836)
+2026-06-16 01:08:10.009 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139836
+2026-06-16 01:08:10.016 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139836 windowInfoResolved=true
+2026-06-16 01:08:10.020 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139836 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:08:10.020 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139836 hasWindowInfo=true
+2026-06-16 01:08:10.020 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:08:10.020 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:08:10.021 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:08:10.021 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:08:13.761 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125700), workspaceId: F91A401D-C61B-4F9B-80DD-C82ABD7744E7, monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:08:13.761 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125700)
+2026-06-16 01:08:13.788 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:08:13.788 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:08:13.788 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:08:13.792 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:08:15.360 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139834
+2026-06-16 01:08:15.362 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139834 pid=47053
+2026-06-16 01:08:41.296 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139837
+2026-06-16 01:08:41.297 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:41.298 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:41.404 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:41.407 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:41.515 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:41.516 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:41.624 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:41.625 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:41.738 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:41.739 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:41.842 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:41.845 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:42.986 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:38:43 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:08:43.016 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1483, windowId: 96), workspaceId: F91A401D-C61B-4F9B-80DD-C82ABD7744E7, monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:08:43.017 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1483, windowId: 96)
+2026-06-16 01:08:45.612 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139837
+2026-06-16 01:08:45.612 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139837 pid=47053
+2026-06-16 01:08:45.612 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139837
+2026-06-16 01:08:45.613 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:45.617 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:45.724 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:45.726 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:45.834 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:45.836 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:45.943 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:45.944 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:46.051 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:46.052 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:46.156 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139837 windowInfoResolved=true
+2026-06-16 01:08:46.158 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139837 hasWindowInfo=true
+2026-06-16 01:08:55.607 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139837
+2026-06-16 01:08:55.607 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139837 pid=47053
+2026-06-16 01:09:14.120 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:09:14.120 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:39:14 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:09:14.121 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125700), workspaceId: F91A401D-C61B-4F9B-80DD-C82ABD7744E7, monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:09:14.121 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125700)
+2026-06-16 01:09:14.297 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139836
+2026-06-16 01:09:14.297 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139836 pid=47053
+2026-06-16 01:09:15.233 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139839
+2026-06-16 01:09:15.233 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139839 windowInfoResolved=true
+2026-06-16 01:09:15.250 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139839 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:09:15.250 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139839 hasWindowInfo=true
+2026-06-16 01:09:15.961 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139839
+2026-06-16 01:09:15.963 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139839 pid=47053
+2026-06-16 01:09:16.892 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139841
+2026-06-16 01:09:16.897 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139841 windowInfoResolved=true
+2026-06-16 01:09:16.900 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139841 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:09:16.900 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139841 hasWindowInfo=true
+2026-06-16 01:09:17.097 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139841
+2026-06-16 01:09:17.097 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139841 pid=47053
+2026-06-16 01:09:18.452 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139843
+2026-06-16 01:09:18.456 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139843 windowInfoResolved=true
+2026-06-16 01:09:18.463 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139843 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:09:18.463 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139843 hasWindowInfo=true
+2026-06-16 01:09:23.357 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139843
+2026-06-16 01:09:23.357 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139843 pid=47053
+2026-06-16 01:09:27.074 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139844
+2026-06-16 01:09:27.075 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139844 windowInfoResolved=true
+2026-06-16 01:09:27.076 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139844 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:09:27.076 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139844 hasWindowInfo=true
+2026-06-16 01:09:27.430 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139844
+2026-06-16 01:09:27.435 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139844 pid=47053
+2026-06-16 01:09:27.435 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139844
+2026-06-16 01:09:27.436 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139844 windowInfoResolved=true
+2026-06-16 01:09:27.438 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139844 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:09:27.438 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139844 hasWindowInfo=true
+2026-06-16 01:09:35.838 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139845
+2026-06-16 01:09:35.838 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139845 windowInfoResolved=true
+2026-06-16 01:09:35.842 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139845 hasWindowInfo=true
+2026-06-16 01:09:35.842 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139845
+2026-06-16 01:09:35.842 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139845 windowInfoResolved=true
+2026-06-16 01:09:35.843 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139845 hasWindowInfo=true
+2026-06-16 01:09:35.843 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139845
+2026-06-16 01:09:35.843 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139845 pid=47053
+2026-06-16 01:09:37.183 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139845
+2026-06-16 01:09:37.183 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139845 pid=47053
+2026-06-16 01:09:47.646 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139844
+2026-06-16 01:10:41.732 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139846
+2026-06-16 01:10:41.732 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139846 windowInfoResolved=true
+2026-06-16 01:10:41.756 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139846 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:41.756 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139846 hasWindowInfo=true
+2026-06-16 01:10:41.972 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139846
+2026-06-16 01:10:41.973 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139846 pid=47053
+2026-06-16 01:10:41.973 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139846
+2026-06-16 01:10:41.973 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139846 windowInfoResolved=true
+2026-06-16 01:10:41.976 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139846 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:41.976 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139846 hasWindowInfo=true
+2026-06-16 01:10:43.035 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139846
+2026-06-16 01:10:43.037 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139846 pid=47053
+2026-06-16 01:10:47.765 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:10:47.768 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:10:47.773 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:47.773 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:10:47.945 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:10:47.945 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:10:47.946 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:10:47.946 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:10:47.947 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:47.947 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:10:50.229 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:10:50.229 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:10:50.229 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:10:50.230 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:10:50.232 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:50.232 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:10:50.540 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:10:50.544 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:10:50.544 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:10:50.545 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:10:50.547 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:50.547 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:10:55.780 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:10:55.781 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:10:55.781 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:10:55.782 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:10:55.787 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:55.787 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:10:55.857 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:10:55.859 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:10:55.859 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:10:55.860 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:10:55.867 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:55.867 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:10:57.430 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:10:57.431 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:10:57.431 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:10:57.432 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:10:57.434 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:10:57.434 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:11:09.071 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:11:09.072 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:11:09.072 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:11:09.072 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:11:09.076 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:11:09.076 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:11:09.204 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:11:09.204 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:11:09.204 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139847
+2026-06-16 01:11:09.205 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139847 windowInfoResolved=true
+2026-06-16 01:11:09.209 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139847 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:11:09.209 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139847 hasWindowInfo=true
+2026-06-16 01:11:10.265 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139847
+2026-06-16 01:11:10.271 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139847 pid=47053
+2026-06-16 01:11:21.645 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139848
+2026-06-16 01:11:21.650 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139848 windowInfoResolved=true
+2026-06-16 01:11:21.663 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139848 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:11:21.663 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139848 hasWindowInfo=true
+2026-06-16 01:11:21.718 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139848
+2026-06-16 01:11:21.718 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139848 pid=47053
+2026-06-16 01:11:21.718 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139848
+2026-06-16 01:11:21.721 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139848 windowInfoResolved=true
+2026-06-16 01:11:21.725 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139848 hasWindowInfo=true
+2026-06-16 01:11:21.836 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139848 windowInfoResolved=true
+2026-06-16 01:11:21.837 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139848 hasWindowInfo=true
+2026-06-16 01:11:21.879 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139848
+2026-06-16 01:11:21.879 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139848 pid=47053
+2026-06-16 01:11:21.879 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139848
+2026-06-16 01:11:21.879 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139848 windowInfoResolved=true
+2026-06-16 01:11:21.881 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139848 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:11:21.881 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139848 hasWindowInfo=true
+2026-06-16 01:11:31.896 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139848
+2026-06-16 01:11:31.899 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139848 pid=47053
+2026-06-16 01:11:31.900 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139848
+2026-06-16 01:11:31.900 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139848 windowInfoResolved=true
+2026-06-16 01:11:31.905 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139848 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:11:31.905 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139848 hasWindowInfo=true
+2026-06-16 01:11:50.087 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139848
+2026-06-16 01:11:50.087 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139848 pid=47053
+2026-06-16 01:12:42.025 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139849
+2026-06-16 01:12:42.026 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139849 windowInfoResolved=true
+2026-06-16 01:12:42.030 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139849 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:12:42.030 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139849 hasWindowInfo=true
+2026-06-16 01:12:43.595 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139849
+2026-06-16 01:12:43.600 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139849 pid=47053
+2026-06-16 01:12:43.600 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139849
+2026-06-16 01:12:43.601 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139849 windowInfoResolved=true
+2026-06-16 01:12:43.605 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139849 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:12:43.605 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139849 hasWindowInfo=true
+2026-06-16 01:12:43.880 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139849
+2026-06-16 01:12:43.880 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139849 pid=47053
+2026-06-16 01:12:43.880 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139849
+2026-06-16 01:12:43.881 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139849 windowInfoResolved=true
+2026-06-16 01:12:43.886 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139849 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:12:43.886 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139849 hasWindowInfo=true
+2026-06-16 01:12:43.924 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139849
+2026-06-16 01:12:43.925 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139849 pid=47053
+2026-06-16 01:12:43.925 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139849
+2026-06-16 01:12:43.925 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139849 windowInfoResolved=true
+2026-06-16 01:12:43.927 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139849 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:12:43.927 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139849 hasWindowInfo=true
+2026-06-16 01:12:44.808 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139849
+2026-06-16 01:12:51.265 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139851
+2026-06-16 01:12:51.270 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:51.276 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139851 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:12:51.276 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:12:52.781 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=125748
+2026-06-16 01:12:52.782 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=125748 windowInfoResolved=true
+2026-06-16 01:12:52.792 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=125748 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:12:52.792 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=125748 hasWindowInfo=true
+2026-06-16 01:12:52.793 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=125748
+2026-06-16 01:12:52.793 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=125748 pid=47053
+2026-06-16 01:12:58.504 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139851
+2026-06-16 01:12:58.504 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139851 pid=47053
+2026-06-16 01:12:58.504 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139851
+2026-06-16 01:12:58.505 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:58.506 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139851 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:12:58.506 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:12:58.586 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139851
+2026-06-16 01:12:58.589 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139851 pid=47053
+2026-06-16 01:12:58.589 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139851
+2026-06-16 01:12:58.591 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:58.597 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:12:58.704 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:58.705 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:12:58.811 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:58.813 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:12:58.914 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:58.919 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:12:59.023 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:59.025 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:12:59.134 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:12:59.140 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:13:00.843 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139851
+2026-06-16 01:13:00.847 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139851 pid=47053
+2026-06-16 01:13:00.847 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139851
+2026-06-16 01:13:00.847 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:13:00.853 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139851 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:13:00.853 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:13:03.998 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139851
+2026-06-16 01:13:03.999 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139851 pid=47053
+2026-06-16 01:13:03.999 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=139851
+2026-06-16 01:13:03.999 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: windowId=139851 windowInfoResolved=true
+2026-06-16 01:13:04.000 I  OmniWM[17365:1450004] [com.omniwm:ax] prepareCreateCandidate: windowId=139851 pid=47053 disposition=undecided source=userRule(486CEFA6-69AA-4A3C-AF27-BCD38F4F138B) layoutKind=fallbackLayout
+2026-06-16 01:13:04.000 I  OmniWM[17365:1450004] [com.omniwm:ax] processCreatedWindow: candidateFailed windowId=139851 hasWindowInfo=true
+2026-06-16 01:13:14.922 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=139851
+2026-06-16 01:13:14.922 I  OmniWM[17365:1450004] [com.omniwm:ax] Removing window state for windowId=139851 pid=47053
+2026-06-16 01:13:41.124 I  OmniWM[17365:14a149c] [com.omniwm:ipc] IPC client connected: 6ED71350-2685-4BFC-8632-B7E31AB9B5BD
+2026-06-16 01:13:41.128 I  OmniWM[17365:14a149c] [com.omniwm:ipc] IPC client disconnected: 6ED71350-2685-4BFC-8632-B7E31AB9B5BD
+2026-06-16 01:14:02.795 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:14:02.795 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:44:03 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:14:02.844 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 1476, windowId: 105130), workspaceId: 54E94AE2-3E02-4C85-888B-31CFCD32A2E1, monitorId: Optional(OmniWM.Monitor.ID(displayId: 1)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:14:02.844 Db OmniWM[17365:1450004] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=105130 ws=54E94AE2
+2026-06-16 01:14:02.844 Db OmniWM[17365:1450004] [com.omniwm:layout] requestImmediateRelayout
+2026-06-16 01:14:02.844 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 1476, windowId: 105130)
+2026-06-16 01:14:02.869 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:14:02.869 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:14:02.872 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=54E94AE2 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:14:02.872 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=54E94AE2
+2026-06-16 01:14:02.872 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=54E94AE2 offset=-2.000000 activeCol=5 frames=[105130:2,135371:865,125694:1725] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:14:02.873 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:14:02.873 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:02.873 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125694 retryBudget=1 force=false
+2026-06-16 01:14:02.873 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:02.877 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:14:02.888 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:34.072 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: nil, source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:14:34.072 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=focusLeaseChanged(lease: Optional(OmniWM.FocusPolicyLease(owner: OmniWM.FocusPolicyLeaseOwner.nativeAppSwitch, reason: "workspaceDidActivateApplication", suppressesFocusFollowsMouse: true, expiresAt: Optional(2026-06-15 19:44:34 +0000), monitorId: Optional(OmniWM.Monitor.ID(displayId: 2)))), source: OmniWM.WMEventSource.focusPolicy) refreshRestoreIntents=false
+2026-06-16 01:14:34.122 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125697), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:14:34.123 Db OmniWM[17365:1450004] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=125697 ws=BF6F3259
+2026-06-16 01:14:34.123 Db OmniWM[17365:1450004] [com.omniwm:layout] requestImmediateRelayout
+2026-06-16 01:14:34.123 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125697)
+2026-06-16 01:14:34.136 Db OmniWM[17365:1450004] [com.omniwm:workspace] RestorePlanner.planEvent: event=managedFocusConfirmed(token: OmniWM.WindowToken(pid: 47053, windowId: 125697), workspaceId: BF6F3259-F359-4BC6-B103-8F2938050589, monitorId: Optional(OmniWM.Monitor.ID(displayId: 3)), appFullscreen: false, source: OmniWM.WMEventSource.workspaceManager) refreshRestoreIntents=false
+2026-06-16 01:14:34.136 Db OmniWM[17365:1450004] [com.omniwm:focus] commitWorkspaceSelection: nodeId=NodeId(u focusedToken=125697 ws=BF6F3259
+2026-06-16 01:14:34.136 Db OmniWM[17365:1450004] [com.omniwm:layout] requestImmediateRelayout
+2026-06-16 01:14:34.136 Db OmniWM[17365:1450004] [com.omniwm:focus] Focus changed to: token=WindowToken(pid: 47053, windowId: 125697)
+2026-06-16 01:14:34.137 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:14:34.137 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:14:34.137 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:14:34.138 I  OmniWM[17365:1450004] [com.omniwm:ax] Window created: windowId=138638
+2026-06-16 01:14:34.138 I  OmniWM[17365:1450004] [com.omniwm:ax] Window destroyed: windowId=138638
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: wsId=BF6F3259 isActive=true removedTokens=0 visibilityCorrected=false isGesture=false
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:layout] removalHandling: RUNNING ensureSelectionVisible for wsId=BF6F3259
+2026-06-16 01:14:34.138 Db OmniWM[17365:1450004] [com.omniwm:layout] computeLayoutPlan: wsId=BF6F3259 offset=-2.000000 activeCol=0 frames=[125697:2,105105:1281,125690:2557] viewportNeedsRecalc=false requiresRecalc=false applyPolicies=false
+2026-06-16 01:14:34.139 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:34.155 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 3 requests, isRetry=false
+2026-06-16 01:14:34.155 Db OmniWM[17365:1450004] [com.omniwm:ax] enqueueFrameApplications: queued windowId=125690 retryBudget=1 force=false
+2026-06-16 01:14:34.155 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:34.155 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed
+2026-06-16 01:14:34.156 Db OmniWM[17365:1450004] [com.omniwm:ax] applyFramesParallel: 0 requests, isRetry=false
+2026-06-16 01:14:34.157 Db OmniWM[17365:1450004] [com.omniwm:ax] Frame write confirmed

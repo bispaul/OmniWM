@@ -209,8 +209,8 @@ Full audit (corrected): dotfiles `memory/project_omniwm_architecture_audit.md` +
 | 7/27 | Column gap after moveToWorkspace | **FIXED** | 106 | Root cause: moveColumnToWorkspace missing activeColumnIndex adjustment + initializeNewColumnWidth. Fix: adjustActiveColumnIndex helper (DRY) + resetColumnWidth:Bool parameter (F7 pattern) + viewport clamp + applyOverspread on every pass. 9 commits, 53 tests. |
 | 7/27/15 | Niri viewport gap (cross-monitor) | **FIXED** | 106 | Same fix as #7/27. Viewport clamping + column transfer pipeline consolidation. |
 | 28 | WhatsApp floating→tiling on wake | **OPEN** | 101 | Need to test with WhatsApp in floating mode (was tiling in build 102 test) |
-| 35 | Viewport gap from ESV offset recomputation | **FIXED** | 118 | Four-layer fix: (1) RuntimeRevision system ported from upstream — stale-patch rejection, (2) focusNeighbor aligned with upstream — layoutRefresh:false + requestSelectedWindowFocusAfterLayout, (3) clampViewportOffset gap tolerance — minOffset includes gap, (4) settled spring in focusNeighbor — prevents resolveSelection ESV from recomputing with different params. Root cause: computeVisibleOffset with fromContainerIndex=nil took different branch → 4px offset. 10 commits. Memorygraph `d89ceef7`. |
-| 34 | 32" display 1275px left gap — viewport at middle column | **FIXED** | 118 | Root cause was Bug #35 (ESV offset recomputation). Fixed by same four-layer solution. Memorygraph `4dbed7ca`. |
+| 35 | Viewport gap from ESV offset recomputation | **PARTIAL** | 118 | H/L navigation FIXED (settled spring). Workspace switch STILL DRIFTS (4px on real hardware, 16px in test). Root cause: computeFitOffset (ViewportState+Geometry.swift:228) returns `currentViewPos - targetPos` which depends on input — not convergent. Failing test committed: `viewportOffsetStableAcrossRelayoutAfterNavigation`. 12 commits. Infrastructure: RuntimeRevision system, focusNeighbor alignment, gap tolerance, settled spring. Memorygraph `b9da807e`. |
+| 34 | 32" display 1275px left gap — viewport at middle column | **PARTIAL** | 118 | Same root cause as Bug #35. H/L navigation fixes it, workspace switch re-introduces it. |
 | 33 | Post-wake click causes position shifts | **OPEN** | 108 | Focus bounces 8+ times in 7s. ensureSelectionVisible runs 12x. windowId=96 wrong display width (2560→1080). Transient — settles in ~12s. applyOverspread-on-every-pass may amplify. Memorygraph `338e5986`. |
 | 31 | Hidden window 1px edge peeking | BY DESIGN | — | `hiddenWindowEdgeRevealEpsilon=1.0` — upstream identical. Prevents macOS GC of off-screen windows. Cosmetic. |
 | 29 | Column reorder on Retina after wake | CLOSED | 102 | Columns identical pre/post wake (signed binary, willSleep snapshot captured) |
@@ -285,7 +285,7 @@ Memorygraph `9e2d0a33`. F7 proved adding explicit policy parameters works (85% A
 
 | Category | Done | Open |
 |----------|------|------|
-| Bugs | 18 closed | 2 (#28 wake, #33 post-wake clicks) |
+| Bugs | 16 closed, 2 partial | 2 open (#28 wake, #33 post-wake), 2 partial (#34/#35 viewport drift) |
 | Features | 5 done + 2 N/A + 2 SKIP | 1 (F5 focus tracking) |
 | Fixes A-E + D L1/L2 | 6/6 | — |
 | SSOT #1-6 | 6/6 | — |
