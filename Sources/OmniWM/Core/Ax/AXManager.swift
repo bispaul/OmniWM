@@ -54,6 +54,8 @@ final class AXManager {
 
     private var framesByPidBuffer: [pid_t: [AXFrameApplicationRequest]] = [:]
     private var lastAppliedFrames: [Int: CGRect] = [:]
+    private var sizeQuantumByWindowId: [Int: CGSize] = [:]
+    private static let maxLearnableSnapQuantum: CGFloat = 16
     private var pendingFrameWrites: [Int: CGRect] = [:]
     private var recentFrameWriteFailures: [Int: AXFrameWriteFailureReason] = [:]
     private var retryBudgetByWindowId: [Int: Int] = [:]
@@ -172,6 +174,34 @@ final class AXManager {
             return false
         }
         return observedFrame.approximatelyEqual(to: lastAppliedFrame, tolerance: 0.5)
+    }
+
+    private func learnSizeQuantum(windowId: Int, target: CGRect, observed: CGRect) {
+        let widthDelta = abs(observed.width - target.width)
+        let heightDelta = abs(observed.height - target.height)
+        let snapWidth = widthDelta > FrameTolerance.frameWrite && widthDelta <= Self.maxLearnableSnapQuantum
+            ? widthDelta.rounded(.up) : 0
+        let snapHeight = heightDelta > FrameTolerance.frameWrite && heightDelta <= Self.maxLearnableSnapQuantum
+            ? heightDelta.rounded(.up) : 0
+        guard snapWidth > 0 || snapHeight > 0 else { return }
+        let existing = sizeQuantumByWindowId[windowId] ?? .zero
+        sizeQuantumByWindowId[windowId] = CGSize(
+            width: max(existing.width, snapWidth),
+            height: max(existing.height, snapHeight)
+        )
+    }
+
+    private func frameWithinConvergence(cached: CGRect, target: CGRect, windowId: Int) -> Bool {
+        guard let quantum = sizeQuantumByWindowId[windowId] else {
+            return cached.approximatelyEqual(to: target, tolerance: FrameTolerance.frameWrite)
+        }
+        guard abs(cached.minX - target.minX) < FrameTolerance.frameWrite,
+              abs(cached.minY - target.minY) < FrameTolerance.frameWrite
+        else {
+            return false
+        }
+        return abs(cached.width - target.width) <= max(FrameTolerance.frameWrite, quantum.width)
+            && abs(cached.height - target.height) <= max(FrameTolerance.frameWrite, quantum.height)
     }
 
     func windowStateDebugSnapshot() -> WindowStateDebugSnapshot {
