@@ -19,6 +19,17 @@ extension CGRect {
             abs(width - other.width) < tolerance &&
             abs(height - other.height) < tolerance
     }
+
+    func axisAwareApproximatelyEqual(
+        to other: CGRect,
+        xyTolerance: CGFloat = 1.0,
+        yhTolerance: CGFloat = 4.0
+    ) -> Bool {
+        abs(origin.x - other.origin.x) < xyTolerance
+            && abs(origin.y - other.origin.y) < yhTolerance
+            && abs(width - other.width) < xyTolerance
+            && abs(height - other.height) < yhTolerance
+    }
 }
 
 enum ScreenCoordinateSpace {

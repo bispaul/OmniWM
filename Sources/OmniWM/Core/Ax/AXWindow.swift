@@ -122,7 +122,7 @@ struct AXFrameApplyResult: Equatable, Sendable {
 
     var confirmedFrame: CGRect? {
         if let observedFrame = writeResult.observedFrame,
-           observedFrame.approximatelyEqual(to: targetFrame, tolerance: 1.0)
+           observedFrame.axisAwareApproximatelyEqual(to: targetFrame)
         {
             return observedFrame
         }
@@ -422,7 +422,7 @@ enum AXWindowService {
         } else if positionError != .success {
             mapFrameWriteFailure(positionError, attribute: .position)
         } else if let observedFrame {
-            observedFrame.approximatelyEqual(to: frame, tolerance: 1.0) ? nil : .verificationMismatch
+            observedFrame.axisAwareApproximatelyEqual(to: frame) ? nil : .verificationMismatch
         } else {
             .readbackFailed
         }
