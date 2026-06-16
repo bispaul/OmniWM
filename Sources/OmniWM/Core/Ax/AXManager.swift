@@ -758,7 +758,11 @@ final class AXManager {
                    !inactiveWorkspaceWindowIds.contains(resolvedWindowId)
                 {
                     lastAppliedFrames[resolvedWindowId] = observedFrame
-                    learnSizeQuantum(windowId: resolvedWindowId, target: resolvedResult.targetFrame, observed: observedFrame)
+                    learnSizeQuantum(
+                        windowId: resolvedWindowId,
+                        target: resolvedResult.targetFrame,
+                        observed: observedFrame
+                    )
                     recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
                     retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                     appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
