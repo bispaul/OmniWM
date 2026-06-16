@@ -319,4 +319,68 @@ import Testing
             "Viewport must be animating after focusNeighbor to prevent resolveSelection ESV from recomputing offset"
         )
     }
+
+    @Test func viewportOffsetStableAfterWorkspaceSwitchRelayout() async {
+        let controller = makeLayoutPlanTestController(
+            monitors: [makeLayoutPlanTestMonitor(width: 2560, height: 1440)],
+            workspaceConfigurations: [
+                WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+                WorkspaceConfiguration(name: "2", monitorAssignment: .main)
+            ]
+        )
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let ws1Id = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: ws1Id, windowId: 9901)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: ws1Id, windowId: 9902)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: ws1Id, windowId: 9903)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        #expect(engine.columns(in: ws1Id).count == 3)
+
+        controller.niriLayoutHandler.focusNeighbor(direction: .right)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let navState = controller.workspaceManager.niriViewportState(for: ws1Id)
+        let navOffset = navState.viewOffsetPixels.target()
+        let navActiveCol = navState.activeColumnIndex
+        #expect(navActiveCol > 0, "Navigation should advance activeColumnIndex")
+
+        // Simulate settled spring → static (what happens after DisplayLink ticks)
+        var settledState = controller.workspaceManager.niriViewportState(for: ws1Id)
+        settledState.viewOffsetPixels = .static(navOffset)
+        controller.workspaceManager.updateNiriViewportState(settledState, for: ws1Id)
+
+        // Workspace switch round-trip
+        controller.workspaceNavigationHandler.switchWorkspace(index: 1)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.workspaceNavigationHandler.switchWorkspace(index: 0)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        // Extra relayout to trigger resolveSelection ESV
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let postState = controller.workspaceManager.niriViewportState(for: ws1Id)
+        let postOffset = postState.viewOffsetPixels.target()
+
+        #expect(
+            postState.activeColumnIndex == navActiveCol,
+            "activeColumnIndex must survive workspace switch (nav=\(navActiveCol) post=\(postState.activeColumnIndex))"
+        )
+        #expect(
+            abs(postOffset - navOffset) < 2,
+            "Viewport offset must not drift after workspace switch (nav=\(navOffset) post=\(postOffset) diff=\(abs(postOffset - navOffset)))"
+        )
+    }
 }
