@@ -742,13 +742,14 @@ private func makeViewportGestureContainers(
     @Test func clampViewportOffsetClampsOverscrolledOffset() {
         var state = ViewportState()
         state.activeColumnIndex = 0
-        state.viewOffsetPixels = .static(100) // past maxOffset=0
+        state.viewOffsetPixels = .static(1400) // past maxOffset for activeCol=0
         let columns = makeViewportGestureContainers(widths: [1277, 1277, 1277])
         let result = state.clampViewportOffset(
             containers: columns, gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth
         )
+        // activePos=0, totalW=3835, maxOffset = 3835-2560-0+2 = 1277
         #expect(result == true)
-        #expect(state.stationary() == 0, "Should clamp to maxOffset=0")
+        #expect(abs(state.stationary() - 1277) < 1, "Should clamp to maxOffset=totalW-viewport-activePos+gap")
     }
 
     @Test func clampViewportOffsetClampsUnderscrolledOffset() {
@@ -759,8 +760,9 @@ private func makeViewportGestureContainers(
         let result = state.clampViewportOffset(
             containers: columns, gap: 2, viewportSpan: 2560, sizeKeyPath: \.cachedWidth
         )
+        // activePos=0, minOffset = -0 - 2 = -2
         #expect(result == true)
-        let expected: CGFloat = 2560 - (1277 * 3 + 2 * 2) // -1275
+        let expected: CGFloat = -2 // minOffset = -activePos - gap
         #expect(abs(state.stationary() - expected) < 1, "Should clamp to minOffset")
     }
 
@@ -874,6 +876,67 @@ private func makeViewportGestureContainers(
         #expect(
             abs(relayoutOffset - navOffset) < 2,
             "Viewport offset must be stable across relayouts (nav=\(navOffset) relayout=\(relayoutOffset) diff=\(abs(relayoutOffset - navOffset)))"
+        )
+    }
+
+    @Test @MainActor func viewportOffsetPreservedAcrossWorkspaceSwitch() async {
+        let controller = makeLayoutPlanTestController(
+            monitors: [makeLayoutPlanTestMonitor(width: 2560, height: 1440)],
+            workspaceConfigurations: [
+                WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+                WorkspaceConfiguration(name: "2", monitorAssignment: .main)
+            ]
+        )
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let ws1Id = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: ws1Id, windowId: 9801)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: ws1Id, windowId: 9802)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: ws1Id, windowId: 9803)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        #expect(engine.columns(in: ws1Id).count == 3)
+
+        controller.niriLayoutHandler.focusNeighbor(direction: .right)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let afterNav = controller.workspaceManager.niriViewportState(for: ws1Id)
+        let navOffset = afterNav.viewOffsetPixels.target()
+        let navActiveCol = afterNav.activeColumnIndex
+
+        #expect(navActiveCol > 0, "Navigation right should advance activeColumnIndex")
+
+        controller.workspaceNavigationHandler.switchWorkspace(index: 1)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        controller.workspaceNavigationHandler.switchWorkspace(index: 0)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let afterSwitch = controller.workspaceManager.niriViewportState(for: ws1Id)
+        let switchOffset = afterSwitch.viewOffsetPixels.target()
+        let switchActiveCol = afterSwitch.activeColumnIndex
+
+        #expect(
+            switchActiveCol == navActiveCol,
+            "activeColumnIndex must survive workspace switch (nav=\(navActiveCol) switch=\(switchActiveCol))"
+        )
+        #expect(
+            abs(switchOffset - navOffset) < 2,
+            "Viewport offset must survive workspace switch (nav=\(navOffset) switch=\(switchOffset) diff=\(abs(switchOffset - navOffset)))"
         )
     }
 }

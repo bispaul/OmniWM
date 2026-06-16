@@ -273,15 +273,15 @@ extension ViewportState {
         guard !viewOffsetPixels.isAnimating, !viewOffsetPixels.isGesture else { return false }
 
         let totalW = totalSpan(containers: containers, gap: gap, sizeKeyPath: sizeKeyPath)
+        let safeIndex = activeColumnIndex.clamped(to: 0 ... (containers.count - 1))
+        let activePos = containerPosition(at: safeIndex, containers: containers, gap: gap, sizeKeyPath: sizeKeyPath)
 
-        let maxOffset: CGFloat = 0
-        let minOffset = viewportSpan - totalW - gap
+        let minOffset = -activePos - gap
+        let maxOffset = totalW - viewportSpan - activePos + gap
         guard minOffset < maxOffset else { return false }
 
         let current = stationary()
-        let safeMin = min(minOffset, maxOffset)
-        let safeMax = max(minOffset, maxOffset)
-        let clamped = current.clamped(to: safeMin ... safeMax)
+        let clamped = current.clamped(to: minOffset ... maxOffset)
         let pixelEpsilon: CGFloat = 1.0 / max(scale, 1.0)
         guard abs(clamped - current) > pixelEpsilon else { return false }
 

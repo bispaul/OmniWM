@@ -720,22 +720,33 @@ enum NiriWindowMoveResult {
            !removal.removalResult.visibilityWasCorrected,
            removal.removalResult.removedTokens.isEmpty || removal.removalResult.fromIndexForVisibility != nil
         {
-            WMLog.layout
-                .debug(
-                    "removalHandling: RUNNING ensureSelectionVisible for wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public)"
+            let targetColIdx = pass.engine.column(of: selectedNode)
+                .flatMap { pass.engine.columnIndex(of: $0, in: pass.wsId) }
+            let isStructuralChange = !removal.removalResult.removedTokens.isEmpty
+                || removal.removalResult.fromIndexForVisibility != nil
+
+            if targetColIdx == state.activeColumnIndex, !isStructuralChange {
+                WMLog.layout.debug(
+                    "removalHandling: SKIP ESV — same column, no structural change wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public)"
                 )
-            pass.engine.ensureSelectionVisible(
-                node: selectedNode,
-                in: pass.wsId,
-                motion: motion,
-                state: &state,
-                workingFrame: pass.insetFrame,
-                gaps: pass.gap,
-                animate: false,
-                fromContainerIndex: removal.removalResult.fromIndexForVisibility
-            )
-            if abs(state.viewOffsetPixels.target() - offsetBefore) > 1 {
-                viewportNeedsRecalc = true
+            } else {
+                WMLog.layout
+                    .debug(
+                        "removalHandling: RUNNING ensureSelectionVisible for wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public)"
+                    )
+                pass.engine.ensureSelectionVisible(
+                    node: selectedNode,
+                    in: pass.wsId,
+                    motion: motion,
+                    state: &state,
+                    workingFrame: pass.insetFrame,
+                    gaps: pass.gap,
+                    animate: false,
+                    fromContainerIndex: removal.removalResult.fromIndexForVisibility
+                )
+                if abs(state.viewOffsetPixels.target() - offsetBefore) > 1 {
+                    viewportNeedsRecalc = true
+                }
             }
         }
 
