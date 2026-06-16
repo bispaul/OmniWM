@@ -32,9 +32,9 @@ extension CGRect {
         verticalTolerance: CGFloat = FrameTolerance.verticalSnap
     ) -> Bool {
         abs(origin.x - other.origin.x) < horizontalTolerance
-            && abs(origin.y - other.origin.y) < verticalTolerance
+            && abs(origin.y - other.origin.y) <= verticalTolerance
             && abs(width - other.width) < horizontalTolerance
-            && abs(height - other.height) < verticalTolerance
+            && abs(height - other.height) <= verticalTolerance
     }
 }
 
