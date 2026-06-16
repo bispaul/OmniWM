@@ -717,8 +717,7 @@ enum NiriWindowMoveResult {
            snapshot.isActiveWorkspace,
            let selectedId = state.selectedNodeId,
            let selectedNode = pass.engine.findNode(by: selectedId),
-           !removal.removalResult.visibilityWasCorrected,
-           removal.removalResult.removedTokens.isEmpty || removal.removalResult.fromIndexForVisibility != nil
+           !removal.removalResult.visibilityWasCorrected
         {
             let targetColIdx = pass.engine.column(of: selectedNode)
                 .flatMap { pass.engine.columnIndex(of: $0, in: pass.wsId) }
