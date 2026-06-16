@@ -242,6 +242,10 @@ final class AXManager {
             lastAppliedFrames[newWindowId] = frame
         }
 
+        if let quantum = sizeQuantumByWindowId.removeValue(forKey: oldWindowId) {
+            sizeQuantumByWindowId[newWindowId] = quantum
+        }
+
         if let frame = pendingFrameWrites.removeValue(forKey: oldWindowId) {
             pendingFrameWrites[newWindowId] = frame
         }
@@ -309,6 +313,7 @@ final class AXManager {
         }
 
         lastAppliedFrames.removeValue(forKey: windowId)
+        sizeQuantumByWindowId.removeValue(forKey: windowId)
         pendingFrameWrites.removeValue(forKey: windowId)
         recentFrameWriteFailures.removeValue(forKey: windowId)
         retryBudgetByWindowId.removeValue(forKey: windowId)
@@ -504,7 +509,7 @@ final class AXManager {
                         continue
                     }
                 } else if let cached = cachedFrame,
-                          cached.approximatelyEqual(to: frame, tolerance: 0.5),
+                          frameWithinConvergence(cached: cached, target: frame, windowId: windowId),
                           !hasRecentFailure
                 {
                     if let terminalObserver {
@@ -734,6 +739,7 @@ final class AXManager {
                 lastAppliedFrames[resolvedWindowId] = confirmedFrame
                 recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
                 retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
+                sizeQuantumByWindowId.removeValue(forKey: resolvedWindowId)
                 appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
                 notifyPendingFrameObserver(with: resolvedResult)
                 clearSettledRekeyMappings(to: resolvedWindowId)
@@ -752,6 +758,7 @@ final class AXManager {
                    !inactiveWorkspaceWindowIds.contains(resolvedWindowId)
                 {
                     lastAppliedFrames[resolvedWindowId] = observedFrame
+                    learnSizeQuantum(windowId: resolvedWindowId, target: resolvedResult.targetFrame, observed: observedFrame)
                     recentFrameWriteFailures.removeValue(forKey: resolvedWindowId)
                     retryBudgetByWindowId.removeValue(forKey: resolvedWindowId)
                     appBusyBackoffDelay.removeValue(forKey: resolvedWindowId)
