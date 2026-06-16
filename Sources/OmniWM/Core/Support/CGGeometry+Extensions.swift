@@ -11,6 +11,7 @@ extension CGPoint {
 enum FrameTolerance {
     static let frameWrite: CGFloat = 1.0
     static let screenMatch: CGFloat = 2.0
+    static let verticalSnap: CGFloat = 4.0
 }
 
 extension CGRect {
@@ -27,13 +28,13 @@ extension CGRect {
 
     func axisAwareApproximatelyEqual(
         to other: CGRect,
-        xyTolerance: CGFloat = 1.0,
-        yhTolerance: CGFloat = 4.0
+        horizontalTolerance: CGFloat = FrameTolerance.frameWrite,
+        verticalTolerance: CGFloat = FrameTolerance.verticalSnap
     ) -> Bool {
-        abs(origin.x - other.origin.x) < xyTolerance
-            && abs(origin.y - other.origin.y) < yhTolerance
-            && abs(width - other.width) < xyTolerance
-            && abs(height - other.height) < yhTolerance
+        abs(origin.x - other.origin.x) < horizontalTolerance
+            && abs(origin.y - other.origin.y) < verticalTolerance
+            && abs(width - other.width) < horizontalTolerance
+            && abs(height - other.height) < verticalTolerance
     }
 }
 
