@@ -54,85 +54,6 @@ enum NiriWindowMoveResult {
         controller.layoutRefreshController.startScrollAnimation(for: workspaceId)
     }
 
-    private func applyViewportPipeline(
-        pass: NiriLayoutPass,
-        state: inout ViewportState,
-        priorFocusedColumnPosition: CGFloat?,
-        applyPolicies: Bool
-    ) {
-        guard let controller else { return }
-        let engine = pass.engine
-        let columns = engine.columns(in: pass.wsId)
-        guard !columns.isEmpty else { return }
-        let orientation = engine.monitor(for: pass.monitor.id)?.orientation ?? .horizontal
-        let motion = controller.motionPolicy.snapshot()
-        let sizeKeyPath: KeyPath<NiriContainer, CGFloat> = orientation == .horizontal
-            ? \.cachedWidth : \.cachedHeight
-
-        if let priorPos = priorFocusedColumnPosition {
-            applyAnchorPreservation(
-                state: &state,
-                priorFocusedColumnPosition: priorPos,
-                columns: columns,
-                gap: pass.gap,
-                sizeKeyPath: sizeKeyPath
-            )
-        }
-
-        let viewportSpan = orientation == .horizontal
-            ? pass.insetFrame.width : pass.insetFrame.height
-        guard applyPolicies else {
-            if !state.viewOffsetPixels.isAnimating, !state.viewOffsetPixels.isGesture {
-                state.applyOverspread(
-                    containers: columns,
-                    gap: pass.gap,
-                    viewportSpan: viewportSpan,
-                    sizeKeyPath: sizeKeyPath,
-                    motion: motion,
-                    animate: false
-                )
-            }
-            state.clampViewportOffset(
-                containers: columns,
-                gap: pass.gap,
-                viewportSpan: viewportSpan,
-                sizeKeyPath: sizeKeyPath
-            )
-            return
-        }
-
-        // applyOverspread is the SSOT for "do columns fit?" — no duplicate guard here.
-        // When it returns true, all columns are centered and visible (active column included).
-        let didOverspread = state.applyOverspread(
-            containers: columns,
-            gap: pass.gap,
-            viewportSpan: viewportSpan,
-            sizeKeyPath: sizeKeyPath,
-            motion: motion,
-            animate: false
-        )
-        if !didOverspread {
-            let settings = engine.effectiveSettings(for: pass.monitor.id)
-            state.ensureContainerVisible(
-                containerIndex: state.activeColumnIndex,
-                containers: columns,
-                gap: pass.gap,
-                viewportSpan: viewportSpan,
-                motion: motion,
-                sizeKeyPath: sizeKeyPath,
-                animate: false,
-                centerMode: settings.centerFocusedColumn,
-                alwaysCenterSingleColumn: settings.alwaysCenterSingleColumn
-            )
-            state.clampViewportOffset(
-                containers: columns,
-                gap: pass.gap,
-                viewportSpan: viewportSpan,
-                sizeKeyPath: sizeKeyPath
-            )
-        }
-    }
-
     private func applyAnchorPreservation(
         state: inout ViewportState,
         priorFocusedColumnPosition: CGFloat,
@@ -538,15 +459,57 @@ enum NiriWindowMoveResult {
             snapshot: snapshot
         )
 
+        // Viewport policy — anchor preservation, overspread, clamp
+        let requiresRecalc = state.requiresViewportRecalc
+        if requiresRecalc {
+            state.requiresViewportRecalc = false
+        }
+
+        let vpColumns = engine.columns(in: pass.wsId)
+        if !vpColumns.isEmpty {
+            let vpOrientation = engine.monitor(for: pass.monitor.id)?.orientation ?? .horizontal
+            let vpSizeKeyPath: KeyPath<NiriContainer, CGFloat> = vpOrientation == .horizontal
+                ? \.cachedWidth : \.cachedHeight
+            let vpSpan = vpOrientation == .horizontal
+                ? pass.insetFrame.width : pass.insetFrame.height
+
+            if let priorPos = priorFocusedColumnPosition {
+                applyAnchorPreservation(
+                    state: &state,
+                    priorFocusedColumnPosition: priorPos,
+                    columns: vpColumns,
+                    gap: pass.gap,
+                    sizeKeyPath: vpSizeKeyPath
+                )
+            }
+
+            if !state.viewOffsetPixels.isAnimating, !state.viewOffsetPixels.isGesture {
+                state.applyOverspread(
+                    containers: vpColumns,
+                    gap: pass.gap,
+                    viewportSpan: vpSpan,
+                    sizeKeyPath: vpSizeKeyPath,
+                    motion: motion,
+                    animate: false
+                )
+            }
+            state.clampViewportOffset(
+                containers: vpColumns,
+                gap: pass.gap,
+                viewportSpan: vpSpan,
+                sizeKeyPath: vpSizeKeyPath
+            )
+        }
+
         let plan = computeLayoutPlan(
             pass: pass,
             motion: motion,
-            state: &state,
+            state: state,
             rememberedFocusToken: arrival.rememberedFocusToken ?? selection.rememberedFocusToken,
             newWindowToken: arrival.newWindowToken,
             viewportNeedsRecalc: selection.viewportNeedsRecalc,
-            snapshot: snapshot,
-            priorFocusedColumnPosition: priorFocusedColumnPosition
+            requiresRecalc: requiresRecalc,
+            snapshot: snapshot
         )
 
         controller?.workspaceManager.setNiriRestorePlacements(
@@ -868,12 +831,12 @@ enum NiriWindowMoveResult {
     private func computeLayoutPlan(
         pass: NiriLayoutPass,
         motion: MotionSnapshot,
-        state: inout ViewportState,
+        state: ViewportState,
         rememberedFocusToken: WindowToken?,
         newWindowToken: WindowToken?,
         viewportNeedsRecalc: Bool,
-        snapshot: NiriWorkspaceSnapshot,
-        priorFocusedColumnPosition: CGFloat? = nil
+        requiresRecalc: Bool,
+        snapshot: NiriWorkspaceSnapshot
     ) -> WorkspaceLayoutPlan {
         let gaps = LayoutGaps(
             horizontal: pass.gap,
@@ -896,11 +859,6 @@ enum NiriWindowMoveResult {
             animationTime: nil
         )
 
-        let requiresRecalc = state.requiresViewportRecalc
-        if requiresRecalc {
-            state.requiresViewportRecalc = false
-        }
-
         let diagOffset = state.viewOffsetPixels.target()
         let diagActive = state.activeColumnIndex
         let diagFrameXs = frames.sorted(by: { $0.value.minX < $1.value.minX }).prefix(3)
@@ -909,13 +867,6 @@ enum NiriWindowMoveResult {
             .debug(
                 "computeLayoutPlan: wsId=\(pass.wsId.uuidString.prefix(8), privacy: .public) offset=\(diagOffset, privacy: .public) activeCol=\(diagActive, privacy: .public) frames=[\(diagFrameXs, privacy: .public)] viewportNeedsRecalc=\(viewportNeedsRecalc, privacy: .public) requiresRecalc=\(requiresRecalc, privacy: .public) applyPolicies=\(viewportNeedsRecalc || newWindowToken != nil || requiresRecalc, privacy: .public)"
             )
-
-        applyViewportPipeline(
-            pass: pass,
-            state: &state,
-            priorFocusedColumnPosition: priorFocusedColumnPosition,
-            applyPolicies: viewportNeedsRecalc || newWindowToken != nil || requiresRecalc
-        )
 
         let hasColumnAnimations = pass.engine.hasAnyColumnAnimationsRunning(in: pass.wsId)
         var directives: [AnimationDirective] = []
