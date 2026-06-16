@@ -483,7 +483,7 @@ import Testing
         for i in 1 ..< offsets.count {
             #expect(
                 abs(offsets[i] - offsets[i - 1]) < 1,
-                "Viewport must converge: pass \(i) offset=\(offsets[i]) vs pass \(i-1) offset=\(offsets[i-1])"
+                "Viewport must converge: pass \(i) offset=\(offsets[i]) vs pass \(i - 1) offset=\(offsets[i - 1])"
             )
         }
     }
