@@ -441,4 +441,50 @@ import Testing
             "Active column must be visible after left-column removal (colStart=\(colStart) colEnd=\(colEnd) viewStart=\(viewStart) viewEnd=\(viewEnd))"
         )
     }
+
+    @Test func viewportPipelineConvergesAfterMultipleRelayouts() async {
+        let controller = makeLayoutPlanTestController(
+            monitors: [makeLayoutPlanTestMonitor(width: 2560, height: 1440)]
+        )
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9601)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9602)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9603)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        controller.niriLayoutHandler.focusNeighbor(direction: .right)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        var state = controller.workspaceManager.niriViewportState(for: workspaceId)
+        state.viewOffsetPixels = .static(state.viewOffsetPixels.target())
+        controller.workspaceManager.updateNiriViewportState(state, for: workspaceId)
+
+        var offsets: [Double] = []
+        for _ in 0 ..< 5 {
+            controller.layoutRefreshController.requestImmediateRelayout(reason: .layoutCommand)
+            await controller.layoutRefreshController.waitForRefreshWorkForTests()
+            let s = controller.workspaceManager.niriViewportState(for: workspaceId)
+            offsets.append(s.viewOffsetPixels.target())
+        }
+
+        for i in 1 ..< offsets.count {
+            #expect(
+                abs(offsets[i] - offsets[i - 1]) < 1,
+                "Viewport must converge: pass \(i) offset=\(offsets[i]) vs pass \(i-1) offset=\(offsets[i-1])"
+            )
+        }
+    }
 }
