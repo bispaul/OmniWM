@@ -383,4 +383,62 @@ import Testing
             "Viewport offset must not drift after workspace switch (nav=\(navOffset) post=\(postOffset) diff=\(abs(postOffset - navOffset)))"
         )
     }
+
+    @Test func activeColumnVisibleAfterLeftColumnRemoval() async {
+        let controller = makeLayoutPlanTestController(
+            monitors: [makeLayoutPlanTestMonitor(width: 2560, height: 1440)]
+        )
+        controller.enableNiriLayout()
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+        controller.syncMonitorsToNiriEngine()
+
+        guard let monitor = controller.workspaceManager.monitors.first,
+              let workspaceId = controller.workspaceManager.activeWorkspaceOrFirst(on: monitor.id)?.id,
+              let engine = controller.niriEngine
+        else {
+            Issue.record("Missing Niri context")
+            return
+        }
+
+        let token1 = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9801)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9802)
+        _ = addLayoutPlanTestWindow(on: controller, workspaceId: workspaceId, windowId: 9803)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        controller.niriLayoutHandler.focusNeighbor(direction: .right)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let preRemoval = controller.workspaceManager.niriViewportState(for: workspaceId)
+        #expect(preRemoval.activeColumnIndex == 1, "Should be on column 1 before removal")
+
+        engine.removeWindow(token: token1)
+        var state = controller.workspaceManager.niriViewportState(for: workspaceId)
+        state.requiresViewportRecalc = true
+        controller.workspaceManager.updateNiriViewportState(state, for: workspaceId)
+
+        controller.layoutRefreshController.requestImmediateRelayout(reason: .workspaceTransition)
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        let postRemoval = controller.workspaceManager.niriViewportState(for: workspaceId)
+        let columns = engine.columns(in: workspaceId)
+        let gap = CGFloat(controller.workspaceManager.gaps)
+        let activeCol = postRemoval.activeColumnIndex
+        #expect(activeCol < columns.count, "activeColumnIndex must be valid")
+
+        let viewStart = postRemoval.containerPosition(
+            at: activeCol, containers: columns, gap: gap, sizeKeyPath: \.cachedWidth
+        ) + postRemoval.stationary()
+        let viewEnd = viewStart + monitor.frame.width
+        let colStart = postRemoval.containerPosition(
+            at: activeCol, containers: columns, gap: gap, sizeKeyPath: \.cachedWidth
+        )
+        let colEnd = colStart + columns[activeCol].cachedWidth
+
+        #expect(
+            colStart >= viewStart - gap && colEnd <= viewEnd + gap,
+            "Active column must be visible after left-column removal (colStart=\(colStart) colEnd=\(colEnd) viewStart=\(viewStart) viewEnd=\(viewEnd))"
+        )
+    }
 }
