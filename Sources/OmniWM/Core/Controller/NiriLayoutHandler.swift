@@ -112,18 +112,6 @@ enum NiriWindowMoveResult {
             animate: false
         )
         if !didOverspread {
-            let settings = engine.effectiveSettings(for: pass.monitor.id)
-            state.ensureContainerVisible(
-                containerIndex: state.activeColumnIndex,
-                containers: columns,
-                gap: pass.gap,
-                viewportSpan: viewportSpan,
-                motion: motion,
-                sizeKeyPath: sizeKeyPath,
-                animate: false,
-                centerMode: settings.centerFocusedColumn,
-                alwaysCenterSingleColumn: settings.alwaysCenterSingleColumn
-            )
             state.clampViewportOffset(
                 containers: columns,
                 gap: pass.gap,
