@@ -459,6 +459,12 @@ enum NiriWindowMoveResult {
             snapshot: snapshot
         )
 
+        // Skip anchor preservation during structural changes — removeColumnByIdx
+        // already adjusts the offset, and anchor preservation would double-correct
+        let hasStructuralChange = !removal.removalResult.removedTokens.isEmpty
+            || arrival.newWindowToken != nil
+        let effectivePriorPos = hasStructuralChange ? nil : priorFocusedColumnPosition
+
         // Viewport policy
         let requiresRecalc = state.requiresViewportRecalc
         if requiresRecalc {
@@ -473,7 +479,7 @@ enum NiriWindowMoveResult {
             let vpSpan = vpOrientation == .horizontal
                 ? pass.insetFrame.width : pass.insetFrame.height
 
-            if let priorPos = priorFocusedColumnPosition {
+            if let priorPos = effectivePriorPos {
                 applyAnchorPreservation(
                     state: &state,
                     priorFocusedColumnPosition: priorPos,

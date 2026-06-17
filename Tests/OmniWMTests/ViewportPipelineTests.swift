@@ -413,6 +413,7 @@ import Testing
         let preRemoval = controller.workspaceManager.niriViewportState(for: workspaceId)
         #expect(preRemoval.activeColumnIndex == 1, "Should be on column 1 before removal")
 
+        controller.workspaceManager.removeWindow(pid: getpid(), windowId: 9801)
         engine.removeWindow(token: token1)
         var state = controller.workspaceManager.niriViewportState(for: workspaceId)
         state.requiresViewportRecalc = true
