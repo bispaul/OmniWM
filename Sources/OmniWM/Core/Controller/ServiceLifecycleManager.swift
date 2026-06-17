@@ -83,6 +83,7 @@ final class ServiceLifecycleManager {
     private var pendingTopologyTask: Task<Void, Never>?
     private var reconciliationSafetyTask: Task<Void, Never>?
     private static let topologyCoalesceInterval: UInt64 = 300_000_000 // 300ms
+    private static let reconciliationSafetyTimeout: UInt64 = 5_000_000_000 // 5s
     var accessibilityPermissionStreamProviderForTests: ((Bool) -> AsyncStream<Bool>)?
     var accessibilityPermissionStateProviderForTests: (() -> Bool)?
     var accessibilityPermissionRequestHandlerForTests: (() -> Bool)?
@@ -231,7 +232,7 @@ final class ServiceLifecycleManager {
             controller?.workspaceManager.isReconciling = true
             reconciliationSafetyTask?.cancel()
             reconciliationSafetyTask = Task { @MainActor [weak self] in
-                try? await Task.sleep(nanoseconds: 5_000_000_000)
+                try? await Task.sleep(nanoseconds: Self.reconciliationSafetyTimeout)
                 guard !Task.isCancelled, let self else { return }
                 if self.controller?.workspaceManager.isReconciling == true {
                     WMLog.workspace.info("Reconciliation safety timeout — force-clearing isReconciling")
@@ -990,6 +991,8 @@ final class ServiceLifecycleManager {
         controller.lockScreenObserver.stop()
         pendingTopologyTask?.cancel()
         pendingTopologyTask = nil
+        reconciliationSafetyTask?.cancel()
+        reconciliationSafetyTask = nil
         permissionCheckerTask?.cancel()
         permissionCheckerTask = nil
         controller.reconcileEnabledAndHotkeysState()
