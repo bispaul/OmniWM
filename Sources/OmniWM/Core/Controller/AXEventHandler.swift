@@ -594,7 +594,8 @@ final class AXEventHandler: CGSEventDelegate {
         if controller?.isOwnedWindow(windowNumber: Int(windowId)) == true { return }
         let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
             controller?.serviceLifecycleManager.isAwaitingRestore == true
-        if isInProtectedWindow, windowExistsInWindowServer(windowId) {
+        let isReconciling = controller?.workspaceManager.isReconciling == true
+        if isInProtectedWindow, (isReconciling || windowExistsInWindowServer(windowId)) {
             WMLog.ax
                 .info(
                     "Window destroyed suppressed (wake/reconfig, still in window server): windowId=\(windowId, privacy: .public)"
@@ -2933,7 +2934,8 @@ extension AXEventHandler: ManagedReplacementCorrelatorDelegate {
     func correlatorShouldSuppressDestroyReplay(windowId: UInt32) -> Bool {
         let isInProtectedWindow = controller?.workspaceManager.isReconciling == true ||
             controller?.serviceLifecycleManager.isAwaitingRestore == true
-        return isInProtectedWindow && windowExistsInWindowServer(windowId)
+        let isReconciling = controller?.workspaceManager.isReconciling == true
+        return isInProtectedWindow && (isReconciling || windowExistsInWindowServer(windowId))
     }
 
     func correlatorFallbackWorkspaceId() -> WorkspaceDescriptor.ID? {

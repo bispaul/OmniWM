@@ -81,6 +81,7 @@ final class ServiceLifecycleManager {
     private var restoreTimerTask: Task<Void, Never>?
     private var darkWakeTimeoutTask: Task<Void, Never>?
     private var pendingTopologyTask: Task<Void, Never>?
+    private var reconciliationSafetyTask: Task<Void, Never>?
     private static let topologyCoalesceInterval: UInt64 = 300_000_000 // 300ms
     var accessibilityPermissionStreamProviderForTests: ((Bool) -> AsyncStream<Bool>)?
     var accessibilityPermissionStateProviderForTests: (() -> Bool)?
@@ -227,6 +228,16 @@ final class ServiceLifecycleManager {
     private func handleDisplayEvent(_ event: DisplayConfigurationObserver.DisplayEvent) {
         switch event {
         case let .disconnected(monitorId, outputId):
+            controller?.workspaceManager.isReconciling = true
+            reconciliationSafetyTask?.cancel()
+            reconciliationSafetyTask = Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: 5_000_000_000)
+                guard !Task.isCancelled, let self else { return }
+                if self.controller?.workspaceManager.isReconciling == true {
+                    WMLog.workspace.info("Reconciliation safety timeout — force-clearing isReconciling")
+                    self.controller?.workspaceManager.isReconciling = false
+                }
+            }
             if sleepSnapshot == nil, case .idle = wakePhase {
                 sleepSnapshot = captureStateSnapshot()
                 let monCount = sleepSnapshot?.outputIds.count ?? 0
@@ -283,6 +294,7 @@ final class ServiceLifecycleManager {
         controller.workspaceManager.applyMonitorConfigurationChange(currentMonitors)
         controller.syncMouseWarpPolicy(for: controller.workspaceManager.monitors)
         guard performPostUpdateActions else {
+            reconciliationSafetyTask?.cancel()
             controller.workspaceManager.isReconciling = false
             return
         }
@@ -294,6 +306,7 @@ final class ServiceLifecycleManager {
         controller.workspaceManager.garbageCollectUnusedWorkspaces(focusedWorkspaceId: focusedWsId)
 
         controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
+        reconciliationSafetyTask?.cancel()
         controller.workspaceManager.isReconciling = false
     }
 
