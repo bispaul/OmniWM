@@ -292,6 +292,7 @@ final class ServiceLifecycleManager {
         guard currentMonitors.allSatisfy({ $0.frame.width > 1 && $0.frame.height > 1 }) else { return }
 
         controller.workspaceManager.isReconciling = true
+        let previousMonitorIds = Set(controller.workspaceManager.monitors.map(\.id))
         controller.workspaceManager.applyMonitorConfigurationChange(currentMonitors)
         controller.syncMouseWarpPolicy(for: controller.workspaceManager.monitors)
         guard performPostUpdateActions else {
@@ -305,6 +306,23 @@ final class ServiceLifecycleManager {
         let focusedWsId = controller.workspaceManager.focusedToken
             .flatMap { controller.workspaceManager.workspace(for: $0) }
         controller.workspaceManager.garbageCollectUnusedWorkspaces(focusedWorkspaceId: focusedWsId)
+
+        let reconnectedMonitorIds = Set(currentMonitors.map(\.id)).subtracting(previousMonitorIds)
+        if !reconnectedMonitorIds.isEmpty {
+            var invalidatedCount = 0
+            for workspace in controller.workspaceManager.workspaces {
+                guard let monitorId = controller.workspaceManager.monitorId(for: workspace.id),
+                      reconnectedMonitorIds.contains(monitorId)
+                else { continue }
+                for entry in controller.workspaceManager.entries(in: workspace.id) {
+                    controller.axManager.invalidateFrameCache(for: entry.token.windowId)
+                    invalidatedCount += 1
+                }
+            }
+            WMLog.ax.info(
+                "monitorReconnect: invalidated frame cache for \(invalidatedCount, privacy: .public) windows on \(reconnectedMonitorIds.count, privacy: .public) monitor(s)"
+            )
+        }
 
         controller.layoutRefreshController.requestFullRescan(reason: .monitorConfigurationChanged)
         reconciliationSafetyTask?.cancel()

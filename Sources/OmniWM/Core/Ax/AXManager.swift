@@ -144,6 +144,11 @@ final class AXManager {
         lastAppliedFrames[windowId]
     }
 
+    func invalidateFrameCache(for windowId: Int) {
+        lastAppliedFrames.removeValue(forKey: windowId)
+        sizeQuantumByWindowId.removeValue(forKey: windowId)
+    }
+
     func recentFrameWriteFailure(for windowId: Int) -> AXFrameWriteFailureReason? {
         recentFrameWriteFailures[windowId]
     }

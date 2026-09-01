@@ -1,16 +1,16 @@
-# Graph Report - Sources  (2026-06-17)
+# Graph Report - Sources  (2026-06-18)
 
 ## Corpus Check
-- 248 files · ~267,386 words
+- 248 files · ~267,539 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 8672 nodes · 21230 edges · 362 communities (346 shown, 16 thin omitted)
+- 8674 nodes · 21238 edges · 349 communities (336 shown, 13 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 253 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6b41f133`
+- Built from commit: `471848bb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -282,7 +282,6 @@
 - [[_COMMUNITY_Community 264|Community 264]]
 - [[_COMMUNITY_Community 265|Community 265]]
 - [[_COMMUNITY_Community 266|Community 266]]
-- [[_COMMUNITY_Community 267|Community 267]]
 - [[_COMMUNITY_Community 268|Community 268]]
 - [[_COMMUNITY_Community 269|Community 269]]
 - [[_COMMUNITY_Community 270|Community 270]]
@@ -290,9 +289,7 @@
 - [[_COMMUNITY_Community 272|Community 272]]
 - [[_COMMUNITY_Community 273|Community 273]]
 - [[_COMMUNITY_Community 274|Community 274]]
-- [[_COMMUNITY_Community 275|Community 275]]
 - [[_COMMUNITY_Community 276|Community 276]]
-- [[_COMMUNITY_Community 277|Community 277]]
 - [[_COMMUNITY_Community 278|Community 278]]
 - [[_COMMUNITY_Community 279|Community 279]]
 - [[_COMMUNITY_Community 280|Community 280]]
@@ -324,7 +321,6 @@
 - [[_COMMUNITY_Community 306|Community 306]]
 - [[_COMMUNITY_Community 307|Community 307]]
 - [[_COMMUNITY_Community 308|Community 308]]
-- [[_COMMUNITY_Community 309|Community 309]]
 - [[_COMMUNITY_Community 310|Community 310]]
 - [[_COMMUNITY_Community 311|Community 311]]
 - [[_COMMUNITY_Community 312|Community 312]]
@@ -336,7 +332,6 @@
 - [[_COMMUNITY_Community 318|Community 318]]
 - [[_COMMUNITY_Community 319|Community 319]]
 - [[_COMMUNITY_Community 320|Community 320]]
-- [[_COMMUNITY_Community 321|Community 321]]
 - [[_COMMUNITY_Community 322|Community 322]]
 - [[_COMMUNITY_Community 323|Community 323]]
 - [[_COMMUNITY_Community 324|Community 324]]
@@ -356,29 +351,20 @@
 - [[_COMMUNITY_Community 338|Community 338]]
 - [[_COMMUNITY_Community 339|Community 339]]
 - [[_COMMUNITY_Community 340|Community 340]]
-- [[_COMMUNITY_Community 341|Community 341]]
 - [[_COMMUNITY_Community 342|Community 342]]
-- [[_COMMUNITY_Community 343|Community 343]]
 - [[_COMMUNITY_Community 344|Community 344]]
-- [[_COMMUNITY_Community 345|Community 345]]
-- [[_COMMUNITY_Community 346|Community 346]]
 - [[_COMMUNITY_Community 347|Community 347]]
-- [[_COMMUNITY_Community 348|Community 348]]
 - [[_COMMUNITY_Community 349|Community 349]]
 - [[_COMMUNITY_Community 351|Community 351]]
-- [[_COMMUNITY_Community 352|Community 352]]
-- [[_COMMUNITY_Community 353|Community 353]]
 - [[_COMMUNITY_Community 354|Community 354]]
 - [[_COMMUNITY_Community 355|Community 355]]
 - [[_COMMUNITY_Community 356|Community 356]]
-- [[_COMMUNITY_Community 357|Community 357]]
 - [[_COMMUNITY_Community 358|Community 358]]
 - [[_COMMUNITY_Community 359|Community 359]]
-- [[_COMMUNITY_Community 360|Community 360]]
 - [[_COMMUNITY_Community 361|Community 361]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `WorkspaceManager` - 255 edges
+1. `WorkspaceManager` - 256 edges
 2. `WMController` - 210 edges
 3. `LayoutRefreshController` - 160 edges
 4. `AXEventHandler` - 143 edges
@@ -404,11 +390,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (362 total, 16 thin omitted)
+## Communities (349 total, 13 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.04
-Nodes (124): Codable, MonitorSettingsType, Equatable, ColumnDisplay, normal, tabbed, AddArguments, ApplyArguments (+116 more)
+Cohesion: 0.05
+Nodes (97): Codable, AddArguments, ApplyArguments, IPCActiveWorkspaceQueryResult, IPCAppRef, IPCAppsQueryResult, IPCColumnIndexArguments, IPCDirection (+89 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.06
@@ -428,7 +414,7 @@ Nodes (44): AXWindowRef, Bool, CGPoint, CGRect, CGSize, Date, DesiredWindowState
 
 ### Community 5 - "Community 5"
 Cohesion: 0.05
-Nodes (42): IPCQueryName, IPCResultKind, IPCRuleActionName, IPCRuleActionOptionDescriptor, IPCWindowActionName, IPCWorkspaceActionName, IPCAutomationLayoutCompatibility, dwindle (+34 more)
+Nodes (56): IPCQueryName, IPCResponseStatus, IPCResultKind, IPCRuleActionName, IPCRuleActionOptionDescriptor, IPCWindowActionName, IPCWorkspaceActionName, CLILocalErrorCode (+48 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.08
@@ -455,16 +441,16 @@ Cohesion: 0.05
 Nodes (37): ActivationEventSource, cgsFrontAppChanged, focusedWindowChanged, workspaceDidActivateApplication, LayoutEngineType, dwindle, niri, unmanaged (+29 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.06
-Nodes (39): Any, Bool, CGDirectDisplayID, CGFloat, CGRect, Content, Double, Int (+31 more)
+Cohesion: 0.07
+Nodes (35): Any, Bool, CGDirectDisplayID, CGFloat, CGRect, Content, Double, Int (+27 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.06
 Nodes (51): AXWindowFacts, AXWindowHeuristicReason, NSRegularExpression, AppRule, Bool, Double, Int, Set (+43 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.06
-Nodes (42): CLIParseError, IPCManagedAppSummary, IPCResponseStatus, IPCSize, IPCWorkspaceWindowCounts, CLILocalErrorCode, internalError, invalidArguments (+34 more)
+Cohesion: 0.07
+Nodes (34): CLIParseError, IPCManagedAppSummary, IPCSize, IPCWorkspaceWindowCounts, CLIOutputDestination, standardError, standardOutput, CLIRenderedOutput (+26 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.06
@@ -472,7 +458,7 @@ Nodes (42): ConflictAlert, HotkeyNoticeAlert, HotkeyPresetPreview, HotkeySequenc
 
 ### Community 16 - "Community 16"
 Cohesion: 0.08
-Nodes (17): AXWindowRef, Date, DesiredWindowState, LayoutReason, ManagedReplacementMetadata, ManagedWindowRuleEffects, ManualWindowOverride, ObservedWindowState (+9 more)
+Nodes (15): AXWindowRef, Date, DisplayFingerprint, LayoutReason, ManagedReplacementMetadata, ManagedWindowRuleEffects, ManualWindowOverride, ObservedWindowState (+7 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.06
@@ -483,8 +469,8 @@ Cohesion: 0.07
 Nodes (28): AXManager, FullRescanEnumerationSnapshot, PendingFrameObserver, WindowStateDebugSnapshot, FrameApplicationTerminalObserver, AXFrameApplicationRequest, AXFrameApplyResult, AXFrameRequestId (+20 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.05
-Nodes (36): CaseIterable, AppearanceMode, automatic, dark, light, AppRule, WindowRuleLayoutAction, auto (+28 more)
+Cohesion: 0.16
+Nodes (14): AppRule, WindowRuleLayoutAction, auto, float, tile, WindowRuleManageAction, auto, off (+6 more)
 
 ### Community 20 - "Community 20"
 Cohesion: 0.14
@@ -492,15 +478,15 @@ Nodes (17): ActionPlan, Bool, DesiredWindowState, FocusPolicyLease, FocusSession
 
 ### Community 21 - "Community 21"
 Cohesion: 0.06
-Nodes (18): AnimationClock, Double, FocusSessionSnapshot, LayoutGaps, MonitorDescription, PersistedWindowRestoreConsumptionKey, ReconcileSnapshot, ReconcileTraceRecord (+10 more)
+Nodes (21): AnimationClock, DesiredWindowState, Double, FocusSessionSnapshot, LayoutGaps, PersistedWindowRestoreCatalog, PersistedWindowRestoreConsumptionKey, ReconcileSnapshot (+13 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.10
-Nodes (19): CanonicalTOMLConfig.Appearance, CanonicalTOMLConfig.Borders, CanonicalTOMLConfig.Borders.Color, CanonicalTOMLConfig.Clipboard, CanonicalTOMLConfig.Dwindle, CanonicalTOMLConfig.Focus, CanonicalTOMLConfig.Gaps, CanonicalTOMLConfig.Gaps.Outer (+11 more)
+Cohesion: 0.12
+Nodes (20): CanonicalTOMLConfig.Appearance, CanonicalTOMLConfig.Borders, CanonicalTOMLConfig.Borders.Color, CanonicalTOMLConfig.Clipboard, CanonicalTOMLConfig.Dwindle, CanonicalTOMLConfig.Focus, CanonicalTOMLConfig.Gaps, CanonicalTOMLConfig.Gaps.Outer (+12 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.12
-Nodes (12): ID, Monitor, MonitorRestoreKey, UInt32, Void, TopologyTransitionPlan, DisconnectedVisibleWorkspaceMigration, MonitorResolutionContext (+4 more)
+Cohesion: 0.11
+Nodes (7): Monitor, MonitorRestoreKey, TopologyProfile, TopologyTransitionPlan, DisconnectedVisibleWorkspaceMigration, MonitorResolutionContext, WorkspaceRestoreSnapshot
 
 ### Community 24 - "Community 24"
 Cohesion: 0.18
@@ -508,7 +494,7 @@ Nodes (18): ClipboardContentKind, fileURL, html, image, richText, text, Clipboar
 
 ### Community 25 - "Community 25"
 Cohesion: 0.04
-Nodes (36): CommandPaletteController, WMController, FocusBridgeCoordinator, FocusPolicyEngine, NativeFullscreenPlaceholderManager, Bool, BorderConfig, BorderWindow (+28 more)
+Nodes (28): CommandPaletteController, WMController, FocusBridgeCoordinator, FocusPolicyEngine, NativeFullscreenPlaceholderManager, BorderConfig, BorderWindow, ClipboardHistoryConfiguration (+20 more)
 
 ### Community 26 - "Community 26"
 Cohesion: 0.07
@@ -543,12 +529,12 @@ Cohesion: 0.07
 Nodes (38): InteractiveMove, InteractiveResize, CenterFocusedColumn, always, never, onOverflow, computeWorkingArea(), NiriLayoutEngine (+30 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.10
-Nodes (18): FocusPolicyLease, PersistedWindowRestoreCatalog, PersistedWindowRestoreEntry, PersistedWindowRestoreKey, UInt64, PersistedWindowRestoreCatalogBuildEntry, Candidate, FocusSession (+10 more)
+Cohesion: 0.15
+Nodes (15): PersistedWindowRestoreEntry, PersistedWindowRestoreKey, PersistedWindowRestoreCatalogBuildEntry, Candidate, FullscreenRestoreInfo, NativeFullscreenAvailability, present, temporarilyUnavailable (+7 more)
 
 ### Community 35 - "Community 35"
-Cohesion: 0.14
-Nodes (18): CLILocalErrorCode, CLIRenderedOutput, CLIWatchConfiguration, IPCClient, CLIRuntime, CLIWatchProcessState, Bool, CLIExitCode (+10 more)
+Cohesion: 0.09
+Nodes (27): CLILocalErrorCode, CLIRenderedOutput, CLIWatchConfiguration, IPCClient, OmniWMCtlMain, CLIRuntime, CLIWatchProcessState, Bool (+19 more)
 
 ### Community 36 - "Community 36"
 Cohesion: 0.12
@@ -567,16 +553,16 @@ Cohesion: 0.11
 Nodes (19): ResizePlaceholderManager, ResizePlaceholderSnapshot, ResizePlaceholderUpdate, ResizePlaceholderView, ResizePlaceholderWindow, Bool, CGPoint, CGRect (+11 more)
 
 ### Community 40 - "Community 40"
-Cohesion: 0.10
-Nodes (34): Bool, Int, Int32, Set, UInt32, UInt64, UInt8, UnsafeMutableRawPointer (+26 more)
+Cohesion: 0.20
+Nodes (22): Int, Int32, Set, UInt32, UInt64, UInt8, UnsafeMutableRawPointer, cgsConnectionCallback() (+14 more)
 
 ### Community 41 - "Community 41"
 Cohesion: 0.09
 Nodes (10): AnimationDirective, LayoutDiffExecutor, DisplayLinkManager, LayoutRefreshController, CGDirectDisplayID, Duration, HideSide, Task (+2 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.09
-Nodes (29): CTFont, NSAttributedString, Bool, CGContext, CGFloat, CGImage, CGRect, CGSize (+21 more)
+Cohesion: 0.06
+Nodes (44): CTFont, AXUIElement, MenuExtractor, NSEvent.ModifierFlags, NSMenu, NSAttributedString, Any, AnyObject (+36 more)
 
 ### Community 43 - "Community 43"
 Cohesion: 0.10
@@ -587,8 +573,8 @@ Cohesion: 0.15
 Nodes (15): WindowTransferResult, WorkspaceNavigationHandler, WorkspaceTransitionFocusHandoff, Bool, Direction, Int, Monitor, NodeId (+7 more)
 
 ### Community 45 - "Community 45"
-Cohesion: 0.29
-Nodes (6): AutomaticCheckSource, automatic, manual, GitHubRelease, UpdateCoordinator, URL
+Cohesion: 0.19
+Nodes (16): AppUpdateCoordinating, GitHubLatestReleasePayload, GitHubRelease, GitHubReleaseFetching, GitHubReleaseService, UpdateCoordinator, UpdatePopupConfiguration, UpdateWindowControlling (+8 more)
 
 ### Community 46 - "Community 46"
 Cohesion: 0.12
@@ -599,8 +585,8 @@ Cohesion: 0.12
 Nodes (20): BorderFrameSource, layout, observed, FocusBorderController, RenderEligibility, clear, hide, update (+12 more)
 
 ### Community 48 - "Community 48"
-Cohesion: 0.15
-Nodes (7): WorkspacePlacementTarget, AXWindowRef, NodeId, String, WindowHandle, WorkspaceDescriptor, WindowCreatePlacementContext
+Cohesion: 0.13
+Nodes (12): StatusBarWorkspaceSummary, WindowFocusOperations, WorkspaceBarRefreshDebugState, WorkspacePlacementTarget, AppInfoCache, AXUIElement, NodeId, pid_t (+4 more)
 
 ### Community 49 - "Community 49"
 Cohesion: 0.05
@@ -615,8 +601,8 @@ Cohesion: 0.09
 Nodes (37): Bool, CGDirectDisplayID, CGPoint, CGRect, CGSize, Date, FocusPolicyLease, Monitor (+29 more)
 
 ### Community 52 - "Community 52"
-Cohesion: 0.22
-Nodes (14): NiriLayoutEngine, Bool, CGFloat, CGRect, Int, LayoutGaps, MotionSnapshot, NiriContainer (+6 more)
+Cohesion: 0.07
+Nodes (46): NiriLayoutEngine, NiriLayoutEngine, NiriLayoutEngine, NiriSizeChange, ResolvedPresetWidth, tile, window, Bool (+38 more)
 
 ### Community 53 - "Community 53"
 Cohesion: 0.06
@@ -627,8 +613,8 @@ Cohesion: 0.05
 Nodes (39): RefreshReason, activeSpaceChanged, appActivationTransition, appHidden, appLaunched, appRulesChanged, appTerminated, appUnhidden (+31 more)
 
 ### Community 55 - "Community 55"
-Cohesion: 0.21
-Nodes (16): ColumnTransferResult, NiriLayoutEngine, TargetColumnInsertionPolicy, append, visualBottom, Bool, CGFloat, CGRect (+8 more)
+Cohesion: 0.20
+Nodes (17): ColumnTransferResult, NiriLayoutEngine, TargetColumnInsertionPolicy, append, visualBottom, Int, Bool, CGFloat (+9 more)
 
 ### Community 56 - "Community 56"
 Cohesion: 0.26
@@ -639,8 +625,8 @@ Cohesion: 0.15
 Nodes (37): Identifiable, Bool, CGFloat, Color, Double, Int, MotionPolicy, NSImage (+29 more)
 
 ### Community 58 - "Community 58"
-Cohesion: 0.13
-Nodes (31): DwindleWorkspaceSnapshot, LayoutFocusedFrame, LayoutFrameChange, LayoutMonitorSnapshot, LayoutRestoreChange, LayoutVisibilityChange, hide, show (+23 more)
+Cohesion: 0.09
+Nodes (48): AnimationDirective, activateWindow, none, startDwindleAnimation, startNiriScroll, updateTabbedOverlays, DwindleWorkspaceSnapshot, LayoutFocusedFrame (+40 more)
 
 ### Community 59 - "Community 59"
 Cohesion: 0.09
@@ -676,7 +662,7 @@ Nodes (11): HideReason, layoutTransient, scratchpad, workspaceInactive, PendingR
 
 ### Community 67 - "Community 67"
 Cohesion: 0.15
-Nodes (20): LayoutResult, ColumnRemovalResult, NiriLayoutEngine, Bool, CGFloat, CGPoint, CGRect, HideSide (+12 more)
+Nodes (19): LayoutResult, ColumnRemovalResult, NiriLayoutEngine, Bool, CGFloat, CGPoint, CGRect, HideSide (+11 more)
 
 ### Community 68 - "Community 68"
 Cohesion: 0.08
@@ -698,6 +684,10 @@ Nodes (16): ActionCatalog, ActionSpec, HotkeyVisibility, advanced, hidden, norma
 Cohesion: 0.13
 Nodes (17): Any, Bool, CGFloat, CGRect, NSStatusItem, String, UserDefaults, Range (+9 more)
 
+### Community 73 - "Community 73"
+Cohesion: 0.12
+Nodes (8): ID, Bool, FocusPolicyLease, TrackedWindowMode, FocusSession, MonitorSession, SessionState, WorkspaceDescriptor
+
 ### Community 74 - "Community 74"
 Cohesion: 0.09
 Nodes (27): ClipboardHistoryPasteboard, ClipboardHistoryRunLoopTimer, ClipboardHistoryService, ClipboardHistoryServiceEnvironment, ClipboardHistoryTimer, ClipboardPasteboardReader, ClipboardHistoryStore, ClipboardPasteboardCaptureConfiguration (+19 more)
@@ -708,7 +698,7 @@ Nodes (13): LayoutState, RefreshDebugHooks, RefreshRoute, immediateRelayout, rel
 
 ### Community 76 - "Community 76"
 Cohesion: 0.10
-Nodes (7): ActionPlan, Int, pid_t, RestoreIntent, TrackedWindowMode, WindowModel, PersistedHydrationMutation
+Nodes (8): ActionPlan, Int, PersistedNiriPlacement, pid_t, RestoreIntent, Set, WindowModel, PersistedHydrationMutation
 
 ### Community 77 - "Community 77"
 Cohesion: 0.10
@@ -719,8 +709,8 @@ Cohesion: 0.15
 Nodes (23): AppRuleDraft, AppRule, Binding, Bool, CGSize, Color, NSImage, SettingsStore (+15 more)
 
 ### Community 79 - "Community 79"
-Cohesion: 0.10
-Nodes (14): SettingsStore, Bool, Double, HyperKeyTrigger, LayoutType, MainActor, NSRect, PersistedWindowRestoreCatalog (+6 more)
+Cohesion: 0.09
+Nodes (15): GestureFingerCount, four, three, two, QuakeTerminalMonitorMode, focusedWindow, mainMonitor, mouseCursor (+7 more)
 
 ### Community 80 - "Community 80"
 Cohesion: 0.08
@@ -736,7 +726,7 @@ Nodes (7): NSView, CGFloat, NSEvent, NSPoint, QuakeSplitDividerMetrics, SplitDiv
 
 ### Community 83 - "Community 83"
 Cohesion: 0.17
-Nodes (13): IPCConnection, Data, FileHandle, Int32, IPCApplicationBridge, IPCEventEnvelope, IPCResponse, IPCSubscriptionChannel (+5 more)
+Nodes (12): IPCConnection, Data, FileHandle, Int32, IPCApplicationBridge, IPCEventEnvelope, IPCResponse, IPCSubscriptionChannel (+4 more)
 
 ### Community 84 - "Community 84"
 Cohesion: 0.16
@@ -751,8 +741,8 @@ Cohesion: 0.10
 Nodes (12): CFTypeRef, AXEventHandler, ManagedReplacementCorrelator, CGDirectDisplayID, Duration, Never, pid_t, Set (+4 more)
 
 ### Community 87 - "Community 87"
-Cohesion: 0.10
-Nodes (11): AppRule, Monitor, MonitorBarSettings, MonitorDwindleSettings, MonitorNiriSettings, MonitorOrientationSettings, MouseWarpAxis, ResolvedBarSettings (+3 more)
+Cohesion: 0.06
+Nodes (24): SettingsStore, AppRule, Bool, CGDirectDisplayID, HotkeyBinding, HotkeyTrigger, HyperKeyTrigger, KeyBinding (+16 more)
 
 ### Community 88 - "Community 88"
 Cohesion: 0.09
@@ -763,20 +753,20 @@ Cohesion: 0.15
 Nodes (8): FollowUpRefresh, RefreshDebugCounters, NodeId, RefreshReason, Set, WorkspaceDescriptor, PostLayoutAction, RelayoutSchedulingPolicy
 
 ### Community 90 - "Community 90"
-Cohesion: 0.17
-Nodes (12): IPCCommandRouter, IPCWindowRequest, Bool, Direction, ExternalCommandResult, HotkeyCommand, Int, IPCDirection (+4 more)
+Cohesion: 0.15
+Nodes (14): IPCCommandRouter, IPCWindowRequest, Bool, Direction, ExternalCommandResult, HotkeyCommand, Int, IPCDirection (+6 more)
 
 ### Community 91 - "Community 91"
-Cohesion: 0.18
+Cohesion: 0.19
 Nodes (11): NiriLayoutEngine, WorkspaceMoveResult, Bool, Direction, Int, NiriContainer, NiriWindow, NodeId (+3 more)
 
 ### Community 92 - "Community 92"
-Cohesion: 0.20
-Nodes (15): AXUIElement, MenuExtractor, NSEvent.ModifierFlags, NSMenu, Any, AnyObject, AXUIElement, Bool (+7 more)
+Cohesion: 0.11
+Nodes (18): IPCRuleLayout, auto, float, tile, IPCRuleSnapshot, IPCSizeChange, IPCSizeChangeKind, adjustFixed (+10 more)
 
 ### Community 93 - "Community 93"
-Cohesion: 0.20
-Nodes (7): CGFloat, CGRect, CGSize, Direction, LayoutWindowSnapshot, WindowToken, WorkspaceLayoutDiff
+Cohesion: 0.18
+Nodes (10): DwindleWorkspaceSnapshot, CGFloat, CGRect, CGSize, DwindleLayoutEngine, LayoutWindowSnapshot, ResolvedDwindleSettings, TimeInterval (+2 more)
 
 ### Community 94 - "Community 94"
 Cohesion: 0.23
@@ -815,8 +805,8 @@ Cohesion: 0.27
 Nodes (3): Int, UInt32, PreparedCreate
 
 ### Community 103 - "Community 103"
-Cohesion: 0.19
-Nodes (25): Appearance, Borders, Clipboard, CodingUserInfoKey, Color, Dwindle, Focus, Gaps (+17 more)
+Cohesion: 0.05
+Nodes (59): AppBootstrapDecision, boot, AppBootstrapPlanner, AXWindowHeuristicDisposition, ManagedBorderReapplyPhase, animationSettled, postLayout, retryExhaustedFallback (+51 more)
 
 ### Community 104 - "Community 104"
 Cohesion: 0.07
@@ -835,16 +825,16 @@ Cohesion: 0.19
 Nodes (5): CGSEventObserver, CGSWindowEvent, WindowServerInfo, WindowToken, PreparedDestroy
 
 ### Community 108 - "Community 108"
-Cohesion: 0.14
-Nodes (14): DwindleLayoutHandler, DwindleWorkspaceSnapshot, Bool, CFTimeInterval, CGDirectDisplayID, DwindleLayoutEngine, Monitor, ResolvedDwindleSettings (+6 more)
+Cohesion: 0.16
+Nodes (11): DwindleLayoutHandler, Bool, CFTimeInterval, CGDirectDisplayID, Direction, Monitor, Set, Void (+3 more)
 
 ### Community 109 - "Community 109"
 Cohesion: 0.16
 Nodes (16): FocusBridgeCoordinator, KeyboardFocusTarget, ManagedFocusRequest, Status, confirmed, pending, ActivationEventSource, AXWindowRef (+8 more)
 
 ### Community 110 - "Community 110"
-Cohesion: 0.18
-Nodes (10): LockedGestureContext, Int, Monitor, NiriContainer, NiriLayoutEngine, NiriNode, NiriWindow, TimeInterval (+2 more)
+Cohesion: 0.19
+Nodes (8): LockedGestureContext, Monitor, NiriContainer, NiriLayoutEngine, NiriNode, NiriWindow, ViewportState, WorkspaceDescriptor
 
 ### Community 111 - "Community 111"
 Cohesion: 0.17
@@ -875,8 +865,8 @@ Cohesion: 0.24
 Nodes (14): PreservedGestureOffset, SnapPoint, SnapResult, ViewportState, Bool, CenterFocusedColumn, CGFloat, CGRect (+6 more)
 
 ### Community 118 - "Community 118"
-Cohesion: 0.16
-Nodes (15): Bool, Date, Monitor, TimeInterval, Void, FocusPolicyDecision, FocusPolicyEngine, FocusPolicyLease (+7 more)
+Cohesion: 0.18
+Nodes (14): Bool, Date, Monitor, TimeInterval, Void, FocusPolicyEngine, FocusPolicyLease, FocusPolicyLeaseOwner (+6 more)
 
 ### Community 119 - "Community 119"
 Cohesion: 0.18
@@ -887,7 +877,7 @@ Cohesion: 0.16
 Nodes (14): AppBootstrapState, AppDelegate, IPCServerLifecycle, NSApplicationDelegate, AppCLIManager, AppUpdateCoordinating, Bool, Notification (+6 more)
 
 ### Community 121 - "Community 121"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (10): NativeFullscreenReplacementRestoreResult, notRestored, restored, AXWindowRef, Bool, CGRect, ManagedReplacementMetadata, TrackedWindowMode (+2 more)
 
 ### Community 122 - "Community 122"
@@ -899,12 +889,12 @@ Cohesion: 0.21
 Nodes (5): Bool, Int, NSEvent, UInt32, KeyRecorderNSView
 
 ### Community 124 - "Community 124"
-Cohesion: 0.09
-Nodes (20): MouseResizeModifierKey, command, commandShift, control, controlCommand, controlCommandShift, controlOption, controlOptionCommand (+12 more)
+Cohesion: 0.07
+Nodes (27): MouseResizeModifierKey, command, commandShift, control, controlCommand, controlCommandShift, controlOption, controlOptionCommand (+19 more)
 
 ### Community 125 - "Community 125"
-Cohesion: 0.14
-Nodes (13): ResolvedReevaluationTargets, WindowDecisionEvaluation, ManualWindowOverride, Set, TrackedWindowMode, WindowDecision, WindowRuleFacts, WindowRuleReevaluationTarget (+5 more)
+Cohesion: 0.15
+Nodes (14): ResolvedReevaluationTargets, WindowDecisionEvaluation, AXWindowRef, ManualWindowOverride, Set, TrackedWindowMode, UInt32, WindowDecision (+6 more)
 
 ### Community 126 - "Community 126"
 Cohesion: 0.16
@@ -920,10 +910,10 @@ Nodes (23): InteractiveResize, LayoutGaps, OuterGaps, ResizeConfiguration, Resiz
 
 ### Community 129 - "Community 129"
 Cohesion: 0.24
-Nodes (13): NiriLayoutEngine, Bool, CGFloat, CGPoint, CGRect, InsertPosition, Int, MotionSnapshot (+5 more)
+Nodes (4): Bool, CGSEventObserver, DebugCounters, resetPendingCGSEventState()
 
 ### Community 130 - "Community 130"
-Cohesion: 0.16
+Cohesion: 0.15
 Nodes (4): NiriNode, CGRect, Int, NiriRoot
 
 ### Community 131 - "Community 131"
@@ -931,20 +921,20 @@ Cohesion: 0.17
 Nodes (9): Bool, GhosttySurfaceView, NavigationDirection, NSCoder, NSSize, SplitDirection, Void, QuakeSplitContainer (+1 more)
 
 ### Community 132 - "Community 132"
-Cohesion: 0.12
-Nodes (7): CGRect, ExternalCommandResult, Monitor, WindowModel, WorkspaceBarItem, WorkspaceBarProjection, WorkspaceBarProjectionOptions
+Cohesion: 0.16
+Nodes (5): CGRect, ExternalCommandResult, Monitor, WindowModel, WindowToken
 
 ### Community 133 - "Community 133"
 Cohesion: 0.19
 Nodes (12): OwnedWindowRegistry, HitTestPolicy, Bool, CapturePolicy, CGPoint, Int, MainActor, NSWindow (+4 more)
 
 ### Community 134 - "Community 134"
-Cohesion: 0.20
+Cohesion: 0.23
 Nodes (6): AXWindowService, CachedTitle, AXUIElement, CGWindowID, TimeInterval, UInt32
 
 ### Community 135 - "Community 135"
-Cohesion: 0.09
-Nodes (21): AssignmentType, main, secondary, specificDisplay, CodingKeys, output, type, LayoutType (+13 more)
+Cohesion: 0.11
+Nodes (18): AssignmentType, main, secondary, specificDisplay, LayoutType, defaultLayout, dwindle, niri (+10 more)
 
 ### Community 136 - "Community 136"
 Cohesion: 0.10
@@ -971,8 +961,8 @@ Cohesion: 0.12
 Nodes (14): NSHostingController, Bool, CGPoint, NSWindow, SettingsStore, WMController, Bool, CGPoint (+6 more)
 
 ### Community 142 - "Community 142"
-Cohesion: 0.13
-Nodes (7): Bool, Task, OverviewDismissReason, cancel, externalDeactivation, selection, OverviewWindow
+Cohesion: 0.15
+Nodes (4): Task, WindowHandle, cancel, OverviewWindow
 
 ### Community 143 - "Community 143"
 Cohesion: 0.13
@@ -1014,10 +1004,6 @@ Nodes (14): CGPoint, CGRect, ID, Monitor, NSScreen, Orientation, horizontal, ver
 Cohesion: 0.15
 Nodes (6): ViewportState, Bool, CFTimeInterval, CGFloat, MotionSnapshot, NiriContainer
 
-### Community 153 - "Community 153"
-Cohesion: 0.10
-Nodes (20): IPCResultKind, activeWorkspace, apps, capabilities, commands, displays, focusedMonitor, focusedWindow (+12 more)
-
 ### Community 154 - "Community 154"
 Cohesion: 0.15
 Nodes (8): Int32, CGContext, CGFloat, CGPoint, CGRect, Float, Int, UInt32
@@ -1035,8 +1021,8 @@ Cohesion: 0.26
 Nodes (6): CLIShell, IPCCommandArgumentKind, CLICompletionGenerator, Int, IPCQueryDescriptor, String
 
 ### Community 158 - "Community 158"
-Cohesion: 0.21
-Nodes (11): MoveAnimation, NiriWindow, AnimationClock, Bool, CGPoint, Date, Double, SpringAnimation (+3 more)
+Cohesion: 0.16
+Nodes (15): MoveAnimation, NiriWindow, WeightedSize, auto, fixed, preset, AnimationClock, Bool (+7 more)
 
 ### Community 159 - "Community 159"
 Cohesion: 0.24
@@ -1071,12 +1057,12 @@ Cohesion: 0.19
 Nodes (7): CGFloat, CGImage, CGPoint, Int, NSEvent, NSTrackingArea, OverviewView
 
 ### Community 167 - "Community 167"
-Cohesion: 0.18
-Nodes (15): body, Double, ghostty_config_t, String, T, URL, Void, QuakeGhosttyConfigBuilder (+7 more)
+Cohesion: 0.20
+Nodes (14): Double, ghostty_config_t, String, T, URL, Void, QuakeGhosttyConfigBuilder, QuakeGhosttyConfigLoadStep (+6 more)
 
 ### Community 168 - "Community 168"
-Cohesion: 0.23
-Nodes (9): Kind, displayName, rawID, Bool, Decoder, Int, S, String (+1 more)
+Cohesion: 0.19
+Nodes (12): CodingKeys, kind, value, Kind, displayName, rawID, Bool, Decoder (+4 more)
 
 ### Community 169 - "Community 169"
 Cohesion: 0.12
@@ -1087,8 +1073,8 @@ Cohesion: 0.14
 Nodes (7): ghostty_clipboard_e, ghostty_color_scheme_e, NSPasteboard, ghostty_config_t, NSAppearance, String, UnsafeMutableRawPointer
 
 ### Community 171 - "Community 171"
-Cohesion: 0.15
-Nodes (8): StatusBarWorkspaceSummary, WindowFocusOperations, WorkspaceBarRefreshDebugState, AppInfoCache, AXUIElement, Int, pid_t, Void
+Cohesion: 0.08
+Nodes (9): Bool, CenterFocusedColumn, CGFloat, CGPoint, CGSize, Direction, Int, ResolvedBarSettings (+1 more)
 
 ### Community 172 - "Community 172"
 Cohesion: 0.17
@@ -1099,12 +1085,12 @@ Cohesion: 0.23
 Nodes (9): Any, Bool, CGDirectDisplayID, Monitor, String, UInt64, WindowServerInfo, display (+1 more)
 
 ### Community 174 - "Community 174"
-Cohesion: 0.17
-Nodes (14): NiriLayoutEngine, Bool, CGFloat, CGPoint, CGRect, LayoutGaps, MotionSnapshot, NiriWindow (+6 more)
+Cohesion: 0.25
+Nodes (7): CGSWindowEvent, closed, created, destroyed, frameChanged, frontAppChanged, titleChanged
 
 ### Community 175 - "Community 175"
-Cohesion: 0.17
-Nodes (10): IPCApplicationBridge, IPCEventBroker, IPCEventStreamRegistration, AsyncStream, Bool, IPCEventEnvelope, IPCSubscribeRequest, IPCSubscriptionChannel (+2 more)
+Cohesion: 0.10
+Nodes (19): IPCApplicationBridge, IPCEventBroker, IPCEventStreamRegistration, IPCQueryRouter, IPCResponseKind, IPCRuleRouter, AsyncStream, Bool (+11 more)
 
 ### Community 176 - "Community 176"
 Cohesion: 0.35
@@ -1123,8 +1109,8 @@ Cohesion: 0.20
 Nodes (7): Array, KeyBinding, Bool, Decoder, Element, HyperKeyTrigger, Set
 
 ### Community 181 - "Community 181"
-Cohesion: 0.31
-Nodes (4): ScrollPayload, CGEventFlags, CGFloat, UInt32
+Cohesion: 0.29
+Nodes (6): ScrollPayload, Bool, CGEventFlags, CGFloat, Int, UInt32
 
 ### Community 182 - "Community 182"
 Cohesion: 0.21
@@ -1171,8 +1157,8 @@ Cohesion: 0.22
 Nodes (8): Bool, Direction, Int, OverviewLayout, OverviewWindowItem, String, WindowHandle, OverviewSearchFilter
 
 ### Community 193 - "Community 193"
-Cohesion: 0.10
-Nodes (19): DebugCounters, GesturePhase, armed, committed, idle, MouseWheelColumnAxis, horizontal, vertical (+11 more)
+Cohesion: 0.15
+Nodes (13): DebugCounters, GesturePhase, armed, committed, idle, MouseWheelColumnAxis, horizontal, vertical (+5 more)
 
 ### Community 194 - "Community 194"
 Cohesion: 0.18
@@ -1183,16 +1169,16 @@ Cohesion: 0.24
 Nodes (8): CubicMoveAnimation, MoveAnimation, CubicAnimation, Bool, CGFloat, Double, SpringAnimation, TimeInterval
 
 ### Community 196 - "Community 196"
-Cohesion: 0.07
-Nodes (27): Payload, activeWorkspace, apps, capabilities, command, commands, displays, focusedMonitor (+19 more)
+Cohesion: 0.05
+Nodes (37): IPCRequest, IPCRequestKind, command, ping, query, rule, subscribe, version (+29 more)
 
 ### Community 197 - "Community 197"
 Cohesion: 0.24
 Nodes (12): MonitorBarSettings, ResolvedBarSettings, Bool, CGDirectDisplayID, Decoder, Double, Encoder, SettingsColor (+4 more)
 
 ### Community 198 - "Community 198"
-Cohesion: 0.33
-Nodes (3): AXWindowRef, Bool, Hasher
+Cohesion: 0.18
+Nodes (6): AXWindowFacts, AXWindowRef, Bool, Hasher, NSApplication, Self
 
 ### Community 199 - "Community 199"
 Cohesion: 0.24
@@ -1203,16 +1189,16 @@ Cohesion: 0.21
 Nodes (8): IPCWorkspaceQuerySnapshot, IPCWorkspaceRef, Int, IPCReconcileDebugQueryResult, IPCWorkspaceLayout, LayoutType, String, WorkspaceDescriptor
 
 ### Community 201 - "Community 201"
-Cohesion: 0.24
+Cohesion: 0.21
 Nodes (9): NiriLayoutEngine, Bool, CGFloat, ColumnDisplay, Int, MotionSnapshot, NiriContainer, ViewportState (+1 more)
 
 ### Community 202 - "Community 202"
-Cohesion: 0.16
+Cohesion: 0.22
 Nodes (6): NiriRoot, NodeId, Set, UUID, WindowToken, WorkspaceDescriptor
 
 ### Community 203 - "Community 203"
-Cohesion: 0.22
-Nodes (10): Kind, fixed, proportion, NiriContainer, PresetSize, ProportionalSize, fixed, proportion (+2 more)
+Cohesion: 0.26
+Nodes (7): Kind, fixed, proportion, NiriContainer, PresetSize, CGFloat, NiriWindow
 
 ### Community 204 - "Community 204"
 Cohesion: 0.27
@@ -1239,8 +1225,8 @@ Cohesion: 0.13
 Nodes (15): CodingKeys, authorizationToken, channel, code, id, kind, name, ok (+7 more)
 
 ### Community 210 - "Community 210"
-Cohesion: 0.11
-Nodes (16): CLIInvocation, local, remote, CLILocalAction, completion, help, CLIOutputFormat, json (+8 more)
+Cohesion: 0.14
+Nodes (12): CLIInvocation, local, remote, CLILocalAction, completion, help, CLIOutputFormat, json (+4 more)
 
 ### Community 211 - "Community 211"
 Cohesion: 0.23
@@ -1275,8 +1261,8 @@ Cohesion: 0.13
 Nodes (15): SettingsSection, bar, borders, dwindle, general, hotkeys, monitors, niri (+7 more)
 
 ### Community 219 - "Community 219"
-Cohesion: 0.54
-Nodes (4): GestureEventSnapshot, GestureTouchSample, NSTouch, NSEvent
+Cohesion: 0.40
+Nodes (4): UpdateCoordinatorError, badStatus, invalidResponse, LocalizedError
 
 ### Community 220 - "Community 220"
 Cohesion: 0.30
@@ -1299,40 +1285,40 @@ Cohesion: 0.23
 Nodes (10): CommandPaletteClipboardPasteTarget, focusWindow(), getWindowId(), makeKeyWindow(), AXUIElement, CGWindowID, pid_t, UInt32 (+2 more)
 
 ### Community 225 - "Community 225"
-Cohesion: 0.13
-Nodes (6): FocusFollowsMouseTarget, dwindle, niri, MouseEventHandler, MainActor, WMController
+Cohesion: 0.15
+Nodes (8): MouseButton, left, right, MouseEventHandler, PendingTapEvents, CGPoint, MainActor, WMController
 
 ### Community 226 - "Community 226"
-Cohesion: 0.16
-Nodes (9): OmniWMCtlMain, TerminationReason, exit, uncaughtSignal, unknown, WatchChildExecutionHooks, WatchRuntimeError, childLaunch (+1 more)
+Cohesion: 0.40
+Nodes (3): WorkspaceBarItem, WorkspaceBarProjection, WorkspaceBarProjectionOptions
 
 ### Community 227 - "Community 227"
-Cohesion: 0.06
-Nodes (38): IPCErrorCode, disabled, internalError, invalidArguments, invalidRequest, layoutMismatch, notFound, overviewOpen (+30 more)
+Cohesion: 0.05
+Nodes (50): IPCErrorCode, disabled, internalError, invalidArguments, invalidRequest, layoutMismatch, notFound, overviewOpen (+42 more)
 
 ### Community 228 - "Community 228"
 Cohesion: 0.22
 Nodes (4): CGRect, NiriOverviewWorkspaceSnapshot, String, WorkspaceDescriptor
 
 ### Community 229 - "Community 229"
-Cohesion: 0.21
-Nodes (11): GitHubLatestReleasePayload, ReleaseVersion, UpdatePopupConfiguration, Decodable, Bool, Date, Int, RuntimeStateStore (+3 more)
+Cohesion: 0.24
+Nodes (6): AutomaticCheckSource, automatic, manual, ReleaseVersion, Bool, Int
 
 ### Community 230 - "Community 230"
-Cohesion: 0.27
-Nodes (6): CGFloat, Direction, MonitorSelectionMode, directional, wrapped, MonitorSelectionRank
+Cohesion: 0.22
+Nodes (7): CGFloat, Direction, UInt32, MonitorSelectionMode, directional, wrapped, MonitorSelectionRank
 
 ### Community 231 - "Community 231"
-Cohesion: 0.14
-Nodes (17): AnimationDirective, activateWindow, none, startDwindleAnimation, startNiriScroll, updateTabbedOverlays, RefreshExecutionEffects, RefreshExecutionPlan (+9 more)
+Cohesion: 0.50
+Nodes (4): SizingMode, fullscreen, maximized, normal
 
 ### Community 232 - "Community 232"
 Cohesion: 0.36
 Nodes (5): CubicAnimation, CubicConfig, Bool, Double, TimeInterval
 
 ### Community 233 - "Community 233"
-Cohesion: 0.29
-Nodes (5): IPCConnectionSubscriptionTestHooks, IPCConnectionSubscriptionTestHookStore, ReadLoopError, requestTooLarge, Void
+Cohesion: 0.27
+Nodes (6): IPCConnectionSubscriptionTestHooks, IPCConnectionSubscriptionTestHookStore, ReadLoopError, requestTooLarge, Sendable, Void
 
 ### Community 234 - "Community 234"
 Cohesion: 0.27
@@ -1351,12 +1337,12 @@ Cohesion: 0.25
 Nodes (3): GhosttySurfaceView, SplitDirection, QuakeTerminalTab
 
 ### Community 238 - "Community 238"
-Cohesion: 0.21
-Nodes (7): MouseButton, left, right, PendingTapEvents, CGPoint, CGRect, ResizeEdge
+Cohesion: 0.13
+Nodes (11): FocusFollowsMouseTarget, dwindle, niri, State, CFMachPort, CFRunLoopSource, CGRect, Date (+3 more)
 
 ### Community 239 - "Community 239"
-Cohesion: 0.36
-Nodes (3): Bool, CGEvent, CGEventType
+Cohesion: 0.23
+Nodes (7): GestureEventSnapshot, GestureTouchSample, NSTouch, CGEvent, CGEventType, NSEvent, TimeInterval
 
 ### Community 240 - "Community 240"
 Cohesion: 0.21
@@ -1399,8 +1385,8 @@ Cohesion: 0.27
 Nodes (4): JSONDecoder, JSONEncoder, Any, Encoder
 
 ### Community 250 - "Community 250"
-Cohesion: 0.11
-Nodes (5): BorderFrameSource, ManagedBorderReapplyPhase, KeyboardFocusTarget, UInt32, QuakeTerminalRestoreTarget
+Cohesion: 0.09
+Nodes (5): BorderFrameSource, ManagedBorderReapplyPhase, KeyboardFocusTarget, WindowHandle, QuakeTerminalRestoreTarget
 
 ### Community 251 - "Community 251"
 Cohesion: 0.20
@@ -1443,8 +1429,8 @@ Cohesion: 0.20
 Nodes (6): IPCAppRef, AppInfoCache, CGRect, IPCActiveWorkspaceQueryResult, IPCFocusedWindowQueryResult, IPCRect
 
 ### Community 263 - "Community 263"
-Cohesion: 0.22
-Nodes (5): OverviewWindowLayoutData, OverviewWorkspaceLayoutItem, WindowHandle, OverviewSnapshot, ScrollTuning
+Cohesion: 0.20
+Nodes (8): Bool, OverviewWindowLayoutData, OverviewWorkspaceLayoutItem, OverviewDismissReason, externalDeactivation, selection, OverviewSnapshot, ScrollTuning
 
 ### Community 264 - "Community 264"
 Cohesion: 0.27
@@ -1458,17 +1444,13 @@ Nodes (7): Int, NiriLayoutEngine, WindowModel, WindowToken, WorkspaceDescriptor,
 Cohesion: 0.21
 Nodes (8): Any, CGDirectDisplayID, CGFloat, CGRect, Int32, Int64, Monitor, pid_t
 
-### Community 267 - "Community 267"
-Cohesion: 0.31
-Nodes (3): HotkeyBinding, HotkeyTrigger, KeyBinding
-
 ### Community 268 - "Community 268"
 Cohesion: 0.33
 Nodes (8): Monitor, MonitorDwindleSettings, SettingsStore, Void, WMController, DwindleSettingsTab, GlobalDwindleSettingsSection, MonitorDwindleSettingsSection
 
 ### Community 269 - "Community 269"
-Cohesion: 0.67
-Nodes (3): AnyObject, LayoutFocusable, LayoutSizable
+Cohesion: 0.50
+Nodes (4): AnyObject, LayoutFocusable, LayoutSizable, CGSEventDelegate
 
 ### Community 270 - "Community 270"
 Cohesion: 0.33
@@ -1483,16 +1465,12 @@ Cohesion: 0.53
 Nodes (4): SwipeEvent, SwipeTracker, Double, TimeInterval
 
 ### Community 273 - "Community 273"
-Cohesion: 0.39
-Nodes (6): AXFrameApplicationRequest, AXFrameApplyResult, AXFrameRequestId, Int, pid_t, Self
+Cohesion: 0.22
+Nodes (11): AXFrameApplicationRequest, AXFrameApplyResult, AXWindowType, floating, tiling, FrameWriteAttribute, position, size (+3 more)
 
 ### Community 274 - "Community 274"
 Cohesion: 0.33
 Nodes (5): CGSEventType, ConnectionNotifyCallback, NotifyCallback, UnsafeMutableRawPointer, UnregisterNotifyProcFunc
-
-### Community 275 - "Community 275"
-Cohesion: 0.28
-Nodes (7): Direction, down, left, right, up, Int, Monitor
 
 ### Community 276 - "Community 276"
 Cohesion: 0.21
@@ -1507,8 +1485,8 @@ Cohesion: 0.33
 Nodes (4): IPCDisplaysQueryResult, IPCQueryRequest, IPCWindowsQueryResult, IPCWorkspacesQueryResult
 
 ### Community 280 - "Community 280"
-Cohesion: 0.16
-Nodes (8): CGFloat, Double, Int, SizingMode, fullscreen, maximized, normal, ClosedRange
+Cohesion: 0.22
+Nodes (4): CGFloat, Double, Int, ClosedRange
 
 ### Community 281 - "Community 281"
 Cohesion: 0.29
@@ -1535,8 +1513,8 @@ Cohesion: 0.36
 Nodes (5): CommandPaletteSelectionID, clipboard, menu, window, Int
 
 ### Community 287 - "Community 287"
-Cohesion: 0.33
-Nodes (5): AXFrameWriteOrder, positionThenSize, sizeThenPosition, AXFrameWriteResult, CGRect
+Cohesion: 0.27
+Nodes (6): AXFrameWriteOrder, positionThenSize, sizeThenPosition, AXFrameWriteResult, AXError, CGRect
 
 ### Community 288 - "Community 288"
 Cohesion: 0.25
@@ -1607,12 +1585,12 @@ Cohesion: 0.31
 Nodes (3): CGFloat, Notification, NSSize
 
 ### Community 305 - "Community 305"
-Cohesion: 0.24
-Nodes (7): CGPoint, CGRect, CGSize, DisplayFingerprint, PersistedNiriPlacement, CGPoint, PersistedWindowRestoreCatalogBuildEntry
+Cohesion: 0.33
+Nodes (4): CGPoint, CGRect, CGSize, CGPoint
 
 ### Community 306 - "Community 306"
-Cohesion: 0.14
-Nodes (14): AppUpdateCoordinating, CodingKeys, htmlURL, name, publishedAt, tagName, GitHubReleaseFetching, GitHubReleaseService (+6 more)
+Cohesion: 0.33
+Nodes (6): CodingKeys, body, htmlURL, name, publishedAt, tagName
 
 ### Community 307 - "Community 307"
 Cohesion: 0.40
@@ -1622,13 +1600,9 @@ Nodes (4): DefaultFloatingApps, Bool, Set, String
 Cohesion: 0.33
 Nodes (3): RunLoopJob, Bool, RunLoopAction
 
-### Community 309 - "Community 309"
-Cohesion: 0.33
-Nodes (5): GestureFingerCount, four, three, two, String
-
 ### Community 310 - "Community 310"
-Cohesion: 0.10
-Nodes (19): AXFrameWriteFailureReason, appBusy, cacheMiss, cancelled, contextUnavailable, positionWriteFailed, readbackFailed, sizeWriteFailed (+11 more)
+Cohesion: 0.17
+Nodes (12): AXFrameWriteFailureReason, appBusy, cacheMiss, cancelled, contextUnavailable, positionWriteFailed, readbackFailed, sizeWriteFailed (+4 more)
 
 ### Community 311 - "Community 311"
 Cohesion: 0.18
@@ -1666,17 +1640,13 @@ Nodes (3): Bool, S, View
 Cohesion: 0.40
 Nodes (4): OmniWMApp, AppBootstrapState, app, Scene
 
-### Community 321 - "Community 321"
-Cohesion: 0.20
-Nodes (9): IPCQueryRouter, IPCResponseKind, IPCRuleRouter, ExternalCommandResult, IPCErrorCode, IPCQueryRequest, IPCRequest, IPCResponse (+1 more)
-
 ### Community 323 - "Community 323"
-Cohesion: 0.20
-Nodes (6): NodeId, RuntimeRevision, ViewportState, WorkspaceSessionPatch, WorkspaceSession, WorkspaceSessionTransfer
+Cohesion: 0.23
+Nodes (6): NodeId, ViewportState, Void, WorkspaceSessionPatch, WorkspaceSession, WorkspaceSessionTransfer
 
 ### Community 324 - "Community 324"
-Cohesion: 0.20
-Nodes (9): DwindleSingleWindowAspectRatio, fill, ratio16x9, ratio21x9, ratio3x2, ratio4x3, square, Bool (+1 more)
+Cohesion: 0.06
+Nodes (29): CaseIterable, AppearanceMode, automatic, dark, light, CommandPaletteMode, clipboard, menu (+21 more)
 
 ### Community 325 - "Community 325"
 Cohesion: 0.50
@@ -1734,53 +1704,25 @@ Nodes (5): Bool, NSEvent, NSRect, QuakeTerminalController, QuakeTerminalWindow
 Cohesion: 0.50
 Nodes (3): String, ReleaseVersion, Bundle
 
-### Community 341 - "Community 341"
-Cohesion: 0.29
-Nodes (7): ActionPlan, Date, ReconcileSnapshot, String, WMEvent, ReconcileInvariantViolation, ReconcileTxn
-
-### Community 343 - "Community 343"
-Cohesion: 0.33
-Nodes (5): AXWindowFacts, AXWindowHeuristicDisposition, AXWindowType, NSApplication, WindowDecisionDisposition
-
-### Community 345 - "Community 345"
-Cohesion: 0.29
-Nodes (5): NiriSizeChange, ResolvedPresetWidth, tile, window, PresetSize
-
-### Community 346 - "Community 346"
-Cohesion: 0.29
-Nodes (6): LayoutReason, macosHiddenApp, nativeFullscreen, standard, ParentKind, tilingContainer
-
-### Community 348 - "Community 348"
-Cohesion: 0.50
-Nodes (4): WeightedSize, auto, fixed, preset
+### Community 342 - "Community 342"
+Cohesion: 0.47
+Nodes (3): AXWindowType, CGSize, WindowSizeConstraints
 
 ### Community 351 - "Community 351"
 Cohesion: 0.40
 Nodes (4): NSPanel, NSRect, NSScreen, WorkspaceBarPanel
 
-### Community 352 - "Community 352"
-Cohesion: 0.50
-Nodes (3): AppBootstrapDecision, boot, AppBootstrapPlanner
-
 ### Community 355 - "Community 355"
-Cohesion: 0.40
-Nodes (4): MonitorOrientationSettings, CGDirectDisplayID, Monitor, String
+Cohesion: 0.33
+Nodes (5): MonitorOrientationSettings, MonitorSettingsType, CGDirectDisplayID, Monitor, String
 
 ### Community 356 - "Community 356"
 Cohesion: 0.40
 Nodes (4): CollapseSafety, safe, unknown, unsafe
 
-### Community 357 - "Community 357"
-Cohesion: 0.50
-Nodes (4): ManagedBorderReapplyPhase, animationSettled, postLayout, retryExhaustedFallback
-
 ### Community 359 - "Community 359"
 Cohesion: 0.50
 Nodes (3): OverviewLayout, OverviewState, String
-
-### Community 360 - "Community 360"
-Cohesion: 0.67
-Nodes (3): Bool, ResolvedBarSettings, WorkspaceBarProjectionOptions
 
 ### Community 361 - "Community 361"
 Cohesion: 0.50
@@ -1789,21 +1731,21 @@ Nodes (4): Kind, focused, pid, window
 ## Knowledge Gaps
 - **2188 isolated node(s):** `boot`, `homebrewManaged`, `appManaged`, `notInstalled`, `conflict` (+2183 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `WMController` connect `Community 25` to `Community 33`, `Community 1`, `Community 132`, `Community 260`, `Community 171`, `Community 108`, `Community 12`, `Community 48`, `Community 344`, `Community 250`, `Community 125`?**
-  _High betweenness centrality (0.117) - this node is a cross-community bridge._
-- **Why does `NiriLayoutEngine` connect `Community 33` to `Community 129`, `Community 91`, `Community 55`?**
+- **Why does `WMController` connect `Community 25` to `Community 1`, `Community 226`, `Community 132`, `Community 260`, `Community 171`, `Community 108`, `Community 12`, `Community 48`, `Community 344`, `Community 250`, `Community 125`?**
+  _High betweenness centrality (0.112) - this node is a cross-community bridge._
+- **Why does `NiriLayoutEngine` connect `Community 33` to `Community 91`, `Community 52`, `Community 55`?**
   _High betweenness centrality (0.086) - this node is a cross-community bridge._
-- **Why does `StatusBarWorkspaceSummary` connect `Community 171` to `Community 0`, `Community 48`, `Community 132`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+- **Why does `StatusBarWorkspaceSummary` connect `Community 48` to `Community 132`, `Community 103`?**
+  _High betweenness centrality (0.069) - this node is a cross-community bridge._
 - **What connects `boot`, `homebrewManaged`, `appManaged` to the rest of the system?**
   _2188 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.041685144124168516 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.04904484487196857 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.05651296382549294 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**

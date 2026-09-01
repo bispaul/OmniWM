@@ -821,4 +821,153 @@ private func waitUntilServiceLifecycleTest(
         }
         #expect(applyCount == 2, "Events spaced beyond debounce window should fire independently, got \(applyCount)")
     }
+
+    // MARK: - Bug #38: Frame Cache Invalidation on Monitor Reconnect
+
+    @Test @MainActor func monitorReconnectInvalidatesFrameCacheForReconnectedMonitorWindows() async {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+            WorkspaceConfiguration(
+                name: "6",
+                monitorAssignment: .specificDisplay(
+                    OutputId(displayId: 2, name: "Portrait")
+                )
+            )
+        ]
+
+        let controller = WMController(settings: settings)
+        let lifecycleManager = ServiceLifecycleManager(controller: controller)
+        let mainMonitor = makeLifecycleMonitor(displayId: 1, name: "Main", x: 0, y: 0)
+        let portraitMonitor = makeLifecycleMonitor(
+            displayId: 2, name: "Portrait", x: -1080, y: 0, width: 1080, height: 1920
+        )
+
+        lifecycleManager.applyMonitorConfigurationChanged(
+            currentMonitors: [mainMonitor, portraitMonitor],
+            performPostUpdateActions: false
+        )
+
+        guard let ws6 = controller.workspaceManager.workspaceId(for: "6", createIfMissing: true) else {
+            Issue.record("Failed to create workspace 6")
+            return
+        }
+        #expect(controller.workspaceManager.setActiveWorkspace(ws6, on: portraitMonitor.id))
+
+        let token = WindowToken(pid: getpid(), windowId: 9901)
+        let ax = makeLifecycleWindow(windowId: 9901)
+        controller.workspaceManager.assignmentManager.assignWindowToWorkspace(
+            ax, pid: token.pid, windowId: token.windowId,
+            to: ws6, reason: .admission
+        )
+
+        let staleFrame = CGRect(x: -1080, y: 0, width: 1080, height: 960)
+        controller.axManager.frameApplyOverrideForTests = { requests in
+            requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId, pid: req.pid, windowId: req.windowId,
+                    targetFrame: req.frame, currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame, observedFrame: req.frame,
+                        writeOrder: .sizeThenPosition, sizeError: .success,
+                        positionError: .success, failureReason: nil
+                    )
+                )
+            }
+        }
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, staleFrame)])
+        #expect(
+            controller.axManager.lastAppliedFrame(for: token.windowId) == staleFrame,
+            "precondition: lastAppliedFrame should be set"
+        )
+
+        lifecycleManager.applyMonitorConfigurationChanged(
+            currentMonitors: [mainMonitor],
+            performPostUpdateActions: false
+        )
+
+        lifecycleManager.applyMonitorConfigurationChanged(
+            currentMonitors: [mainMonitor, portraitMonitor]
+        )
+        await controller.layoutRefreshController.waitForRefreshWorkForTests()
+
+        #expect(
+            controller.axManager.lastAppliedFrame(for: token.windowId) == nil,
+            "reconnect should invalidate frame cache for windows on reconnected monitor"
+        )
+    }
+
+    @Test @MainActor func monitorReconnectDoesNotInvalidateFrameCacheForSurvivingMonitorWindows() {
+        let defaults = makeLifecycleTestDefaults()
+        let settings = SettingsStore(defaults: defaults)
+        settings.workspaceConfigurations = [
+            WorkspaceConfiguration(name: "1", monitorAssignment: .main),
+            WorkspaceConfiguration(
+                name: "6",
+                monitorAssignment: .specificDisplay(
+                    OutputId(displayId: 2, name: "Portrait")
+                )
+            )
+        ]
+
+        let controller = WMController(settings: settings)
+        let lifecycleManager = ServiceLifecycleManager(controller: controller)
+        let mainMonitor = makeLifecycleMonitor(displayId: 1, name: "Main", x: 0, y: 0)
+        let portraitMonitor = makeLifecycleMonitor(
+            displayId: 2, name: "Portrait", x: -1080, y: 0, width: 1080, height: 1920
+        )
+
+        lifecycleManager.applyMonitorConfigurationChanged(
+            currentMonitors: [mainMonitor, portraitMonitor],
+            performPostUpdateActions: false
+        )
+
+        guard let ws1 = controller.workspaceManager.workspaceId(for: "1", createIfMissing: true) else {
+            Issue.record("Failed to create workspace 1")
+            return
+        }
+        #expect(controller.workspaceManager.setActiveWorkspace(ws1, on: mainMonitor.id))
+
+        let token = WindowToken(pid: getpid(), windowId: 9902)
+        let ax = makeLifecycleWindow(windowId: 9902)
+        controller.workspaceManager.assignmentManager.assignWindowToWorkspace(
+            ax, pid: token.pid, windowId: token.windowId,
+            to: ws1, reason: .admission
+        )
+
+        let frame = CGRect(x: 0, y: 0, width: 960, height: 540)
+        controller.axManager.frameApplyOverrideForTests = { requests in
+            requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId, pid: req.pid, windowId: req.windowId,
+                    targetFrame: req.frame, currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame, observedFrame: req.frame,
+                        writeOrder: .sizeThenPosition, sizeError: .success,
+                        positionError: .success, failureReason: nil
+                    )
+                )
+            }
+        }
+        controller.axManager.applyFramesParallel([(token.pid, token.windowId, frame)])
+        #expect(controller.axManager.lastAppliedFrame(for: token.windowId) == frame)
+
+        lifecycleManager.applyMonitorConfigurationChanged(
+            currentMonitors: [mainMonitor],
+            performPostUpdateActions: false
+        )
+
+        controller.layoutRefreshController.resetDebugState()
+        controller.layoutRefreshController.debugHooks.onFullRescan = { _ in true }
+
+        lifecycleManager.applyMonitorConfigurationChanged(
+            currentMonitors: [mainMonitor, portraitMonitor]
+        )
+
+        #expect(
+            controller.axManager.lastAppliedFrame(for: token.windowId) == frame,
+            "reconnect should NOT invalidate frame cache for windows on surviving monitor"
+        )
+    }
 }

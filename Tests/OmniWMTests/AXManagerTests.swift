@@ -819,4 +819,82 @@ private func axManagerTestWriteResult(
         #expect(attemptCount == 3, "2 failures + 1 success = 3 attempts")
         #expect(controller.axManager.recentFrameWriteFailure(for: token.windowId) == nil)
     }
+
+    // MARK: - Bug #38: Frame Cache Invalidation
+
+    @Test @MainActor func invalidateFrameCacheClearsLastAppliedFrame() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9910
+        let frame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        let observedFrame = CGRect(x: 100, y: 100, width: 508, height: 400)
+
+        manager.frameApplyOverrideForTests = { requests in
+            requests.map { req in
+                AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: AXFrameWriteResult(
+                        targetFrame: req.frame,
+                        observedFrame: observedFrame,
+                        writeOrder: .sizeThenPosition,
+                        sizeError: .success,
+                        positionError: .success,
+                        failureReason: .verificationMismatch
+                    )
+                )
+            }
+        }
+
+        manager.applyFramesParallel([(pid, windowId, frame)])
+        #expect(manager.lastAppliedFrame(for: windowId) != nil, "precondition: lastAppliedFrame set after write")
+
+        manager.invalidateFrameCache(for: windowId)
+
+        #expect(manager.lastAppliedFrame(for: windowId) == nil, "invalidateFrameCache should clear lastAppliedFrame")
+    }
+
+    @Test @MainActor func invalidateFrameCacheAllowsNextWriteThrough() {
+        let manager = AXManager()
+        let pid: pid_t = getpid()
+        let windowId = 9911
+        let firstFrame = CGRect(x: 100, y: 100, width: 500, height: 400)
+        let secondFrame = CGRect(x: 100, y: 100, width: 502, height: 400)
+
+        var writeCount = 0
+        manager.frameApplyOverrideForTests = { requests in
+            requests.map { req in
+                writeCount += 1
+                return AXFrameApplyResult(
+                    requestId: req.requestId,
+                    pid: req.pid,
+                    windowId: req.windowId,
+                    targetFrame: req.frame,
+                    currentFrameHint: req.currentFrameHint,
+                    writeResult: axManagerTestWriteResult(
+                        targetFrame: req.frame,
+                        currentFrameHint: req.currentFrameHint,
+                        observedFrame: req.frame,
+                        failureReason: nil
+                    )
+                )
+            }
+        }
+
+        manager.applyFramesParallel([(pid, windowId, firstFrame)])
+        let countAfterFirst = writeCount
+
+        manager.applyFramesParallel([(pid, windowId, secondFrame)])
+        let countAfterSecondSkipped = writeCount
+
+        manager.invalidateFrameCache(for: windowId)
+        manager.applyFramesParallel([(pid, windowId, secondFrame)])
+        let countAfterInvalidate = writeCount
+
+        #expect(countAfterFirst == 1, "first write should go through")
+        #expect(countAfterInvalidate > countAfterSecondSkipped, "write after invalidation should go through")
+    }
 }
